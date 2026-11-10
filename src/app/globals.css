@@ -1,0 +1,157 @@
+@import "tailwindcss";
+
+@theme {
+  /* Surfaces */
+  --color-ink: #08090c;
+  --color-surface: #101218;
+  --color-raised: #161922;
+  --color-line: #242835;
+
+  /* Text */
+  --color-fg: #e8eaf0;
+  --color-muted: #99a0b0;
+
+  /* Brand */
+  --color-accent: #f2b33d;
+  --color-accent-hover: #ffc65c;
+
+  /* Semantics */
+  --color-good: #3fd6a0;
+  --color-bad: #f2705d;
+
+  /* Tiers */
+  --color-tier-s: #f2b33d;
+  --color-tier-a: #3fd6a0;
+  --color-tier-b: #5aa9f0;
+  --color-tier-c: #9aa3b8;
+
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+@layer base {
+  html {
+    color-scheme: dark;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-ink);
+    background-image: radial-gradient(
+      ellipse 80% 50% at 50% -10%,
+      rgba(242, 179, 61, 0.07),
+      transparent
+    );
+    background-repeat: no-repeat;
+    color: var(--color-fg);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection {
+    background-color: var(--color-accent);
+    color: #1a1204;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  h1,
+  h2,
+  h3 {
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+}
+
+/* Plain CSS rather than @apply, so these never depend on utility generation. */
+@layer components {
+  .card {
+    border-radius: 0.75rem;
+    border: 1px solid var(--color-line);
+    background-color: var(--color-surface);
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 9999px;
+    border: 1px solid var(--color-line);
+    padding: 0.25rem 0.7rem;
+    font-size: 0.75rem;
+    line-height: 1.2;
+    color: var(--color-muted);
+    transition: color 120ms ease, border-color 120ms ease, background-color 120ms ease;
+  }
+
+  .chip:hover {
+    color: var(--color-fg);
+    border-color: #343a4b;
+  }
+
+  .chip[data-active="true"] {
+    background-color: var(--color-accent);
+    border-color: var(--color-accent);
+    color: #1a1204;
+    font-weight: 600;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: 0.5rem;
+    padding: 0.625rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    line-height: 1;
+    transition: background-color 120ms ease, border-color 120ms ease, color 120ms ease;
+  }
+
+  .btn-primary {
+    background-color: var(--color-accent);
+    color: #1a1204;
+  }
+
+  .btn-primary:hover {
+    background-color: var(--color-accent-hover);
+  }
+
+  .btn-ghost {
+    border: 1px solid var(--color-line);
+    color: var(--color-fg);
+  }
+
+  .btn-ghost:hover {
+    border-color: #343a4b;
+    background-color: var(--color-raised);
+  }
+
+  .btn-sm {
+    padding: 0.4rem 0.75rem;
+    font-size: 0.8125rem;
+  }
+
+  .stat-value {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.02em;
+  }
+
+  .prose-block p + p {
+    margin-top: 0.9rem;
+  }
+
+  .prose-block {
+    line-height: 1.65;
+    color: #c9cedb;
+  }
+}

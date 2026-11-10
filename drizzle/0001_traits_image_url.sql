@@ -1,0 +1,1 @@
+ALTER TABLE "traits" ADD COLUMN "image_url" text;

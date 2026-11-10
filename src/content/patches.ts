@@ -1,0 +1,107 @@
+import type { Patch } from "./types";
+
+/**
+ * PATCH NOTES + META READS
+ *
+ * ⚠️ 18.5 IS STILL A TEMPLATE ENTRY. 18.6 is written from Riot's real notes and
+ * is the shape to follow: do not copy-paste those notes — summarise them, then
+ * add your read underneath.
+ *
+ * `risers` / `fallers` stay empty until the crawler has patch-window data for
+ * both the old and new patch; the page renders "collecting data" until then.
+ */
+export const patches: Patch[] = [
+  {
+    patch: "18.6",
+    setNumber: 18,
+    title: "A patch that moves the floor, not the ceiling",
+    releasedAt: "2026-11-04",
+    summary:
+      "The standalone client ships and the balance changes are deliberately small: the Blossom and Sprykin emblem verticals get their breakpoints back, Sentinel's shield scales harder, and Elderwood's nine-piece is trimmed. Nothing here touches the top of the ladder.",
+    changes: [
+      {
+        kind: "buff",
+        subject: "Sentinel",
+        detail:
+          "Shield HP ratio 10% → 12%. The quiet winner of the patch: every level-9 board that tanks with Sentinel gets more effective health, and it makes the HP items you were slamming anyway better.",
+      },
+      {
+        kind: "nerf",
+        subject: "Elderwood, nine pieces",
+        detail:
+          "The 9-piece HP bonus drops from 25% to 10%. That is the emblem-dependent vertical, not the three-piece most Elderwood boards actually run — so the level-9 lines lose nothing, and the board that bought an Elderwood Emblem to reach nine loses a lot.",
+      },
+      {
+        kind: "adjust",
+        subject: "Blossom and Sprykin with an Emblem",
+        detail:
+          "Blossom's AD/AP goes 12/30/50/55% → 12/30/55/65%, and Sprykin's ranged BFF 15/28/33% → 15/30/38%. Both buffs target boards holding an Emblem, which matters most if a Wisp or a Curio Cart handed you one.",
+      },
+      {
+        kind: "buff",
+        subject: "Nidalee, Malphite and the 4-cost AP line",
+        detail:
+          "Nidalee's heal and both forms improve, with her third cast at 140% instead of 125%; Malphite's shield and spell damage rise. Riot is trying to make AP Nidalee a real carry — a line to watch, not one to force.",
+      },
+      {
+        kind: "adjust",
+        subject: "Augments",
+        detail:
+          "Clockwork Accelerator 10% → 12% attack speed per proc, Plot Armor 8 → 10 resists, Shopping Spree 6 → 7 starting gold, Unrivaled's Rengar and Kha'Zix shares up, Embiggen down from 50% to 35%.",
+      },
+      {
+        kind: "adjust",
+        subject: "Emblems are an economy decision now",
+        detail:
+          "Curio Cart's emblem costs 17 gold instead of 15, and the Middle Path Wisp costs 5 with a 4-gold upgrade. Paying for a breakpoint is a real trade against the XP you need to reach 9.",
+      },
+    ],
+    metaRead: {
+      headline: "What 18.6 changes for the boards you actually play",
+      paragraphs: [
+        "Strip out the standalone client and the bug-fix list and 18.6 is a floor-raising patch. After the 18.5 mid-patches took Kha'Zix and Brambleback down, Riot is not pulling another ceiling down — it is making the 4-cost lines and the emblem verticals less punishing to be on.",
+        "For the boards on this site the read is short. Elderwood's nine-piece lost more than half its HP bonus, which hurts exactly one board: the one that bought an Elderwood Emblem to get there. The three-piece the level-9 lines run is untouched. Sentinel's shield going from 10% to 12% is a quiet buff to every AP flex board that tanks with it, and it is the change I would actually plan around.",
+        "What I am changing: I am still first-picking the fast-9 lines off a win streak, and I am more willing to hold a Sentinel tank early now that the shield scales with the HP items I slam anyway. I am not chasing AP Nidalee until it shows up in the data twice. And I am buying fewer emblems — at 17 gold, the Curio Cart emblem is competing with the XP that gets me to 9 at all.",
+      ],
+    },
+    risers: [],
+    fallers: [],
+    sourceUrl:
+      "https://teamfighttactics.leagueoflegends.com/en-us/news/game-updates/teamfight-tactics-patch-18-6/",
+  },
+  {
+    patch: "18.5",
+    setNumber: 18,
+    title: "Two weeks of small numbers, one real shift",
+    releasedAt: "2026-10-20",
+    summary:
+      "Template entry — replace with a plain-language summary of Riot's 18.5 notes: what changed, and which of the top comps it actually touches.",
+    changes: [
+      {
+        kind: "buff",
+        subject: "The buff of the patch",
+        detail: "Name the change in one line, then say who it actually helps — not who it is supposed to help.",
+      },
+      {
+        kind: "nerf",
+        subject: "The nerf of the patch",
+        detail: "The change, plus the comps it removes from the top of the list.",
+      },
+      {
+        kind: "adjust",
+        subject: "The adjustment worth noticing",
+        detail: "Small numbers that change item or tempo priorities even when they look irrelevant.",
+      },
+    ],
+    metaRead: {
+      headline: "What this patch actually changes",
+      paragraphs: [
+        "Most patch notes overstate their own impact. A few percent of damage on a four-cost carry moves average placement far less than a change to the item that carry wants, or to the trait that makes the board legal in the first place. So the useful question is never “what got buffed” — it is “which of the boards I would actually play got better at the thing it was already good at”.",
+        "This page tracks three things: what Riot changed, which comps moved in the data, and what I am changing about my own play. Where the numbers and my read disagree, I will say so rather than quietly siding with the graph — the disagreement is usually where the next patch's meta is hiding.",
+      ],
+    },
+    risers: [],
+    fallers: [],
+    sourceUrl: "https://teamfighttactics.leagueoflegends.com/en-us/news/game-updates/",
+  },
+];

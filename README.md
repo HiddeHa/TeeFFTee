@@ -1,0 +1,341 @@
+# TFT meta site
+
+A TFT meta/stats site with a coaching funnel: high-elo comp stats, a curated meta
+layer, and the analysis seam that will hold the crawler.
+
+## Planning documents
+
+| Document | What's in it |
+|---|---|
+| [docs/blueprint.md](docs/blueprint.md) | Product definition, positioning, scope, data strategy, pipeline architecture, data model, comp-assignment algorithm, stack, coaching funnel, Riot compliance, metrics, risks |
+| [docs/roadmap.md](docs/roadmap.md) | Week-by-week plan to the Set 19 launch on Dec 1, launch runbook, cut list, post-launch milestones |
+
+## Getting started
+
+```bash
+npm install
+npm run dev     # http://localhost:3000
+npm run build   # production build (typechecks as part of it)
+npm run typecheck
+```
+
+No environment variables are required to run the site. Copy `.env.example` to
+`.env` to set the public URL, booking link, a database or a Riot API key: both
+`next` and the crawler read that file (see [worker/load-env.ts](worker/load-env.ts)),
+and real environment variables take precedence over it.
+
+## What exists
+
+| Route | State |
+|---|---|
+| `/` | Home: current patch, top comps, meta read teaser, coaching band |
+| `/comps` | Tier list, URL-driven patch / region / rank filters |
+| `/comps/[slug]` | Comp detail: board, stats, leveling, augments, matchups, your notes, inline CTA |
+| `/patch/[patch]` | Patch summary, change list, movers, meta read |
+| `/coaching` | Offers and prices, process, FAQ, booking CTAs |
+| `/about` | Author credibility block and full methodology |
+| `/terms`, `/privacy` | Starter legal pages (Riot's production key review checks for these) |
+| `/sitemap.xml`, `/robots.txt` | Generated from content |
+
+## Replacing the placeholder content
+
+The site currently ships **labelled placeholder content** — a banner on every page
+says so until you flip the flag. In order:
+
+1. [src/content/site.ts](src/content/site.ts) — name, domain, author rank/proof, prices, booking link, socials, contact email.
+2. [src/content/comps.ts](src/content/comps.ts) — replace the three example comps with 8–12 real ones. Keep `coreUnits` and `definingTrait` accurate: together they are the assignment signature, and a board only counts toward a comp when that trait is active on it.
+3. [src/content/patches.ts](src/content/patches.ts) — write the 18.5 entry from Riot's notes, in your own words.
+4. [src/app/terms/page.tsx](src/app/terms/page.tsx) and [src/app/privacy/page.tsx](src/app/privacy/page.tsx) — fill the bracketed placeholders, then get them reviewed.
+5. [src/content/flags.ts](src/content/flags.ts) — set `PLACEHOLDER_CONTENT = false` once the above is true.
+
+## Database
+
+The schema for raw match data, curated comps and derived stats lives in
+[src/db/schema.ts](src/db/schema.ts); the migration is already generated in
+[drizzle/](drizzle/).
+
+```bash
+npm run db:generate   # after editing the schema
+npm run db:migrate    # apply to DATABASE_URL
+npm run db:studio     # browse
+```
+
+### Where the numbers come from
+
+Editorial content stays in `src/content` — typed, reviewed in git, editable without
+a database. Numbers come from Postgres. The target is the same either way, so no
+page component knows the difference.
+
+| State | What renders |
+|---|---|
+| No `DATABASE_URL` | The curated snapshot in `src/content/comps.ts` |
+| Postgres unreachable | That same fallback, plus one warning in the server log |
+| Postgres answers, comp has rows | Those numbers |
+| Postgres answers, comp has no rows | **“Collecting data”** |
+
+The last row is deliberate. An empty database is a measurement — nothing has been
+crawled for that comp yet — and falling back to the content file there would pass
+placeholder figures off as real ones. Outages fall back; emptiness does not.
+
+`comp_stats` stores **counts** (games, place sum, top-4 count, win count, boards),
+not rates, because counts combine across regions exactly and pick rate needs its
+denominator. Averages, rates and the Wilson bound are derived in one place,
+[src/lib/stats-source.ts](src/lib/stats-source.ts). Comp pages revalidate every
+five minutes, so a fresh aggregation appears without a redeploy.
+
+The seam is [src/lib/data.ts](src/lib/data.ts) — every page reads through it.
+
+### Unit names, costs and icons
+
+Those come from the set catalogue, not from editorial content. A comp's board in
+[src/content/comps.ts](src/content/comps.ts) lists only **which** unit (`id`, the
+Riot apiName), its target star and its items; name, cost and icon are looked up in
+`units` — the table `npm run crawl -- load-assets` fills from Community Dragon —
+and attached as `visibleBoard` by [src/lib/data.ts](src/lib/data.ts).
+
+There is no content fallback for unit identity, deliberately. A slot the catalogue
+cannot resolve renders its raw id with “Not in the set catalogue” rather than a
+made-up champion: a placeholder id or a renamed unit becomes visible instead of
+plausible. That is also what a board looks like against a set whose assets have
+never been loaded — it says so, slot by slot, instead of guessing.
+
+The three example comps are real Set 18 boards: every id resolves against `units`,
+every item is an item the set actually ships, and each board activates at least
+three trait breakpoints (counted by hand against `traits.breakpoints`). They are
+still examples — the names say so, and the notes and numbers are illustration —
+but the champions, costs and icons on them come from the catalogue.
+
+## Crawler (`worker/`)
+
+Four stages, runnable individually or as a loop. All queue state lives in
+Postgres, so a crashed run resumes where it stopped instead of starting over.
+
+| Command | Does |
+|---|---|
+| `npm run crawl -- seed` | Load the challenger/grandmaster ladders into `players` |
+| `npm run crawl -- discover` | Turn tracked players into queued match ids |
+| `npm run crawl -- fetch` | Fetch queued matches, normalise, write all five tables |
+| `npm run crawl -- reprocess` | Rebuild rows from stored raw payloads after a normaliser fix |
+| `npm run crawl -- load-assets` | Load a set's units, traits, items and augments from Community Dragon |
+| `npm run crawl -- sync-comps` | Push curated comps from `src/content` into the `comps` table |
+| `npm run crawl -- aggregate` | Assign boards to comps and materialise `comp_stats` |
+| `npm run crawl -- candidates` | Rank recurring unit sets in the crawled data (evidence for new comps) |
+| `npm run crawl -- once` | seed → discover → fetch, one pass |
+| `npm run crawl -- run` | Continuous loop: discover + fetch, re-seed periodically, aggregate on a timer |
+| `npm run crawl -- stats` | Queue health and table counts |
+
+Needs `DATABASE_URL` and `RIOT_API_KEY`, both read from `.env` when the file
+exists. Key knobs are in [worker/config.ts](worker/config.ts); `.env.example`
+documents them. The very first live run is
+`npm run crawl -- once && npm run crawl -- aggregate`.
+
+### Compression: boards → comps → stats
+
+`aggregate` scores every crawled board against the published comps. A board
+counts for a comp when **at least 60% of the comp's core units are present**
+(`CRAWL_ASSIGN_THRESHOLD`) **and** its `definingTrait`, when set, is active. Ties
+go to the comp with more core units, so a specific definition beats a loose one.
+
+Boards that match nothing are counted and reported, not hidden. That number is
+the point: a high unclassified rate means the curated comps have stopped
+describing what the ladder is actually playing — which is exactly the signal the
+`/lab` discovery loop is meant to act on.
+
+Stats are written per `(patch, region, rank bucket)` as a **replace**, so a
+re-run can never leave a comp's stale numbers behind. Comps are ordered by the
+Wilson 95% lower bound of their top-4 rate, so a 40-game comp cannot outrank a
+5,000-game one. Rank buckets describe provenance, not each player's rank: Riot
+does not expose rank-at-time-of-match, so a match counts toward `master+` when
+at least one participant is a tracked Master+ player.
+
+```bash
+npm run crawl -- sync-comps   # after editing src/content/comps.ts
+npm run crawl -- aggregate    # optionally: --patch 18.5 --region EUW
+```
+
+### Finding comps in the data
+
+Curated comps are written by hand, but *which units go together* should not be a
+guess. `candidates` mines the crawled boards for unit sets that recur, and ranks
+them by how they actually placed:
+
+```bash
+npm run crawl -- candidates                              # best placement first
+npm run crawl -- candidates --bucket master+ --min-games 100
+npm run crawl -- candidates --set 19 --json > candidates.json
+```
+
+| Flag | Meaning |
+|---|---|
+| `--min-games` | boards a shape needs before it is reported (default 20) |
+| `--core` | largest set to mine, 2–5 (default 4) |
+| `--bucket` | `all` (default) or `master+` |
+| `--patch` / `--region` / `--set` | narrow the scope |
+| `--json` | the same evidence as JSON, for scripting |
+
+A shape is reported only when a *larger* shape does not already explain it:
+`{A,B,C}` with 5,000 boards is dropped when `{A,B,C,D}` covers ≥90% of them. A
+60% overlap keeps both, because those really are two different boards. Each
+candidate prints its board count, average placement next to the scope baseline,
+top-4 and win rate, the star level and two most common items per unit, and the
+traits active on at least half of those boards — which is most of what the
+`coreUnits`, item and `definingTrait` fields of a comp need.
+
+It is read-only: it never writes a comp, and it says nothing about whether a
+shape is *good* to recommend. That remains the editorial call. On 160,000 boards
+(about 20,000 matches) mining takes roughly 40 seconds and 160 MB.
+
+### Loading a set's units, traits, items and augments
+
+The crawl stores Riot's ids verbatim (`DA_18_Maokai`, `DA_18_Elderwood`,
+`TFT_Item_InfinityEdge`). `load-assets` turns those ids into names, costs, trait
+breakpoints and icons, pulled from
+[Community Dragon](https://raw.communitydragon.org/latest/cdragon/tft/en_us.json)
+— the same data the client ships, and the only public source with trait
+breakpoints and augment rarity:
+
+```bash
+npm run crawl -- load-assets                      # newest set in the payload
+npm run crawl -- load-assets --set 18             # an explicit set
+npm run crawl -- load-assets --set 18 --mutator TFTSet18_PAIRS
+CDRAGON_URL=https://raw.communitydragon.org/15.21/cdragon/tft/en_us.json \
+  npm run crawl -- load-assets --set 18           # pin a patch to reproduce
+```
+
+| Flag | Meaning |
+|---|---|
+| `--set` | set to load (default: the newest set the payload contains) |
+| `--mutator` | a mode variant instead of the base set, e.g. `TFTSet18_PVEMODE` |
+| `--source` | catalogue URL (also `CDRAGON_URL`) |
+
+It writes `units`, `traits`, `items` and `augments` and then reports what it did,
+including how much of the **crawled** data it can now name:
+
+```
+units     91  (17 traitless summons kept)
+traits    36
+items     772  (special 588, component 83, completed 78, emblem 23)
+augments  595  (Gold 279, Silver 162, Prismatic 154)
+images    1490/1494 rows have a URL  (4 missing in payload)
+pruned    nothing stale
+
+coverage  set 18 · 24 boards crawled
+  units      0/10   ids resolved (0%)
+          unresolved: TFT18_STUB_01, TFT18_STUB_02, …
+```
+
+That coverage block is the point of the job: a catalogue nobody's ids match is a
+silent failure, and it is the first thing to look at after a set launch.
+
+Behaviour worth knowing:
+
+- **Idempotent.** Rows upsert on their primary key, so re-running after a patch
+  is safe. Rows the payload no longer lists are deleted — that is the `pruned`
+  line — so a renamed unit converges instead of lingering.
+- **One set at a time.** Tables hold every set you have loaded; only the loaded
+  set's rows are pruned. Item ids are global, so a shared item keeps the
+  `set_number` of the load that touched it last.
+- **A variant replaces the set.** `--mutator` loads a mode's version of the same
+  set number, so loading `PVEMODE` prunes the base set's augments. Reload the
+  base set afterwards.
+- **A new set is a data load.** On launch day, `load-assets --set 19` is the
+  whole change. If 19 is only in the PBE build, point `CDRAGON_URL` at it; a set
+  the payload does not contain is refused with the list of sets it does.
+- **Augment tier is inferred, and says so.** The payload has no rarity field. The
+tier is read from the icon name (`_i` / `-ii` / `_iii`) and, where the icon is a
+  shared placeholder, from the augment's rarity tag — whose meaning is *learned*
+  from the augments whose icon states the tier, not hardcoded. On set 18 the two
+  agree for 168 of 170 augments that carry both, which is what makes the tag
+  safe to use on the rest; the 16 icon/tag conflicts favour the tag, because Riot
+  reuses one icon across different rarities (`constructacompanion_iii.tex` is both
+  a Gold and a Silver augment).
+
+Inside the crawler container, where `DATABASE_URL` is already set:
+
+```bash
+docker compose -f compose.crawl.yml exec crawler npx tsx worker/cli.ts load-assets --set 18
+```
+
+The loader is not part of the `run` loop — run it when a set launches or after a
+trait/item rework, and the crawl will resolve against it from then on.
+
+### Rehearsing without an API key
+
+Dev keys expire every 24 hours, so there is a local stub of the three endpoints
+the crawler uses:
+
+```bash
+npm run crawl:stub        # stub Riot API on 127.0.0.1:4010
+
+RIOT_API_BASE_URL=http://127.0.0.1:4010 RIOT_API_KEY=stub \
+  DATABASE_URL=... npm run crawl -- once
+
+npm run crawl -- stats
+```
+
+The stub returns the same twelve match ids for every player on purpose, so a run
+proves the queue dedupes. `STUB_429_EVERY=3` makes every third request answer
+429 to exercise the retry path.
+
+### Running it continuously
+
+`npm run crawl -- run` is the production loop: seed → discover → fetch, then
+re-aggregate on a timer so the site's numbers follow the data without a redeploy.
+It ships as a container with its own Postgres:
+
+```bash
+RIOT_API_KEY=RGAPI-... docker compose -f compose.crawl.yml up -d --build
+docker compose -f compose.crawl.yml logs -f crawler
+docker compose -f compose.crawl.yml stop     # SIGTERM, exits 0 in about a second
+```
+
+| Behaviour | What actually happens |
+|---|---|
+| Cycle | re-seed every 12th cycle, discover, fetch, then aggregate once `CRAWL_AGGREGATE_MINUTES` has elapsed |
+| Freshness | pages revalidate every 5 minutes, so a new aggregation is visible within 5 minutes without a redeploy |
+| Stop | SIGTERM sets a flag checked between players and between matches; the run loop exits 0 and never interrupts a write |
+| Hung shutdown | a 20 s watchdog exits anyway, logging the stage it was in — a stuck socket must not become a SIGKILL |
+| Hard kill | SIGKILL is safe: writes are per-match transactions and stale claims are reclaimed after `CRAWL_CLAIM_TIMEOUT_MINUTES` |
+| Expired key | a 401 fails that cycle but not the loop; it retries next cycle and logs the reason. Dev keys expire every 24 h — regenerate and `docker compose restart crawler` |
+| Set rollover | the set comes from `tft_set_number` in each match, so no code or config change is needed on the 19th |
+
+Nothing can be classified for a new set until it has comps. Aggregation says so
+explicitly rather than reporting 0% pick rate:
+
+```
+WARN [aggregate] set has crawled boards but no published comps — all of them are unclassified
+  {"setNumber":19,"patch":"19.1","matches":24,
+   "action":"add set 19 comps to src/content/comps.ts, then run `npm run crawl -- sync-comps` and aggregate again"}
+```
+
+So the rollover is a content task on the day, not a deploy: add the new set's
+comps, run `sync-comps`, and the next aggregation pass fills `comp_stats`.
+
+### Safety properties (each one verified against Postgres)
+
+- **Dedupe by `match_id`** before fetching — every match is visible from eight
+  PUUIDs, so this is the difference between 12 fetches and 960.
+- **`FOR UPDATE SKIP LOCKED` claims**, so parallel fetchers never take the same
+  row, and stale claims are reclaimed after a crash.
+- **Rate limiting at 65% of the published quota** with a global pause on 429.
+- **Raw payloads stored**, so a normaliser change is a replay (`reprocess`), not
+  a re-crawl.
+- **`ON CONFLICT DO NOTHING`** throughout: re-delivering a queue row is a no-op.
+
+## Deploying
+
+Any Node host works (Vercel is the obvious fit for Next.js). You need a **public
+HTTPS URL** before applying for a Riot production key, because the application is
+reviewed against a live site with working terms and privacy pages.
+
+## Status
+
+Built and verified: all v1 pages, the schema and legal pages, the crawl pipeline
+(seed → discover → fetch → normalise), comp assignment with Wilson bounds, the
+tier list and comp pages reading `comp_stats` with a content fallback, and the
+continuous containerised loop above.
+
+Not yet done: the comps are still placeholders, so aggregation classifies 0% of
+boards; there is no Riot **production** key yet (dev keys expire every 24 h); and
+nothing is deployed. See [Phase 1](docs/roadmap.md#phase-1--crawler--aggregation)
+onward.

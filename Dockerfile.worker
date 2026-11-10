@@ -1,0 +1,28 @@
+# Crawler image: runs `worker/cli.ts run` — the continuous loop.
+#
+#   docker build -f Dockerfile.worker -t tft-crawler .
+#   docker run --env-file .env.crawler tft-crawler
+#
+# Built for the worker, not the website. The Next.js app deploys separately.
+
+FROM node:24-slim
+
+WORKDIR /app
+
+# Dependencies first, so code edits do not invalidate the install layer.
+COPY package.json package-lock.json ./
+RUN npm ci --no-audit --no-fund
+
+COPY tsconfig.json drizzle.config.ts ./
+COPY drizzle ./drizzle
+COPY worker ./worker
+COPY src ./src
+
+ENV NODE_ENV=production
+
+# Apply migrations on start: a fresh volume becomes usable without a manual step.
+#
+# `node --import tsx` (not `npx tsx`) because npx spawns a child: Docker sends
+# SIGTERM to PID 1, which would be npx, and the loop would be killed instead of
+# shutting down cleanly. With `exec`, node is PID 1 and receives the signal.
+CMD ["sh", "-c", "npx drizzle-kit migrate && exec node --import tsx worker/cli.ts run"]

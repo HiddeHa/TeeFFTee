@@ -1,0 +1,20 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1793201335319,
+      "tag": "0000_worried_gunslinger",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1793208833953,
+      "tag": "0001_traits_image_url",
+      "breakpoints": true
+    }
+  ]
+}

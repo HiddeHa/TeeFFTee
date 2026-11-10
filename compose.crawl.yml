@@ -1,0 +1,53 @@
+# Continuous crawler + its own Postgres.
+#
+#   RIOT_API_KEY=RGAPI-... docker compose -f compose.crawl.yml up -d --build
+#   docker compose -f compose.crawl.yml logs -f crawler
+#
+# The API key is required and is read from your environment or a .env file in
+# this directory — it is never baked into the image.
+
+services:
+  db:
+    image: postgres:18
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: tft
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-tft}
+      POSTGRES_DB: tft
+    volumes:
+      # postgres:18 stores data in a versioned subdirectory; the mount point is
+      # /var/lib/postgresql, not .../data, or the container refuses to start.
+      - crawler-db:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U tft -d tft"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  crawler:
+    build:
+      context: .
+      dockerfile: Dockerfile.worker
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    stop_grace_period: 45s
+    environment:
+      DATABASE_URL: postgres://tft:${POSTGRES_PASSWORD:-tft}@db:5432/tft
+      # Dev keys expire every 24 hours. A production key is what you want here.
+      RIOT_API_KEY: ${RIOT_API_KEY:?set RIOT_API_KEY in your environment or a .env file}
+      RIOT_KEY_TYPE: ${RIOT_KEY_TYPE:-development}
+      RIOT_REGIONS: ${RIOT_REGIONS:-EUW,KR}
+      CRAWL_BUDGET_PERCENT: ${CRAWL_BUDGET_PERCENT:-65}
+      CRAWL_SEED_TIERS: ${CRAWL_SEED_TIERS:-challenger,grandmaster}
+      CRAWL_CONCURRENCY: ${CRAWL_CONCURRENCY:-4}
+      CRAWL_LOOP_INTERVAL_SECONDS: ${CRAWL_LOOP_INTERVAL_SECONDS:-300}
+      # How often comp_stats is re-materialised. Pages revalidate every 5 minutes,
+      # so this is the effective freshness of the numbers on the site.
+      CRAWL_AGGREGATE_MINUTES: ${CRAWL_AGGREGATE_MINUTES:-30}
+      # Point at a stub for a rehearsal run; empty means the live Riot API.
+      RIOT_API_BASE_URL: ${RIOT_API_BASE_URL:-}
+
+volumes:
+  crawler-db:
