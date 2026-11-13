@@ -1,8 +1,10 @@
 import { count, desc, eq, sql } from "drizzle-orm";
 import { NextResponse } from "next/server";
 
+import type { RankBucket } from "@/content/types";
 import { getDb, useHttpDriver } from "@/db/client";
 import { compStats, comps, matches, participants, patches } from "@/db/schema";
+import { comparePatch } from "@/lib/stats-source";
 
 /**
  * GET /api/health — the deployment smoke signal.
@@ -42,8 +44,13 @@ type HealthPayload = {
     boards: number;
     publishedComps: number;
     statRows: number;
-    /** Boards assigned to a comp — the number the tier list actually shows. */
+    /**
+     * Games assigned to a published comp — a board count, not a sum of metrics.
+     * Counted once, in `classifiedScope`; never added across rank buckets.
+     */
     classifiedGames: number;
+    /** The single scope `classifiedGames` was counted in. Null when no rows. */
+    classifiedScope: { patch: string; rankBucket: string } | null;
     latestPatch: string | null;
     statsComputedAt: string | null;
     statsAgeMinutes: number | null;
@@ -83,6 +90,50 @@ function describeError(error: unknown): { message: string; code?: string } {
   return code ? { message: sanitized, code } : { message: sanitized };
 }
 
+/**
+ * `comp_stats` holds one row per (patch, region, rank bucket), and the same board
+ * is counted once in **every** bucket. Summing all rows therefore reports each
+ * board twice (once for `master+`, once for `all`) — which is how this endpoint
+ * used to claim 7,252 classified games from a 4,553-board corpus.
+ *
+ * A board count has to be summed inside one bucket, in one patch, across regions
+ * — exactly the scope the tier list renders. These are the buckets in preference
+ * order, mirroring `DEFAULT_RANK` in src/lib/data.ts.
+ */
+const RANK_PREFERENCE: RankBucket[] = ["master+", "diamond+", "all"];
+
+type ScopeRow = { patch: string; rankBucket: string; games: number };
+
+/**
+ * The scope the tier list shows: newest patch with stats, one rank bucket.
+ * Falls back to any bucket present if the preferred ones are absent, so a
+ * database crawled only at `all` still reports a number instead of zero.
+ */
+function tierListScope(rows: ScopeRow[]): (ScopeRow & { rankBucket: RankBucket }) | null {
+  const first = rows[0];
+  if (!first) return null;
+
+  const newestPatch = rows.reduce(
+    (latest, row) => (comparePatch(row.patch, latest) > 0 ? row.patch : latest),
+    first.patch,
+  );
+
+  const inPatch = rows.filter((row) => row.patch === newestPatch);
+  // Prefer a bucket that actually has games; an empty preferred bucket is a
+  // fact about the crawl, not a reason to report zero.
+  const populated = inPatch.filter((row) => row.games > 0);
+  const pool = populated.length > 0 ? populated : inPatch;
+
+  for (const bucket of RANK_PREFERENCE) {
+    const match = pool.find((row) => row.rankBucket === bucket);
+    if (match) return { ...match, rankBucket: bucket };
+  }
+
+  const fallback = pool[0];
+  if (!fallback) return null;
+  return { ...fallback, rankBucket: fallback.rankBucket as RankBucket };
+}
+
 /** `max(computed_at)` arrives as Date or string depending on the driver. */
 function toIso(value: unknown): string | null {
   if (value instanceof Date) return value.toISOString();
@@ -120,24 +171,27 @@ export async function GET() {
     const db = getDb();
 
     // One round trip: counts are cheap but each separate query costs a request.
-    const [matchRows, boardRows, compRows, statsRows, statPatchRows, patchRows] = await Promise.all([
+    const [matchRows, boardRows, compRows, statsRows, scopeRows, patchRows] = await Promise.all([
       db.select({ n: count() }).from(matches),
       db.select({ n: count() }).from(participants),
       db.select({ n: count() }).from(comps).where(eq(comps.published, true)),
       db
         .select({
           n: count(),
-          games: sql<number>`coalesce(sum(${compStats.games}), 0)::int`,
           computedAt: sql<unknown>`max(${compStats.computedAt})`,
         })
         .from(compStats),
-      // The patch the numbers actually belong to beats a catalogue row: `patches`
-      // is populated by the asset loader, which may lag or be empty.
+      // Grouped, not summed across buckets: the choice of bucket happens in
+      // `tierListScope`, where the scope can also be reported. Summing regions
+      // inside that one bucket is correct, which is why the grouping stops here.
       db
-        .select({ patch: compStats.patch })
+        .select({
+          patch: compStats.patch,
+          rankBucket: compStats.rankBucket,
+          games: sql<number>`coalesce(sum(${compStats.games}), 0)::int`,
+        })
         .from(compStats)
-        .orderBy(desc(compStats.computedAt))
-        .limit(1),
+        .groupBy(compStats.patch, compStats.rankBucket),
       db
         .select({ patch: patches.patch })
         .from(patches)
@@ -147,14 +201,19 @@ export async function GET() {
 
     const latencyMs = Math.round(performance.now() - startedAt);
     const computedAt = toIso(statsRows[0]?.computedAt ?? null);
+    const scope = tierListScope(scopeRows);
 
     const corpus: NonNullable<HealthPayload["corpus"]> = {
       matches: matchRows[0]?.n ?? 0,
       boards: boardRows[0]?.n ?? 0,
       publishedComps: compRows[0]?.n ?? 0,
       statRows: statsRows[0]?.n ?? 0,
-      classifiedGames: statsRows[0]?.games ?? 0,
-      latestPatch: statPatchRows[0]?.patch ?? patchRows[0]?.patch ?? null,
+      classifiedGames: scope?.games ?? 0,
+      classifiedScope: scope ? { patch: scope.patch, rankBucket: scope.rankBucket } : null,
+      // The patch the numbers belong to is the patch they were counted in. A
+      // catalogue row is only a fallback: `patches` is filled by the asset
+      // loader, which may lag or be empty.
+      latestPatch: scope?.patch ?? patchRows[0]?.patch ?? null,
       statsComputedAt: computedAt,
       statsAgeMinutes: computedAt
         ? Math.max(0, Math.round((Date.now() - new Date(computedAt).getTime()) / 60_000))
