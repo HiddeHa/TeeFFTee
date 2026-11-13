@@ -3,7 +3,7 @@ import "./load-env";
 
 import { parseArgs } from "node:util";
 
-import { aggregate, getSetSummary } from "./aggregate";
+import { aggregate, bootstrapNewPatches, getSetSummary } from "./aggregate";
 import { formatAssetReport, loadAssets } from "./assets";
 import { findCandidates, formatReport, type Scope } from "./candidates";
 import { KEY_LIMITS, config, requireApiKey, type Region } from "./config";
@@ -33,6 +33,7 @@ Commands
   load-assets Load a set's units, traits, items and augments from Community Dragon
   sync-comps  Push curated comps from src/content into Postgres
   aggregate   Assign boards to comps and materialise comp_stats
+  bootstrap   Seed comp_stats for any patch/region with games but no rows yet
   candidates  Rank frequent unit sets in the crawled data (evidence for comps)
   once        seed -> discover -> fetch in one pass (rehearsal)
   run         Continuous loop: discover + fetch, re-seed periodically
@@ -287,6 +288,26 @@ async function main(): Promise<void> {
       break;
     }
 
+    case "bootstrap": {
+      const result = await bootstrapNewPatches();
+      log.info("bootstrap complete", {
+        seeded: result.bootstrapped.length,
+        waitingForComps: result.waitingForComps.length,
+        rowsWritten: result.rowsWritten,
+      });
+
+      for (const scope of result.scopes) {
+        const share =
+          scope.boards === 0 ? 0 : Math.round((scope.unclassified / scope.boards) * 1000) / 10;
+        console.log(
+          `  ${scope.patch} ${scope.region.padEnd(4)} boards=${String(scope.boards).padEnd(6)} ` +
+            `classified=${String(scope.classified).padEnd(6)} unclassified=${scope.unclassified} (${share}%) ` +
+            `rows=${scope.rows}`,
+        );
+      }
+      break;
+    }
+
     case "candidates": {
       const bucket =
         values.bucket === "master+" || values.bucket === "all" ? values.bucket : undefined;
@@ -397,6 +418,20 @@ async function main(): Promise<void> {
             shouldStop: () => stopping,
           });
           log.info("fetch complete", fetched);
+
+          // Seed a patch window the moment its first games land. Movers compare
+          // two windows, so waiting for the aggregate timer would delay them by
+          // up to CRAWL_AGGREGATE_MINUTES for no reason. A no-op once seeded.
+          if (!stopping) {
+            phase = "bootstrap";
+            const seeded = await bootstrapNewPatches();
+            if (seeded.bootstrapped.length > 0) {
+              log.info("bootstrap seeded new patch windows", {
+                scopes: seeded.bootstrapped,
+                rows: seeded.rowsWritten,
+              });
+            }
+          }
 
           // Refresh the derived layer on a timer: fetching without aggregating
           // leaves the site showing yesterday's numbers.

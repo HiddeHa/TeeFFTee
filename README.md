@@ -9,6 +9,10 @@ layer, and the analysis seam that will hold the crawler.
 |---|---|
 | [docs/blueprint.md](docs/blueprint.md) | Product definition, positioning, scope, data strategy, pipeline architecture, data model, comp-assignment algorithm, stack, coaching funnel, Riot compliance, metrics, risks |
 | [docs/roadmap.md](docs/roadmap.md) | Week-by-week plan to the Set 19 launch on Dec 1, launch runbook, cut list, post-launch milestones |
+| [docs/plan.md](docs/plan.md) | Manager's board: verified state, critical path, owner inputs, workstream lanes, subagent protocol, next steps in order |
+| [docs/decisions.md](docs/decisions.md) | Locked decisions (D1–D15), the production sequence, and what each call changes |
+| [docs/redesign-plan.md](docs/redesign-plan.md) | Competitive teardown of tftacademy / tactics.tools / tftactics.gg, the target IA, and phases R1–R4 |
+| [docs/guide-standard.md](docs/guide-standard.md) | What a comp guide must answer, the six-answer template, and the measured-versus-judgement rule |
 
 ## Getting started
 
@@ -119,6 +123,7 @@ Postgres, so a crashed run resumes where it stopped instead of starting over.
 | `npm run crawl -- load-assets` | Load a set's units, traits, items and augments from Community Dragon |
 | `npm run crawl -- sync-comps` | Push curated comps from `src/content` into the `comps` table |
 | `npm run crawl -- aggregate` | Assign boards to comps and materialise `comp_stats` |
+| `npm run crawl -- bootstrap` | Seed `comp_stats` for any patch/region with games but no rows yet (also runs each loop cycle) |
 | `npm run crawl -- candidates` | Rank recurring unit sets in the crawled data (evidence for new comps) |
 | `npm run crawl -- once` | seed → discover → fetch, one pass |
 | `npm run crawl -- run` | Continuous loop: discover + fetch, re-seed periodically, aggregate on a timer |

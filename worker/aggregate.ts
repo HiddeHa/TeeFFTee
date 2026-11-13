@@ -318,3 +318,130 @@ export async function aggregate(
 
   return summary;
 }
+
+/* -------------------------------------------------------------------------- */
+/* Bootstrap: seed a patch window as soon as its first games land             */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * A (patch, region) pair that exists in `matches`, with what aggregate needs to
+ * know about it: whether it already has stats, and whether its set has comps.
+ */
+export type ScopeSeed = {
+  patch: string;
+  region: string;
+  setNumber: number;
+  seeded: boolean;
+  /** Published comps for the set. Zero means aggregation would classify nothing. */
+  comps: number;
+};
+
+export type BootstrapPlan = {
+  ready: ScopeSeed[];
+  waitingForComps: ScopeSeed[];
+};
+
+/**
+ * A patch window is worth seeding when it has games and its set has comps, but
+ * no `comp_stats` rows yet. A set with no comps is reported separately: seeding
+ * it would write zero rows and warn, so it waits for content instead.
+ *
+ * Pure, so the decision can be checked without a database.
+ */
+export function selectBootstrapScopes(scopes: ScopeSeed[]): BootstrapPlan {
+  const pending = scopes.filter((scope) => !scope.seeded);
+  return {
+    ready: pending.filter((scope) => scope.comps > 0),
+    waitingForComps: pending.filter((scope) => scope.comps === 0),
+  };
+}
+
+async function readScopeSeeds(): Promise<ScopeSeed[]> {
+  const sql = db();
+  return sql<ScopeSeed[]>`
+    SELECT
+      scopes.patch,
+      scopes.region,
+      scopes.set_number AS "setNumber",
+      EXISTS (
+        SELECT 1 FROM comp_stats s
+        WHERE s.patch = scopes.patch AND s.region = scopes.region
+      ) AS seeded,
+      (
+        SELECT count(*)::int FROM comps c
+        WHERE c.set_number = scopes.set_number AND c.published
+      ) AS comps
+    FROM (SELECT DISTINCT patch, region, set_number FROM matches) AS scopes
+    ORDER BY scopes.patch, scopes.region
+  `;
+}
+
+export type BootstrapSummary = AggregateSummary & {
+  bootstrapped: { patch: string; region: string }[];
+  waitingForComps: { patch: string; region: string; setNumber: number }[];
+};
+
+/** Logged once per scope per process, so a set waiting on content does not spam
+ * the loop log every five minutes. */
+const warnedWaitingScopes = new Set<string>();
+
+/**
+ * Seed every patch window that has games but no `comp_stats` rows yet.
+ *
+ * The periodic `aggregate()` refreshes existing scopes; this fills in a brand new
+ * one — the patch-day case. Doing it from the run loop means the site's movers
+ * can compare two windows as soon as the new patch has games, instead of waiting
+ * up to `CRAWL_AGGREGATE_MINUTES` for the timer.
+ *
+ * Idempotent: once a scope has rows it is skipped, and a set without comps is
+ * reported rather than seeded. `aggregate` still replaces rows per scope, so a
+ * re-run can never leave partial numbers behind.
+ */
+export async function bootstrapNewPatches(): Promise<BootstrapSummary> {
+  const plan = selectBootstrapScopes(await readScopeSeeds());
+
+  const summary: BootstrapSummary = {
+    scopes: [],
+    rowsWritten: 0,
+    compsLoaded: 0,
+    sets: [],
+    bootstrapped: plan.ready.map(({ patch, region }) => ({ patch, region })),
+    waitingForComps: plan.waitingForComps.map(({ patch, region, setNumber }) => ({
+      patch,
+      region,
+      setNumber,
+    })),
+  };
+
+  const fresh = plan.waitingForComps.filter((scope) => {
+    const key = `${scope.patch}/${scope.region}`;
+    if (warnedWaitingScopes.has(key)) return false;
+    warnedWaitingScopes.add(key);
+    return true;
+  });
+
+  if (fresh.length > 0) {
+    log.warn("new patch window has games but its set has no published comps", {
+      scopes: fresh.map(({ patch, region, setNumber }) => ({ patch, region, setNumber })),
+      action:
+        "add comps for the set to src/content/comps.ts, then run sync-comps — bootstrap seeds on the next cycle",
+    });
+  }
+
+  for (const scope of plan.ready) {
+    const result = await aggregate({ patch: scope.patch, region: scope.region });
+    summary.scopes.push(...result.scopes);
+    summary.rowsWritten += result.rowsWritten;
+    summary.compsLoaded = result.compsLoaded;
+    summary.sets = result.sets;
+  }
+
+  if (plan.ready.length > 0) {
+    log.info("new patch window seeded", {
+      scopes: summary.bootstrapped,
+      rows: summary.rowsWritten,
+    });
+  }
+
+  return summary;
+}

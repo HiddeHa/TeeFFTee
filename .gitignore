@@ -13,3 +13,13 @@ build/
 .freebuff/
 .cloud-attachments/
 *.log
+/freebuff-sites-build/
+/.open-next/
+/.wrangler/
+
+# Hosted Postgres connection string, provided by the owner for deploys.
+.neon-url.txt
+.env.backup-local-db
+.neon
+
+.pilot/

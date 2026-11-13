@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 
 import { CoachingCTA } from "@/components/coaching-cta";
-import { DataNote } from "@/components/data-note";
 import { TrackedLink } from "@/components/tracked-link";
 import { site } from "@/content/site";
 
@@ -130,13 +129,6 @@ export default function CoachingPage() {
               </div>
             </div>
           ))}
-        </div>
-        <div className="mt-3">
-          <DataNote>
-            Prices and packages are placeholders in{" "}
-            <code className="font-mono text-[11px]">src/content/site.ts</code>. Decide how
-            many sessions a week you can actually deliver before publishing them.
-          </DataNote>
         </div>
       </section>
 

@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { DataNote } from "@/components/data-note";
 import { METHODOLOGY, RIOT_DISCLAIMER, site } from "@/content/site";
 
 export const metadata: Metadata = {
@@ -39,18 +38,14 @@ export default function AboutPage() {
       <section className="card p-5">
         <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
           <h2 className="text-lg font-semibold">{site.author.name}</h2>
-          <span className="text-sm text-muted">{site.author.handle}</span>
+          {site.author.handle ? (
+            <span className="text-sm text-muted">{site.author.handle}</span>
+          ) : null}
         </div>
         <p className="mt-2 text-sm text-fg/80">
           {site.author.currentRank} · {site.author.server} (peak {site.author.peakRank})
         </p>
         <p className="mt-2 text-sm leading-relaxed text-muted">{site.author.proof}</p>
-        <div className="mt-4">
-          <DataNote>
-            This block is a placeholder. Your rank, server and track record are the main
-            reason a stranger trusts the numbers — fill it in before launch.
-          </DataNote>
-        </div>
       </section>
 
       <section className="mt-10">

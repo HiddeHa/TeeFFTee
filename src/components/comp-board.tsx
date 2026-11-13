@@ -1,15 +1,9 @@
 import type { BoardUnit } from "@/content/types";
+import { AssetImage } from "@/components/asset-image";
+import { COST_EDGE } from "@/lib/costs";
 import { classNames } from "@/lib/format";
 
-/** Left border encodes champion cost, the way the in-game shop does. */
-const COST_EDGE: Record<number, string> = {
-  0: "border-l-slate-600",
-  1: "border-l-slate-500",
-  2: "border-l-emerald-500",
-  3: "border-l-sky-500",
-  4: "border-l-violet-500",
-  5: "border-l-amber-400",
-};
+import { ItemIcon } from "./item-icon";
 
 /**
  * The board.
@@ -38,22 +32,18 @@ export function CompBoard({ board }: { board: BoardUnit[] }) {
             )}
           >
             <div className="flex items-start gap-2.5">
-              {unit.imageUrl ? (
-                <img
-                  src={unit.imageUrl}
-                  alt=""
-                  width={40}
-                  height={40}
-                  loading="lazy"
-                  decoding="async"
-                  className="h-10 w-10 shrink-0 rounded border border-line bg-surface object-cover"
-                />
-              ) : (
-                <span
-                  aria-hidden
-                  className="h-10 w-10 shrink-0 rounded border border-dashed border-line bg-surface"
-                />
-              )}
+              <AssetImage
+                src={unit.imageUrl}
+                width={40}
+                height={40}
+                className="h-10 w-10 shrink-0 rounded border border-line bg-surface object-cover"
+                fallback={
+                  <span
+                    aria-hidden
+                    className="h-10 w-10 shrink-0 rounded border border-dashed border-line bg-surface"
+                  />
+                }
+              />
 
               <div className="min-w-0 flex-1">
                 <div className="flex items-baseline justify-between gap-2">
@@ -80,13 +70,17 @@ export function CompBoard({ board }: { board: BoardUnit[] }) {
               </div>
             </div>
 
-            <ul className="mt-2 space-y-1 text-[11px] leading-snug text-muted">
-              {unit.items.length > 0 ? (
-                unit.items.map((item) => <li key={item}>{item}</li>)
-              ) : (
-                <li className="text-muted/50">No items</li>
-              )}
-            </ul>
+            {unit.resolvedItems.length > 0 ? (
+              <ul className="mt-2 space-y-1">
+                {unit.resolvedItems.map((item, index) => (
+                  <li key={`${item.id}-${index}`} className="min-w-0">
+                    <ItemIcon item={item} size={16} showName />
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="mt-2 text-[11px] leading-snug text-muted/50">No items</p>
+            )}
 
             {unresolved ? (
               <p className="mt-2 text-[10px] leading-snug text-muted/70">

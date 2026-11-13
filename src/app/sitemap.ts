@@ -11,7 +11,17 @@ import { site } from "@/content/site";
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = site.url.replace(/\/$/, "");
 
-  const staticRoutes = ["", "/comps", "/coaching", "/about", "/terms", "/privacy"].map(
+  const staticRoutes = [
+    "",
+    "/comps",
+    "/comps/stats",
+    "/teambuilder",
+    "/tier-lists",
+    "/coaching",
+    "/about",
+    "/terms",
+    "/privacy",
+  ].map(
     (path) => ({
       url: `${base}${path}`,
       changeFrequency: "weekly" as const,

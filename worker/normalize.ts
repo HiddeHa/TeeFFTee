@@ -1,3 +1,5 @@
+import { patches } from "../src/content/patches";
+
 import { config } from "./config";
 import { db } from "./db";
 import type { TftMatchDto, TftParticipantDto, TftUnitDto } from "./riot-types";
@@ -50,7 +52,7 @@ export type NormalizedMatch = {
   queueId: number | null;
   gameDatetime: Date | null;
   gameVersion: string | null;
-  raw: unknown;
+  raw: TftMatchDto;
   participants: NormalizedParticipant[];
 };
 
@@ -63,6 +65,25 @@ export function patchFromGameVersion(version: string | null | undefined): string
   const match = /(\d+)\.(\d+)\.(\d+)/.exec(version) ?? /(\d+)\.(\d+)/.exec(version);
   if (!match || match[1] === undefined || match[2] === undefined) return null;
   return `${match[1]}.${match[2]}`;
+}
+
+/**
+ * Fallback patch for a set, from the declared patch windows in src/content.
+ *
+ * Riot no longer sends a parseable version for TFT: the current client reports
+ * `TFT Unreal Version ?.?.?.?`, which has no numbers in it at all. The newest
+ * declared patch for the set is the honest answer, and it keeps attribution
+ * editorial (a patch page exists because someone wrote it) instead of guessing
+ * from a string we cannot read. Returns null for a set with no written patch, so
+ * those games stay visibly `unknown`.
+ */
+export function patchForSet(setNumber: number): string | null {
+  const candidates = patches.filter((entry) => entry.setNumber === setNumber);
+  if (candidates.length === 0) return null;
+  const latest = [...candidates].sort((a, b) =>
+    b.patch.localeCompare(a.patch, undefined, { numeric: true }),
+  )[0];
+  return latest?.patch ?? null;
 }
 
 function toUnit(raw: TftUnitDto, slot: number): NormalizedUnit | null {
@@ -148,12 +169,10 @@ export function normalizeMatch(
       : null;
 
   const gameVersion = info.game_version ?? null;
+  // Never invent a patch: an unknown patch is visible in the stats pipeline
+  // rather than silently being attributed to the current one.
   const patch =
-    config.patchOverride ||
-    patchFromGameVersion(gameVersion) ||
-    // Never invent a patch: an unknown patch is visible in the stats pipeline
-    // rather than silently being attributed to the current one.
-    "unknown";
+    config.patchOverride || patchFromGameVersion(gameVersion) || patchForSet(setNumber) || "unknown";
 
   return {
     matchId: payload.metadata?.match_id ?? matchId,
@@ -185,7 +204,7 @@ export async function persistMatch(match: NormalizedMatch): Promise<PersistResul
       VALUES (
         ${match.matchId}, ${match.region}, ${match.patch}, ${match.setNumber},
         ${match.queueId}, ${match.gameDatetime}, ${match.gameVersion},
-        ${JSON.stringify(match.raw)}::jsonb
+        ${tx.json(match.raw)}
       )
       ON CONFLICT (match_id) DO NOTHING
       RETURNING match_id

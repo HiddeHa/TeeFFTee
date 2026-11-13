@@ -12,9 +12,13 @@
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
     "crawl": "tsx worker/cli.ts",
-    "crawl:stub": "tsx worker/dev/stub-riot.ts"
+    "crawl:stub": "tsx worker/dev/stub-riot.ts",
+    "catalogue:export": "tsx scripts/export-catalogue.ts",
+    "check:content": "tsx scripts/check-content.ts",
+    "momentum:measure": "tsx scripts/measure-momentum.ts"
   },
   "dependencies": {
+    "@neondatabase/serverless": "^1.2.0",
     "drizzle-orm": "^0.45.4",
     "next": "^16.4.3",
     "postgres": "^3.4.9",
@@ -22,6 +26,7 @@
     "react-dom": "^19.3.1"
   },
   "devDependencies": {
+    "@opennextjs/cloudflare": "1.20.12",
     "@tailwindcss/postcss": "^4.3.3",
     "@types/node": "^24.0.0",
     "@types/react": "^19.0.0",
@@ -29,6 +34,7 @@
     "drizzle-kit": "^0.31.11",
     "tailwindcss": "^4.3.3",
     "tsx": "^4.23.15",
-    "typescript": "^5.6.0"
+    "typescript": "^5.6.0",
+    "wrangler": "4.148.0"
   }
 }

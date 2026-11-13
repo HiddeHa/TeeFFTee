@@ -4,6 +4,7 @@ import { RIOT_DISCLAIMER, site } from "@/content/site";
 
 const PRODUCT_LINKS = [
   { href: "/comps", label: "Tier list" },
+  { href: "/teambuilder", label: "Teambuilder" },
   { href: `/patch/${site.currentPatch}`, label: "Patch notes" },
   { href: "/coaching", label: "Coaching" },
 ];

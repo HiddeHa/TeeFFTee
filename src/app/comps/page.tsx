@@ -1,190 +1,250 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { AssetImage } from "@/components/asset-image";
+import { CompViewTabs } from "@/components/comp-view-tabs";
 import { DataNote } from "@/components/data-note";
-import { FilterRow } from "@/components/filter-row";
-import { TierBadge } from "@/components/tier-badge";
 import { METHODOLOGY, site } from "@/content/site";
-import type { RankBucket, Region } from "@/content/types";
-import { listComps, listPatches, totalGames } from "@/lib/data";
-import { formatGames, formatPercent, formatPlace } from "@/lib/format";
+import type { BoardUnit, Tier } from "@/content/types";
+import { COST_BORDER } from "@/lib/costs";
+import { TIER_ORDER, listComps, type CompListItem } from "@/lib/data";
+import { classNames, formatGames, formatPercent, formatPlace } from "@/lib/format";
 
 export const metadata: Metadata = {
   title: "Tier list",
   description:
-    "The current Teamfight Tactics comp tier list, built from Master, Grandmaster and Challenger games on EUW and KR, with sample sizes shown.",
+    "A Teamfight Tactics tier list built from the average of nine published tier lists, with every source's letter shown so the consensus can be checked.",
   alternates: { canonical: "/comps" },
 };
 
-type SearchParams = Promise<{
-  patch?: string;
-  region?: string;
-  rank?: string;
-}>;
+export const revalidate = 300;
 
-function parseRegion(value: string | undefined): Region | undefined {
-  return site.regions.find((region) => region === value);
-}
-
-function parseRank(value: string | undefined): RankBucket | undefined {
-  return site.rankBuckets.find((bucket) => bucket === value);
-}
-
-const RANK_LABELS: Record<RankBucket, string> = {
-  "master+": "Master+",
-  "diamond+": "Diamond+",
-  all: "All ranks",
+const BAND: Record<Tier, string> = {
+  S: "bg-tier-s text-[#241a04]",
+  A: "bg-tier-a text-[#04241a]",
+  B: "bg-tier-b text-[#041a2c]",
+  C: "bg-tier-c text-[#12161d]",
 };
 
-export default async function CompsPage({ searchParams }: { searchParams: SearchParams }) {
-  const params = await searchParams;
-  const patches = await listPatches();
-  const patch = params.patch ?? site.currentPatch;
-  const region = parseRegion(params.region);
-  const rank = parseRank(params.rank) ?? "master+";
+/**
+ * Tier bands are cuts on the consensus score, not opinions of their own:
+ * S ≥ 3.5, A ≥ 2.5, B ≥ 1.5, C below that. Written down here because a band with
+ * an unstated threshold is just a vibe with a colour.
+ */
+const BAND_LABEL: Record<Tier, string> = {
+  S: "3.5 and up",
+  A: "2.5 – 3.49",
+  B: "1.5 – 2.49",
+  C: "below 1.5",
+};
 
-  const comps = await listComps({ patch, region, rank });
-  const games = totalGames(comps);
+function UnitPortrait({ unit }: { unit: BoardUnit }) {
+  return (
+    <div
+      className="flex w-[44px] shrink-0 flex-col items-center gap-1"
+      title={`${unit.name ?? unit.id} · ${unit.cost === null ? "unknown cost" : `${unit.cost}c`}`}
+    >
+      <AssetImage
+        src={unit.imageUrl}
+        width={40}
+        height={40}
+        className={classNames(
+          "h-10 w-10 rounded-md border-2 bg-surface object-cover",
+          COST_BORDER[unit.cost ?? 0] ?? "border-line",
+        )}
+        fallback={
+          <span
+            aria-hidden
+            className="flex h-10 w-10 items-center justify-center rounded-md border-2 border-dashed border-line bg-surface text-[9px] text-muted"
+          >
+            {unit.name === null ? "?" : unit.name.slice(0, 2).toUpperCase()}
+          </span>
+        }
+      />
+      <span
+        className={classNames(
+          "w-full truncate text-center leading-tight",
+          unit.name === null ? "font-mono text-[8px] text-muted/70" : "text-[9px] text-muted",
+        )}
+      >
+        {unit.name ?? unit.id}
+      </span>
+    </div>
+  );
+}
 
-  const current = {
-    patch,
-    region: params.region,
-    rank: params.rank ?? "master+",
-  };
+function ConsensusCard({ comp }: { comp: CompListItem }) {
+  const stats = comp.visibleStats;
+  const sourceCount = comp.consensus.sources.length;
 
   return (
-    <div className="mx-auto max-w-6xl px-4 sm:px-6">
-      <header className="py-10">
-        <p className="text-xs font-semibold uppercase tracking-wider text-accent">
-          Set {site.setNumber} · patch {patch}
-        </p>
-        <h1 className="mt-3 text-3xl font-semibold sm:text-4xl">Tier list</h1>
-        <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted">
-          Ordered by the Wilson 95% lower bound of each comp's top-4 rate — a comp with
-          5,000 games beats a comp with 40, even if the small sample looks better.
-        </p>
-      </header>
-
-      <div className="card space-y-3 p-4">
-        <FilterRow
-          label="Patch"
-          paramName="patch"
-          basePath="/comps"
-          current={current}
-          activeValue={patch}
-          options={patches.map((entry) => ({ label: entry.patch, value: entry.patch }))}
-        />
-        <FilterRow
-          label="Region"
-          paramName="region"
-          basePath="/comps"
-          current={current}
-          activeValue={region ?? ""}
-          options={[
-            { label: "All regions", value: "" },
-            ...site.regions.map((entry) => ({ label: entry, value: entry })),
-          ]}
-        />
-        <FilterRow
-          label="Rank"
-          paramName="rank"
-          basePath="/comps"
-          current={current}
-          activeValue={rank}
-          options={site.rankBuckets.map((bucket) => ({
-            label: RANK_LABELS[bucket],
-            value: bucket,
-          }))}
-        />
+    <article className="flex flex-col rounded-lg border border-line bg-raised/50 p-3">
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <Link
+            href={`/comps/${comp.slug}`}
+            className="block truncate font-semibold hover:text-accent"
+          >
+            {comp.name}
+          </Link>
+          <p className="mt-0.5 text-[11px] text-muted">
+            {comp.playstyle} · {comp.difficulty}
+          </p>
+        </div>
+        <div className="shrink-0 text-right">
+          <p className="stat-value text-lg font-semibold leading-none">
+            {comp.consensus.score.toFixed(2)}
+          </p>
+          <p className="mt-1 text-[9px] uppercase tracking-wider text-muted">
+            {sourceCount} sources
+          </p>
+        </div>
       </div>
 
-      <p className="mt-4 text-xs text-muted">
-        {comps.length} comps · {formatGames(games)} games in this sample
-        {region ? ` · ${region}` : ` · ${site.regions.join(" + ")}`} · {RANK_LABELS[rank]}
-      </p>
-
-      <div className="mt-4 overflow-x-auto">
-        <table className="w-full min-w-[640px] border-collapse text-sm">
-          <thead>
-            <tr className="border-b border-line text-left text-[11px] uppercase tracking-wider text-muted">
-              <th className="py-2 pr-3 font-medium">Tier</th>
-              <th className="py-2 pr-3 font-medium">Comp</th>
-              <th className="py-2 pr-3 text-right font-medium">Avg place</th>
-              <th className="py-2 pr-3 text-right font-medium">Top 4</th>
-              <th className="hidden py-2 pr-3 text-right font-medium sm:table-cell">Win</th>
-              <th className="hidden py-2 pr-3 text-right font-medium sm:table-cell">Pick</th>
-              <th className="py-2 text-right font-medium">Games</th>
-            </tr>
-          </thead>
-          <tbody>
-            {comps.map((comp) => {
-              const stats = comp.visibleStats;
-              return (
-                <tr
-                  key={comp.slug}
-                  className="border-b border-line/60 transition-colors hover:bg-raised"
-                >
-                  <td className="py-3 pr-3 align-top">
-                    <TierBadge tier={comp.tier} />
-                  </td>
-                  <td className="py-3 pr-3 align-top">
-                    <Link
-                      href={`/comps/${comp.slug}`}
-                      className="font-semibold hover:text-accent"
-                    >
-                      {comp.name}
-                    </Link>
-                    <p className="mt-0.5 text-xs text-muted">
-                      {comp.playstyle} · {comp.difficulty}
-                    </p>
-                    {stats ? null : (
-                      <p className="mt-1 text-[11px] text-muted/80">
-                        Collecting data for this filter
-                      </p>
-                    )}
-                  </td>
-                  <td className="stat-value py-3 pr-3 text-right align-top">
-                    {stats ? formatPlace(stats.avgPlace) : "—"}
-                  </td>
-                  <td className="stat-value py-3 pr-3 text-right align-top">
-                    {stats ? formatPercent(stats.top4Rate) : "—"}
-                  </td>
-                  <td className="stat-value hidden py-3 pr-3 text-right align-top sm:table-cell">
-                    {stats ? formatPercent(stats.winRate) : "—"}
-                  </td>
-                  <td className="stat-value hidden py-3 pr-3 text-right align-top sm:table-cell">
-                    {stats ? formatPercent(stats.pickRate) : "—"}
-                  </td>
-                  <td className="stat-value py-3 text-right align-top">
-                    {stats ? formatGames(stats.games) : "—"}
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+      <div className="mt-3 flex flex-wrap gap-1.5">
+        {comp.visibleBoard.slice(0, 8).map((unit) => (
+          <UnitPortrait key={unit.id} unit={unit} />
+        ))}
       </div>
+
+      <ul className="mt-3 flex flex-wrap gap-1">
+        {comp.consensus.sources.map((source) => (
+          <li key={`${comp.slug}-${source.source}`} className="chip text-[10px]">
+            <span className="text-muted">{source.source}</span>
+            <span className="ml-1 font-semibold text-fg">{source.tier}</span>
+          </li>
+        ))}
+      </ul>
+
+      <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 border-t border-line/60 pt-2 text-[11px] text-muted">
+        {stats ? (
+          <>
+            <span>
+              Top 4 <span className="stat-value text-fg/90">{formatPercent(stats.top4Rate)}</span>
+            </span>
+            <span>
+              Avg <span className="stat-value text-fg/90">{formatPlace(stats.avgPlace)}</span>
+            </span>
+            <span className="ml-auto">{formatGames(stats.games)} games</span>
+          </>
+        ) : (
+          <span className="text-muted/80">
+            Our crawl has no sample for this board yet — the letter is consensus only.
+          </span>
+        )}
+      </div>
+    </article>
+  );
+}
+
+function BoardView({ comps }: { comps: CompListItem[] }) {
+  const byTier = (tier: Tier) =>
+    comps
+      .filter((comp) => comp.tier === tier)
+      .sort((a, b) => b.consensus.score - a.consensus.score);
+
+  return (
+    <>
+      <div className="card mt-4 space-y-3 p-4 text-sm">
+        <p className="font-semibold">How the letters are made</p>
+        <p className="text-muted">
+          Each source&apos;s letter becomes a number — S and S+ = 4, A = 3, B = 2, C = 1,
+          D = 0 — and the comp&apos;s score is the mean across every list that mentions
+          it. A comp needs at least two sources to be rated at all. Bands are cuts on
+          that score: S ≥ 3.5, A ≥ 2.5, B ≥ 1.5, C below.
+        </p>
+        <p className="text-muted">
+          Sources averaged: TFT Academy, TFTactics, EmblemComp, MetaTFT, SeeMeta, Blitz,
+          tft.ninja, MID.GG, Mobalytics and TFT Flow. Where two sites publish the same
+          board under different names — Sprykin Zyra, Flora Fatalis Azir and Executioner
+          Azir are one composition — the letters are pooled under the board, and the
+          published name travels with the letter.
+        </p>
+        <p className="text-muted">
+          Mobalytics entries whose boards could not be mapped to a unit list with
+          confidence (Wrath of the Woods, AD Exodia, B4L Power, Deadwood Execution) were
+          left out rather than guessed at. Every comp here has at least four sources.
+        </p>
+      </div>
+
+      {TIER_ORDER.map((tier) => {
+        const entries = byTier(tier);
+        if (entries.length === 0) return null;
+
+        return (
+          <section key={tier} className="mt-4 overflow-hidden rounded-xl border border-line">
+            <div className="flex">
+              <div
+                className={classNames(
+                  "flex w-16 shrink-0 flex-col items-center justify-center gap-1 sm:w-24",
+                  BAND[tier],
+                )}
+              >
+                <span className="text-2xl font-black leading-none sm:text-4xl">{tier}</span>
+                <span className="text-[8px] font-bold uppercase tracking-[0.14em] opacity-70">
+                  {BAND_LABEL[tier]}
+                </span>
+              </div>
+              <div className="grid flex-1 gap-2 bg-surface p-2.5 sm:grid-cols-2">
+                {entries.map((comp) => (
+                  <ConsensusCard key={comp.slug} comp={comp} />
+                ))}
+              </div>
+            </div>
+          </section>
+        );
+      })}
 
       {comps.length === 0 ? (
         <div className="mt-6">
           <DataNote>
-            No published comps yet for this patch. Add them in{" "}
+            No published comps yet. Add them in{" "}
             <code className="font-mono text-[11px]">src/content/comps.ts</code>.
           </DataNote>
         </div>
       ) : null}
 
       <div className="mt-8 space-y-3">
-        <DataNote>{METHODOLOGY.bucket}</DataNote>
+        <DataNote>{METHODOLOGY.assignment}</DataNote>
         <DataNote>{METHODOLOGY.confidence}</DataNote>
+        <DataNote>
+          The tier is consensus, but the numbers under each card are ours: they come from
+          boards in our own crawl once a comp has enough of them, and a comp without a
+          sample says so instead of borrowing someone else&apos;s figure.
+        </DataNote>
       </div>
+    </>
+  );
+}
+
+export default async function CompsPage() {
+  const comps = await listComps();
+
+  return (
+    <div className="mx-auto max-w-6xl px-4 sm:px-6">
+      <header className="py-10">
+        <p className="text-xs font-semibold uppercase tracking-wider text-accent">
+          Set {site.setNumber} · patch {site.currentPatch}
+        </p>
+        <h1 className="mt-3 text-3xl font-semibold sm:text-4xl">Tier list</h1>
+        <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted">
+          {comps.length} comps, each lettered by the average of the published tier
+          lists that cover it. Every site&apos;s verdict is printed next to the score,
+          because an average you cannot audit is just an opinion with decimals.
+        </p>
+      </header>
+
+      <CompViewTabs active="board" />
+
+      <BoardView comps={comps} />
 
       <p className="mt-6 text-sm text-muted">
-        Want the reasoning behind a tier?{" "}
-        <Link href="/coaching" className="font-semibold text-accent hover:underline">
-          Coaching
-        </Link>{" "}
-        is where it gets specific to your games.
+        Every comp here has a full guide — preconditions, the leave signal, and where the
+        guide is wrong.{" "}
+        <Link href={`/comps/${comps[0]?.slug ?? ""}`} className="font-semibold text-accent hover:underline">
+          Start with the top one
+        </Link>
+        .
       </p>
     </div>
   );

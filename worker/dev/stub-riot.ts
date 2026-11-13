@@ -1,6 +1,7 @@
 import { createServer } from "node:http";
 
-import type { TftMatchDto } from "../riot-types";
+import { comps } from "../../src/content/comps";
+import type { TftMatchDto, TftTraitDto, TftUnitDto } from "../riot-types";
 
 /**
  * Local Riot API stub — a rehearsal target, not a test fixture.
@@ -67,6 +68,19 @@ const TRAITS = [
 
 const AUGMENTS = ["TFT18_STUB_Augment_A", "TFT18_STUB_Augment_B", "TFT18_STUB_Augment_C"];
 
+/**
+ * Emit real curated boards instead of the stub ids.
+ *
+ * Off by default: the stub ids are what prove the queue dedupes and what make an
+ * unresolved-catalogue case reproducible. Switched on, every participant gets a
+ * board from src/content/comps.ts — units, stars and the comp's defining trait —
+ * so `aggregate` actually classifies something and a rehearsal run produces
+ * `comp_stats` rows the site can render. Pair it with STUB_GAME_VERSION so the
+ * match lands on the patch the site is currently showing.
+ */
+const COMP_BOARDS = process.env.STUB_COMP_BOARDS === "1";
+const CURATED_BOARDS = comps.filter((comp) => comp.published);
+
 let requestCount = 0;
 
 function pick<T>(items: readonly T[], seed: number): T {
@@ -123,19 +137,38 @@ function buildMatch(matchId: string): TftMatchDto {
   const participants = Array.from({ length: 8 }, (_, playerIndex) => {
     const playerSeed = seed + playerIndex * 7919;
     const unitCount = 5 + (playerSeed % 4);
+    const comp = COMP_BOARDS ? pick(CURATED_BOARDS, playerSeed) : null;
 
-    const units = Array.from({ length: unitCount }, (_, unitIndex) => {
-      const unitSeed = playerSeed + unitIndex * 131;
-      const itemCount = unitSeed % 4;
-      return {
-        character_id: pick(UNITS, unitSeed),
-        tier: 1 + (unitSeed % 3),
-        rarity: 1 + (unitSeed % 5),
-        itemNames: Array.from({ length: itemCount }, (_, itemIndex) =>
-          pick(ITEMS, unitSeed + itemIndex * 17),
-        ),
-      };
-    });
+    const units: TftUnitDto[] = comp
+      ? comp.board.map((slot) => ({
+          character_id: slot.id,
+          tier: slot.star,
+          rarity: 5,
+          itemNames: [],
+        }))
+      : Array.from({ length: unitCount }, (_, unitIndex) => {
+          const unitSeed = playerSeed + unitIndex * 131;
+          const itemCount = unitSeed % 4;
+          return {
+            character_id: pick(UNITS, unitSeed),
+            tier: 1 + (unitSeed % 3),
+            rarity: 1 + (unitSeed % 5),
+            itemNames: Array.from({ length: itemCount }, (_, itemIndex) =>
+              pick(ITEMS, unitSeed + itemIndex * 17),
+            ),
+          };
+        });
+
+    // Only the comp's gate trait is needed for assignment to classify the board.
+    const traits: TftTraitDto[] = comp
+      ? comp.definingTrait
+        ? [{ name: comp.definingTrait, num_units: comp.coreUnits.length, tier_current: 1 }]
+        : []
+      : TRAITS.map((trait, traitIndex) => ({
+          name: trait,
+          num_units: 2 + ((playerSeed + traitIndex) % 3),
+          tier_current: 1 + ((playerSeed + traitIndex) % 3),
+        }));
 
     return {
       puuid: `stub-${platform}-challenger-${((seed + playerIndex * 3) % PLAYERS_PER_TIER) + 1}`,
@@ -144,11 +177,7 @@ function buildMatch(matchId: string): TftMatchDto {
       last_round: 30 + (playerSeed % 8),
       gold_left: playerSeed % 40,
       augments: AUGMENTS.map((augment) => augment),
-      traits: TRAITS.map((trait, traitIndex) => ({
-        name: trait,
-        num_units: 2 + ((playerSeed + traitIndex) % 3),
-        tier_current: 1 + ((playerSeed + traitIndex) % 3),
-      })),
+      traits,
       units,
     };
   });
@@ -242,6 +271,9 @@ server.listen(PORT, HOST, () => {
   );
   if (FAIL_EVERY > 0) {
     console.log(`chaos: every ${FAIL_EVERY}. request answers 429 (retry-after: 1)`);
+  }
+  if (COMP_BOARDS) {
+    console.log(`boards: ${CURATED_BOARDS.length} curated comps (real unit ids)`);
   }
 });
 

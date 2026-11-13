@@ -6,6 +6,8 @@ import { CoachingCTA } from "./coaching-cta";
 
 const NAV = [
   { href: "/comps", label: "Tier list" },
+  { href: "/tier-lists", label: "My tier lists" },
+  { href: "/teambuilder", label: "Teambuilder" },
   { href: `/patch/${site.currentPatch}`, label: "Patch notes" },
   { href: "/coaching", label: "Coaching" },
   { href: "/about", label: "About" },

@@ -3,24 +3,27 @@ import type { Region, RankBucket } from "./types";
 /**
  * SITE CONFIGURATION
  *
- * Everything in this file is content you control by hand. The fields marked
- * PLACEHOLDER must be replaced before the site is submitted to Riot for a
- * production key or promoted publicly.
+ * Everything in this file is content you control by hand. As of 2026-11-10 the
+ * site content is real (docs/decisions.md D3–D6) and PLACEHOLDER_CONTENT is off;
+ * the one thing still missing is the domain, which NEXT_PUBLIC_SITE_URL supplies
+ * at build time. Keep this file honest: if a field becomes a placeholder again,
+ * turn the flag in ./flags.ts back on rather than leaving it looking finished.
  */
 export const site = {
-  /** Keep "TFT", "Teamfight" and "Riot" out of the name and the domain. */
-  name: "metaread",
+  /** Keep "Riot" out of the name and the domain. "TFT" is referenced in copy, never in the name. */
+  name: "TeeFfTee",
   tagline: "High-elo TFT stats, read by someone who plays there.",
   description:
     "Tier lists, comp stats and patch reads for Teamfight Tactics, built from Challenger and Grandmaster games on EUW and KR.",
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
 
-  // PLACEHOLDER — replace with your live booking page (Calendly, Stripe link, ...).
+  //
+  // No booking tool yet (docs/decisions.md D6): every CTA opens a pre-filled email
+  // rather than pretending to send you to a calendar that does not exist. Point this
+  // at Calendly or a Stripe link when one exists — every component reads it here.
   bookingUrl:
     process.env.NEXT_PUBLIC_BOOKING_URL ??
-    "https://calendly.com/your-handle/tft-coaching",
-  // PLACEHOLDER
-  discordUrl: process.env.NEXT_PUBLIC_DISCORD_URL ?? "https://discord.gg/your-invite",
+    "mailto:hidde.hanning.bee@gmail.com?subject=TeeFfTee%20coaching",
 
   /** Current live set. Set 19 lands the week of 2026-12-01. */
   setNumber: 18,
@@ -32,17 +35,18 @@ export const site = {
   regions: ["EUW", "KR"] as Region[],
   rankBuckets: ["master+", "diamond+", "all"] as RankBucket[],
 
-  /** PLACEHOLDER — your credibility block. This appears next to every coaching CTA. */
+  /** The credibility block. Appears beside every coaching CTA and on /about. */
   author: {
-    name: "Your Name",
-    handle: "@yourhandle",
+    name: "Hitmoney",
+    /** No public handle volunteered; /about omits the line when this is empty. */
+    handle: "",
     peakRank: "Challenger",
-    currentRank: "Challenger",
+    currentRank: "Master",
     server: "EUW",
-    proof: "Replace with your real track record, e.g. “coached 40+ players to Master”.",
+    proof: "Current Master on EUW, peak Challenger.",
   },
 
-  /** PLACEHOLDER — set your own prices. Put them on the page; “DM for price” converts worse. */
+  /** Real prices (docs/decisions.md D6). Put them on the page; “DM for price” converts worse. */
   offers: [
     {
       id: "vod",
@@ -85,13 +89,14 @@ export const site = {
     },
   ],
 
-  socials: [
-    { label: "Discord", href: "https://discord.gg/your-invite" },
-    { label: "X", href: "https://x.com/yourhandle" },
-    { label: "Twitch", href: "https://twitch.tv/yourhandle" },
-  ],
+  /**
+   * No public profiles yet (docs/decisions.md D5): a dead Discord invite and a made-up
+   * handle are worse than a short column, so the footer links the one channel that
+   * exists. Add real handles here when there are some.
+   */
+  socials: [{ label: "Email", href: "mailto:hidde.hanning.bee@gmail.com" }],
 
-  contactEmail: "you@example.com",
+  contactEmail: "hidde.hanning.bee@gmail.com",
 } as const;
 
 /**

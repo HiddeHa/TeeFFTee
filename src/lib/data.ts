@@ -1,16 +1,22 @@
 import { comps } from "@/content/comps";
 import { patches } from "@/content/patches";
 import type {
+  BoardPosition,
   BoardUnit,
   Comp,
   CompStats,
+  ItemPriority,
   Patch,
+  PositionedUnit,
   RankBucket,
   Region,
+  ResolvedItem,
+  ResolvedPriority,
   Tier,
   UnitSlot,
 } from "@/content/types";
 
+import { loadItemCatalogue, type ItemIndex } from "./items";
 import { loadCompStats } from "./stats-source";
 import { loadUnitCatalogue, type UnitIndex } from "./units";
 
@@ -50,20 +56,78 @@ export type CompListItem = Comp & {
   visibleStats: CompStats | null;
   /**
    * The board with names, costs and icons from the set catalogue. Slots whose id
-   * the catalogue does not know keep a null name — never a made-up one.
+   * the catalogue does not know keep a null name — never a made-up one — and so
+   * do slots carrying an item id the item catalogue does not know.
    */
   visibleBoard: BoardUnit[];
+  /** Positioning resolved to names and icons; null when the comp has none authored. */
+  visiblePositioning: PositionedUnit[] | null;
+  /** Item priority chains resolved to names and icons. */
+  visibleItemPriority: ResolvedPriority[];
 };
 
+function resolveItem(id: string, index: ItemIndex | null): ResolvedItem {
+  const item = index?.get(id) ?? null;
+  return { id, name: item?.name ?? null, imageUrl: item?.imageUrl ?? null };
+}
+
 /** Attach catalogue data to every slot; unresolved ids stay explicitly null. */
-function resolveBoard(board: UnitSlot[], index: UnitIndex | null): BoardUnit[] {
+function resolveBoard(
+  board: UnitSlot[],
+  unitIndex: UnitIndex | null,
+  itemIndex: ItemIndex | null,
+): BoardUnit[] {
   return board.map((slot) => {
-    const unit = index?.get(slot.id) ?? null;
+    const unit = unitIndex?.get(slot.id) ?? null;
     return {
       ...slot,
       name: unit?.name ?? null,
       cost: unit?.cost ?? null,
       imageUrl: unit?.imageUrl ?? null,
+      resolvedItems: slot.items.map((id) => resolveItem(id, itemIndex)),
+    };
+  });
+}
+
+/**
+ * Positioning carries only unit ids and coordinates in content; name, icon, cost
+ * and star are looked up here, so a positioning entry can never disagree with the
+ * board it belongs to.
+ */
+function resolvePositioning(
+  positions: BoardPosition[] | undefined,
+  board: UnitSlot[],
+  unitIndex: UnitIndex | null,
+): PositionedUnit[] | null {
+  if (!positions || positions.length === 0) return null;
+
+  return positions.map((position) => {
+    const unit = unitIndex?.get(position.unitId) ?? null;
+    const slot = board.find((entry) => entry.id === position.unitId) ?? null;
+    return {
+      ...position,
+      name: unit?.name ?? null,
+      imageUrl: unit?.imageUrl ?? null,
+      cost: unit?.cost ?? null,
+      star: slot?.star ?? null,
+    };
+  });
+}
+
+function resolvePriorities(
+  priorities: ItemPriority[],
+  board: UnitSlot[],
+  unitIndex: UnitIndex | null,
+  itemIndex: ItemIndex | null,
+): ResolvedPriority[] {
+  return priorities.map((entry) => {
+    const unit = unitIndex?.get(entry.unitId) ?? null;
+    const slot = board.find((candidate) => candidate.id === entry.unitId) ?? null;
+
+    return {
+      unitId: entry.unitId,
+      unitName: unit?.name ?? slot?.id ?? null,
+      chain: entry.chain.map((id) => resolveItem(id, itemIndex)),
     };
   });
 }
@@ -103,21 +167,35 @@ export async function listComps(filters: CompFilters = {}): Promise<CompListItem
   const fromDatabase = await loadCompStats(resolveScope(filters));
   const published = comps.filter((comp) => comp.published);
 
-  // One catalogue read per set, not per comp: boards are the only consumer, and a
-  // list page renders every comp on it.
-  const catalogues = new Map<number, UnitIndex | null>();
+  // One catalogue read per set, not per comp: boards and item chains are the only
+  // consumers, and a list page renders every comp on it.
+  const unitsPerSet = new Map<number, UnitIndex | null>();
+  const itemsPerSet = new Map<number, ItemIndex | null>();
   for (const setNumber of new Set(published.map((comp) => comp.setNumber))) {
-    catalogues.set(setNumber, await loadUnitCatalogue(setNumber));
+    unitsPerSet.set(setNumber, await loadUnitCatalogue(setNumber));
+    itemsPerSet.set(setNumber, await loadItemCatalogue(setNumber));
   }
 
   return published
-    .map((comp) => ({
-      ...comp,
-      visibleStats: fromDatabase
-        ? (fromDatabase.get(comp.slug) ?? null)
-        : pickStats(comp.stats, filters),
-      visibleBoard: resolveBoard(comp.board, catalogues.get(comp.setNumber) ?? null),
-    }))
+    .map((comp) => {
+      const unitIndex = unitsPerSet.get(comp.setNumber) ?? null;
+      const itemIndex = itemsPerSet.get(comp.setNumber) ?? null;
+
+      return {
+        ...comp,
+        visibleStats: fromDatabase
+          ? (fromDatabase.get(comp.slug) ?? null)
+          : pickStats(comp.stats, filters),
+        visibleBoard: resolveBoard(comp.board, unitIndex, itemIndex),
+        visiblePositioning: resolvePositioning(comp.positioning, comp.board, unitIndex),
+        visibleItemPriority: resolvePriorities(
+          comp.itemPriority,
+          comp.board,
+          unitIndex,
+          itemIndex,
+        ),
+      };
+    })
     .sort(sortByTierThenConfidence);
 }
 

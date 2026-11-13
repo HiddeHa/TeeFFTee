@@ -41,6 +41,45 @@ function toIsoString(value: unknown): string {
 }
 
 /**
+ * Patches that actually have `comp_stats` rows, ascending. Movers need two of
+ * them; a patch with a page but no rows is not a comparison window.
+ *
+ * Returns an empty list when Postgres is absent or unreachable — callers treat
+ * that the same as "no second window yet".
+ */
+export async function listStatsPatches(): Promise<string[]> {
+  if (!process.env.DATABASE_URL) return [];
+
+  let db: ReturnType<typeof getDb>;
+  try {
+    db = getDb();
+  } catch {
+    return [];
+  }
+
+  try {
+    const rows = await db.selectDistinct({ patch: compStats.patch }).from(compStats);
+    return rows.map((row) => row.patch).sort(comparePatch);
+  } catch {
+    return [];
+  }
+}
+
+/** "18.6" < "18.10" — numeric per segment, unlike a string compare. */
+export function comparePatch(a: string, b: string): number {
+  const left = a.split(".").map((part) => Number.parseInt(part, 10) || 0);
+  const right = b.split(".").map((part) => Number.parseInt(part, 10) || 0);
+  const length = Math.max(left.length, right.length);
+
+  for (let index = 0; index < length; index += 1) {
+    const delta = (left[index] ?? 0) - (right[index] ?? 0);
+    if (delta !== 0) return delta;
+  }
+
+  return a.localeCompare(b);
+}
+
+/**
  * Returns null when Postgres is not configured or cannot be reached, which is
  * the signal for callers to fall back to the curated content snapshot. An empty
  * Map is a different thing: the database answered and nobody has a sample, which

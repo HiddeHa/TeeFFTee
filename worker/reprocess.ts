@@ -20,7 +20,7 @@ export type ReprocessResult = { scanned: number; rebuilt: number; skipped: numbe
 export async function reprocessMatches(limit: number): Promise<ReprocessResult> {
   const sql = db();
 
-  const rows = await sql<{ match_id: string; region: string; raw: TftMatchDto }[]>`
+  const rows = await sql<{ match_id: string; region: string; raw: TftMatchDto | string }[]>`
     SELECT match_id, region, raw
     FROM matches
     WHERE raw IS NOT NULL
@@ -31,7 +31,18 @@ export async function reprocessMatches(limit: number): Promise<ReprocessResult> 
   const result: ReprocessResult = { scanned: rows.length, rebuilt: 0, skipped: 0 };
 
   for (const row of rows) {
-    const normalized = normalizeMatch(row.raw, row.match_id, row.region);
+    // Rows written before the jsonb fix hold a JSON *string* rather than an
+    // object, so accept both shapes instead of making that fix un-replayable.
+    let raw: TftMatchDto;
+    try {
+      raw = typeof row.raw === "string" ? (JSON.parse(row.raw) as TftMatchDto) : row.raw;
+    } catch {
+      result.skipped += 1;
+      log.warn("stored payload is not valid JSON", { matchId: row.match_id });
+      continue;
+    }
+
+    const normalized = normalizeMatch(raw, row.match_id, row.region);
     if (!normalized) {
       result.skipped += 1;
       log.warn("payload no longer parses", { matchId: row.match_id });
