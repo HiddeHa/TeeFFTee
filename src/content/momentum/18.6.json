@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-11T11:42:36.891Z",
+  "generatedAt": "2026-11-13T21:13:24.565Z",
   "label": "first half vs second half of the 18.6 crawl window",
   "patch": "18.6",
   "setNumber": 18,
@@ -9,121 +9,169 @@
   "splitAt": "2026-11-09T20:12:36.727Z",
   "matches": 577,
   "boards": 4553,
-  "classified": 1159,
+  "classified": 3140,
   "minGames": 20,
   "source": "matches + participant_units/participant_traits, assigned at 60% core-unit overlap",
   "entries": [
     {
-      "compSlug": "ashe-blossom-hunters",
-      "label": "Ashe Blossom Hunters",
+      "compSlug": "solar-karma-reroll",
+      "label": "Solar Karma",
       "first": {
-        "games": 38,
-        "top4Rate": 0.5526,
-        "avgPlace": 4.05
+        "games": 130,
+        "top4Rate": 0.5923,
+        "avgPlace": 3.97
       },
       "second": {
-        "games": 28,
-        "top4Rate": 0.7143,
-        "avgPlace": 3.68
+        "games": 111,
+        "top4Rate": 0.6577,
+        "avgPlace": 3.71
       },
-      "top4Delta": 0.1617,
-      "placeDelta": -0.37
+      "top4Delta": 0.0654,
+      "placeDelta": -0.26
     },
     {
-      "compSlug": "nidalee-primal",
-      "label": "Nidalee Primal",
+      "compSlug": "maokai-draven",
+      "label": "Maokai Draven",
       "first": {
-        "games": 45,
-        "top4Rate": 0.4222,
-        "avgPlace": 4.8
+        "games": 240,
+        "top4Rate": 0.5583,
+        "avgPlace": 4.11
       },
       "second": {
-        "games": 22,
-        "top4Rate": 0.5455,
-        "avgPlace": 4.68
+        "games": 218,
+        "top4Rate": 0.5963,
+        "avgPlace": 3.84
       },
-      "top4Delta": 0.1233,
-      "placeDelta": -0.12
+      "top4Delta": 0.038,
+      "placeDelta": -0.27
     },
     {
-      "compSlug": "coven-cassiopeia",
-      "label": "Coven Cassiopeia",
+      "compSlug": "ahri-spellweavers",
+      "label": "Ahri Spellweavers",
       "first": {
-        "games": 30,
-        "top4Rate": 0.3667,
-        "avgPlace": 5.37
+        "games": 296,
+        "top4Rate": 0.4831,
+        "avgPlace": 4.58
       },
       "second": {
-        "games": 34,
-        "top4Rate": 0.4118,
-        "avgPlace": 5.03
+        "games": 279,
+        "top4Rate": 0.5197,
+        "avgPlace": 4.53
       },
-      "top4Delta": 0.0451,
-      "placeDelta": -0.34
+      "top4Delta": 0.0366,
+      "placeDelta": -0.05
     },
     {
-      "compSlug": "draven-fast-9",
-      "label": "Draven Fast 9",
+      "compSlug": "vanguard-alune",
+      "label": "Vanguard Alune",
       "first": {
-        "games": 194,
-        "top4Rate": 0.5361,
+        "games": 130,
+        "top4Rate": 0.5769,
+        "avgPlace": 4.06
+      },
+      "second": {
+        "games": 113,
+        "top4Rate": 0.5841,
+        "avgPlace": 4.04
+      },
+      "top4Delta": 0.0072,
+      "placeDelta": -0.02
+    },
+    {
+      "compSlug": "riftbeast-brambleback",
+      "label": "Riftbeast Brambleback",
+      "first": {
+        "games": 276,
+        "top4Rate": 0.5254,
         "avgPlace": 4.27
       },
       "second": {
+        "games": 205,
+        "top4Rate": 0.5024,
+        "avgPlace": 4.4
+      },
+      "top4Delta": -0.023,
+      "placeDelta": 0.13
+    },
+    {
+      "compSlug": "defender-rengar",
+      "label": "Defender Rengar",
+      "first": {
+        "games": 60,
+        "top4Rate": 0.45,
+        "avgPlace": 4.68
+      },
+      "second": {
+        "games": 54,
+        "top4Rate": 0.4074,
+        "avgPlace": 4.93
+      },
+      "top4Delta": -0.0426,
+      "placeDelta": 0.25
+    },
+    {
+      "compSlug": "elderwood-ezreal",
+      "label": "Elderwood Ezreal",
+      "first": {
+        "games": 194,
+        "top4Rate": 0.5773,
+        "avgPlace": 4.21
+      },
+      "second": {
+        "games": 186,
+        "top4Rate": 0.5323,
+        "avgPlace": 4.46
+      },
+      "top4Delta": -0.045,
+      "placeDelta": 0.25
+    },
+    {
+      "compSlug": "adaptor-master-yi",
+      "label": "Adaptor Master Yi",
+      "first": {
+        "games": 227,
+        "top4Rate": 0.5022,
+        "avgPlace": 4.61
+      },
+      "second": {
         "games": 175,
-        "top4Rate": 0.5771,
-        "avgPlace": 3.97
+        "top4Rate": 0.4571,
+        "avgPlace": 4.61
       },
-      "top4Delta": 0.041,
-      "placeDelta": -0.3
+      "top4Delta": -0.0451,
+      "placeDelta": 0
     },
     {
-      "compSlug": "blackthorn-malphite",
-      "label": "Blackthorn Malphite",
+      "compSlug": "invoker-teemo",
+      "label": "Invoker Teemo",
       "first": {
-        "games": 52,
-        "top4Rate": 0.5385,
-        "avgPlace": 4
+        "games": 68,
+        "top4Rate": 0.5588,
+        "avgPlace": 4.15
       },
       "second": {
-        "games": 40,
-        "top4Rate": 0.575,
-        "avgPlace": 4.3
+        "games": 78,
+        "top4Rate": 0.5,
+        "avgPlace": 4.49
       },
-      "top4Delta": 0.0365,
-      "placeDelta": 0.3
+      "top4Delta": -0.0588,
+      "placeDelta": 0.34
     },
     {
-      "compSlug": "tristana-fae",
-      "label": "Tristana Fae",
+      "compSlug": "zyra-sprykin",
+      "label": "Sprykin Zyra",
       "first": {
-        "games": 63,
-        "top4Rate": 0.381,
-        "avgPlace": 5.08
+        "games": 55,
+        "top4Rate": 0.6182,
+        "avgPlace": 4.05
       },
       "second": {
-        "games": 57,
-        "top4Rate": 0.3509,
-        "avgPlace": 5.02
+        "games": 45,
+        "top4Rate": 0.4889,
+        "avgPlace": 4.51
       },
-      "top4Delta": -0.0301,
-      "placeDelta": -0.06
-    },
-    {
-      "compSlug": "kogmaw-riftbeast",
-      "label": "Kog'Maw Riftbeast",
-      "first": {
-        "games": 217,
-        "top4Rate": 0.4654,
-        "avgPlace": 4.6
-      },
-      "second": {
-        "games": 164,
-        "top4Rate": 0.4085,
-        "avgPlace": 4.9
-      },
-      "top4Delta": -0.0569,
-      "placeDelta": 0.3
+      "top4Delta": -0.1293,
+      "placeDelta": 0.46
     }
   ]
 }
