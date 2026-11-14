@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import {
   BOARD_COLS,
@@ -130,6 +130,15 @@ export function TeamBuilder({ units, items, traits, initialBoard, setNumber, pat
   const [brush, setBrush] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
 
+  /**
+   * Where the last champion landed. Placement used to be invisible: the board sat
+   * above the pool, so on any window shorter than the page a click looked like it
+   * did nothing at all. The board is pinned beside the pools from `lg` up, and this
+   * marks the hex just for the cases where the board is still off-screen.
+   */
+  const [lastPlaced, setLastPlaced] = useState<number | null>(null);
+  const boardRef = useRef<HTMLElement | null>(null);
+
   const [unitQuery, setUnitQuery] = useState("");
   const [costFilter, setCostFilter] = useState<"all" | number>("all");
   const [itemQuery, setItemQuery] = useState("");
@@ -220,19 +229,38 @@ export function TeamBuilder({ units, items, traits, initialBoard, setNumber, pat
     );
   }, [items, itemKind, itemQuery]);
 
-  function placeUnit(unitId: string) {
-    setBoard((prev) => {
-      const target =
-        selectedHex !== null && prev[selectedHex] === null
-          ? selectedHex
-          : prev.findIndex((slot) => slot === null);
-      if (target === -1) return prev;
+  /**
+   * Bring a freshly placed champion into view, and only that: below `lg` the board
+   * sits above the pools, so a placement there would otherwise happen off-screen.
+   * The guard is the hex itself, not the card — the card is taller than a laptop
+   * viewport, and scrolling to "the whole board" would jump the page every click.
+   */
+  useEffect(() => {
+    if (lastPlaced === null) return;
+    const hex = boardRef.current?.querySelector<HTMLElement>(`[data-hex="${lastPlaced}"]`);
+    if (!hex) return;
+    const rect = hex.getBoundingClientRect();
+    if (rect.top >= 0 && rect.bottom <= window.innerHeight) return;
+    // Instant, not `behavior: "smooth"`: a browser with reduced motion (or none
+    // configured) treats the smooth variant as a no-op, which is how a placement
+    // looks like nothing happening in the first place.
+    hex.scrollIntoView({ block: "center" });
+  }, [lastPlaced]);
 
+  function placeUnit(unitId: string) {
+    const target =
+      selectedHex !== null && board[selectedHex] === null
+        ? selectedHex
+        : board.findIndex((slot) => slot === null);
+    if (target === -1) return;
+
+    setBoard((prev) => {
       const next = [...prev];
       next[target] = { unitId, items: [], star: 1 };
       return next;
     });
     setSelectedHex(null);
+    setLastPlaced(target);
   }
 
   function handleHexClick(index: number) {
@@ -263,6 +291,7 @@ export function TeamBuilder({ units, items, traits, initialBoard, setNumber, pat
       return next;
     });
     setSelectedHex(null);
+    setLastPlaced(null);
   }
 
   function setStar(index: number, star: Star) {
@@ -288,6 +317,7 @@ export function TeamBuilder({ units, items, traits, initialBoard, setNumber, pat
   function clearBoard() {
     setBoard(emptyBoard());
     setSelectedHex(null);
+    setLastPlaced(null);
   }
 
   async function copyLink() {
@@ -302,9 +332,10 @@ export function TeamBuilder({ units, items, traits, initialBoard, setNumber, pat
   }
 
   return (
-    <div className="space-y-6">
-      {/* Board */}
-      <section className="card p-4 sm:p-5">
+    <div className="grid gap-6 lg:grid-cols-2 lg:items-start">
+      {/* Board — pinned beside the pools from `lg` up, because a champion dropped
+          from a pool a screen below it lands on a board you cannot see. */}
+      <section ref={boardRef} className="card p-4 sm:p-5 lg:sticky lg:top-4">
         <div className="flex flex-wrap items-baseline justify-between gap-2">
           <div>
             <h2 className="text-sm font-semibold uppercase tracking-wider text-muted">
@@ -359,6 +390,7 @@ export function TeamBuilder({ units, items, traits, initialBoard, setNumber, pat
                   <button
                     key={index}
                     type="button"
+                    data-hex={index}
                     onClick={() => handleHexClick(index)}
                     aria-label={
                       slot
@@ -426,6 +458,14 @@ export function TeamBuilder({ units, items, traits, initialBoard, setNumber, pat
                       >
                         {"★".repeat(slot.star)}
                       </span>
+                    ) : null}
+
+                    {lastPlaced === index ? (
+                      <span
+                        aria-hidden
+                        style={{ clipPath: HEX_CLIP }}
+                        className="pointer-events-none absolute inset-0 border-2 border-accent"
+                      />
                     ) : null}
 
                     {slot && slot.items.length > 0 ? (
@@ -633,7 +673,7 @@ export function TeamBuilder({ units, items, traits, initialBoard, setNumber, pat
         )}
       </section>
 
-      <div className="grid gap-4 lg:grid-cols-2">
+      <div className="grid gap-4">
         {/* Champion pool */}
         <section className="card flex flex-col p-4">
           <h2 className="text-sm font-semibold uppercase tracking-wider text-muted">
@@ -795,7 +835,7 @@ export function TeamBuilder({ units, items, traits, initialBoard, setNumber, pat
         </section>
       </div>
 
-      <p className="text-[11px] leading-relaxed text-muted/80">
+      <p className="text-[11px] leading-relaxed text-muted/80 lg:col-span-2">
         Built from the Set {setNumber} catalogue for patch {patch}: champion names,
         costs, icons and traits, and the same item list the comp pages resolve against.
         A board is a plan, not a match result — it lives in this page's URL and nowhere
