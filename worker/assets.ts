@@ -353,9 +353,12 @@ export function buildCatalogue(
       unit_id: unitId,
       set_number: setNumber,
       name,
-      // Summons (Training Dummy, Voidspawn) carry cost 0 — keep it, do not
-      // round them up into the shop.
-      cost: Number.isFinite(cost) ? Math.max(0, Math.round(cost)) : 0,
+      // Cost 0 means "not a shop champion", and the payload cannot be trusted to
+      // say so itself: every summon (Training Dummy, Voidspawn, Rift Herald), PvE
+      // monster and loot anvil arrives with cost 1 and no traits, which is how a
+      // naive read ends up advertising eleven 1-cost "champions". Traits are the
+      // real discriminator — every champion the shop sells has at least one.
+      cost: !Number.isFinite(cost) || traits.length === 0 ? 0 : Math.max(0, Math.round(cost)),
       traits,
       image_url: imageUrl(champion.squareIcon ?? champion.icon),
     });

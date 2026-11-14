@@ -1,8 +1,127 @@
 {
-  "generatedAt": "2026-11-13T19:15:53.049Z",
+  "generatedAt": "2026-11-14T09:05:32.431Z",
   "source": "units/items/traits/augments tables (Community Dragon via `npm run crawl -- load-assets`)",
   "sets": {
     "18": [
+      {
+        "id": "TFT_ArmoryKeyOrnn",
+        "name": "Artifact Item Anvil",
+        "cost": 0,
+        "imageUrl": null,
+        "traits": []
+      },
+      {
+        "id": "TFT_ArmoryKeyCompleted",
+        "name": "Completed Item Anvil",
+        "cost": 0,
+        "imageUrl": null,
+        "traits": []
+      },
+      {
+        "id": "TFT_ArmoryKeyComponent",
+        "name": "Component Anvil",
+        "cost": 0,
+        "imageUrl": null,
+        "traits": []
+      },
+      {
+        "id": "TFT_ElderDragon",
+        "name": "Elder Dragon",
+        "cost": 0,
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/championsplashes/tft_elderdragon_mobile.png",
+        "traits": []
+      },
+      {
+        "id": "TFT_BlueGolem",
+        "name": "Golem",
+        "cost": 0,
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/championsplashes/tft_bluegolem_mobile.png",
+        "traits": []
+      },
+      {
+        "id": "TFT_Krug",
+        "name": "Krug",
+        "cost": 0,
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/championsplashes/tft_krug_mobile.png",
+        "traits": []
+      },
+      {
+        "id": "TFT6_MercenaryChest",
+        "name": "Mercenary Chest",
+        "cost": 0,
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/championsplashes/tft6_mercenarychest_mobile.png",
+        "traits": []
+      },
+      {
+        "id": "TFT_Murkwolf",
+        "name": "Murk Wolf",
+        "cost": 0,
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/championsplashes/tft_murkwolf_mobile.png",
+        "traits": []
+      },
+      {
+        "id": "TFT_MurkwolfMini",
+        "name": "Murkwolf",
+        "cost": 0,
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/championsplashes/tft_murkwolf_mobile.png",
+        "traits": []
+      },
+      {
+        "id": "TFT_Razorbeak",
+        "name": "Razorbeak",
+        "cost": 0,
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/championsplashes/tft_razorbeak_mobile.png",
+        "traits": []
+      },
+      {
+        "id": "TFT_RazorbeakMini",
+        "name": "Razorbeak",
+        "cost": 0,
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/championsplashes/tft_razorbeak_mobile.png",
+        "traits": []
+      },
+      {
+        "id": "TFT_RiftHerald",
+        "name": "Rift Herald",
+        "cost": 0,
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/championsplashes/tft_riftherald_mobile.png",
+        "traits": []
+      },
+      {
+        "id": "TFT9_SLIME_Crab",
+        "name": "Rift Scuttler",
+        "cost": 0,
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/championsplashes/tft_scuttlecrab_mobile.png",
+        "traits": []
+      },
+      {
+        "id": "TFT_ArmoryKeySupport",
+        "name": "Support item anvil",
+        "cost": 0,
+        "imageUrl": null,
+        "traits": []
+      },
+      {
+        "id": "TFT5_EmblemArmoryKey",
+        "name": "Tome of Traits",
+        "cost": 0,
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/championsplashes/tft5_draconicegg_mobile.png",
+        "traits": []
+      },
+      {
+        "id": "TFT_TrainingDummy",
+        "name": "Training Dummy",
+        "cost": 0,
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/championsplashes/tftdebug_dummy_mobile.png",
+        "traits": []
+      },
+      {
+        "id": "TFT_Voidspawn",
+        "name": "Voidspawn",
+        "cost": 0,
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/championsplashes/tft_voidspawn_mobile.png",
+        "traits": []
+      },
       {
         "id": "DA_18_Akali_AD",
         "name": "Akali",
@@ -35,20 +154,6 @@
         ]
       },
       {
-        "id": "TFT_ElderDragon",
-        "name": "Elder Dragon",
-        "cost": 1,
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/championsplashes/tft_elderdragon_mobile.png",
-        "traits": []
-      },
-      {
-        "id": "TFT_BlueGolem",
-        "name": "Golem",
-        "cost": 1,
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/championsplashes/tft_bluegolem_mobile.png",
-        "traits": []
-      },
-      {
         "id": "DA_Karma18",
         "name": "Karma",
         "cost": 1,
@@ -69,13 +174,6 @@
         ]
       },
       {
-        "id": "TFT_Krug",
-        "name": "Krug",
-        "cost": 1,
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/championsplashes/tft_krug_mobile.png",
-        "traits": []
-      },
-      {
         "id": "DA_18_Leona",
         "name": "Leona",
         "cost": 1,
@@ -84,20 +182,6 @@
           "DA_18_Solar",
           "DA_18_Defender"
         ]
-      },
-      {
-        "id": "TFT_Murkwolf",
-        "name": "Murk Wolf",
-        "cost": 1,
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/championsplashes/tft_murkwolf_mobile.png",
-        "traits": []
-      },
-      {
-        "id": "TFT_MurkwolfMini",
-        "name": "Murkwolf",
-        "cost": 1,
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/championsplashes/tft_murkwolf_mobile.png",
-        "traits": []
       },
       {
         "id": "DA_18_Ornn",
@@ -131,20 +215,6 @@
         ]
       },
       {
-        "id": "TFT_RazorbeakMini",
-        "name": "Razorbeak",
-        "cost": 1,
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/championsplashes/tft_razorbeak_mobile.png",
-        "traits": []
-      },
-      {
-        "id": "TFT_Razorbeak",
-        "name": "Razorbeak",
-        "cost": 1,
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/championsplashes/tft_razorbeak_mobile.png",
-        "traits": []
-      },
-      {
         "id": "DA_18_RekSai",
         "name": "Rek'Sai",
         "cost": 1,
@@ -153,27 +223,6 @@
           "DA_18_Blackthorn",
           "DA_18_Brawler"
         ]
-      },
-      {
-        "id": "TFT_RiftHerald",
-        "name": "Rift Herald",
-        "cost": 1,
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/championsplashes/tft_riftherald_mobile.png",
-        "traits": []
-      },
-      {
-        "id": "TFT9_SLIME_Crab",
-        "name": "Rift Scuttler",
-        "cost": 1,
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/championsplashes/tft_scuttlecrab_mobile.png",
-        "traits": []
-      },
-      {
-        "id": "TFT_TrainingDummy",
-        "name": "Training Dummy",
-        "cost": 1,
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/championsplashes/tftdebug_dummy_mobile.png",
-        "traits": []
       },
       {
         "id": "DA_18_Varus",
@@ -195,13 +244,6 @@
           "DA_18_Sprykin",
           "DA_18_Spellweaver"
         ]
-      },
-      {
-        "id": "TFT_Voidspawn",
-        "name": "Voidspawn",
-        "cost": 1,
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/championsplashes/tft_voidspawn_mobile.png",
-        "traits": []
       },
       {
         "id": "DA_18_Xayah",
@@ -828,48 +870,6 @@
           "DA_Emerald18",
           "DA_18_Vanguard"
         ]
-      },
-      {
-        "id": "TFT_ArmoryKeyOrnn",
-        "name": "Artifact Item Anvil",
-        "cost": 8,
-        "imageUrl": null,
-        "traits": []
-      },
-      {
-        "id": "TFT_ArmoryKeyCompleted",
-        "name": "Completed Item Anvil",
-        "cost": 8,
-        "imageUrl": null,
-        "traits": []
-      },
-      {
-        "id": "TFT_ArmoryKeyComponent",
-        "name": "Component Anvil",
-        "cost": 8,
-        "imageUrl": null,
-        "traits": []
-      },
-      {
-        "id": "TFT_ArmoryKeySupport",
-        "name": "Support item anvil",
-        "cost": 8,
-        "imageUrl": null,
-        "traits": []
-      },
-      {
-        "id": "TFT5_EmblemArmoryKey",
-        "name": "Tome of Traits",
-        "cost": 8,
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/championsplashes/tft5_draconicegg_mobile.png",
-        "traits": []
-      },
-      {
-        "id": "TFT6_MercenaryChest",
-        "name": "Mercenary Chest",
-        "cost": 11,
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/championsplashes/tft6_mercenarychest_mobile.png",
-        "traits": []
       }
     ]
   },
@@ -912,13 +912,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_bloodthirster.png"
       },
       {
-        "id": "TFT_Item_BlueBuff",
+        "id": "DA_BlueBuff",
         "name": "Blue Buff",
         "kind": "completed",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_bluebuff.png"
       },
       {
-        "id": "DA_BlueBuff",
+        "id": "TFT_Item_BlueBuff",
         "name": "Blue Buff",
         "kind": "completed",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_bluebuff.png"
@@ -936,22 +936,16 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_bramblevest.png"
       },
       {
-        "id": "TFT_Item_Crownguard",
-        "name": "Crownguard",
-        "kind": "completed",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_crownguard.png"
-      },
-      {
         "id": "DA_Crownguard",
         "name": "Crownguard",
         "kind": "completed",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_crownguard.png"
       },
       {
-        "id": "TFT_Item_Deathblade",
-        "name": "Deathblade",
+        "id": "TFT_Item_Crownguard",
+        "name": "Crownguard",
         "kind": "completed",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_deathblade.png"
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_crownguard.png"
       },
       {
         "id": "DA_Deathblade",
@@ -960,10 +954,10 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_deathblade.png"
       },
       {
-        "id": "TFT_Item_DragonsClaw",
-        "name": "Dragon's Claw",
+        "id": "TFT_Item_Deathblade",
+        "name": "Deathblade",
         "kind": "completed",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_dragonsclaw.png"
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_deathblade.png"
       },
       {
         "id": "DA_DragonsClaw",
@@ -972,10 +966,10 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_dragonsclaw.png"
       },
       {
-        "id": "TFT_Item_GuardianAngel",
-        "name": "Edge of Night",
+        "id": "TFT_Item_DragonsClaw",
+        "name": "Dragon's Claw",
         "kind": "completed",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_guardianangel.png"
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_dragonsclaw.png"
       },
       {
         "id": "DA_EdgeOfNight",
@@ -984,13 +978,19 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_guardianangel.png"
       },
       {
-        "id": "TFT_Item_SpectralGauntlet",
+        "id": "TFT_Item_GuardianAngel",
+        "name": "Edge of Night",
+        "kind": "completed",
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_guardianangel.png"
+      },
+      {
+        "id": "DA_Evenshroud",
         "name": "Evenshroud",
         "kind": "completed",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_spectralgauntlet.png"
       },
       {
-        "id": "DA_Evenshroud",
+        "id": "TFT_Item_SpectralGauntlet",
         "name": "Evenshroud",
         "kind": "completed",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_spectralgauntlet.png"
@@ -1008,22 +1008,16 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_gargoylestoneplate.png"
       },
       {
-        "id": "TFT_Item_MadredsBloodrazor",
-        "name": "Giant Slayer",
-        "kind": "completed",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_madredsbloodrazor.png"
-      },
-      {
         "id": "DA_GiantSlayer",
         "name": "Giant Slayer",
         "kind": "completed",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_madredsbloodrazor.png"
       },
       {
-        "id": "TFT_Item_GuinsoosRageblade",
-        "name": "Guinsoo's Rageblade",
+        "id": "TFT_Item_MadredsBloodrazor",
+        "name": "Giant Slayer",
         "kind": "completed",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_guinsoosrageblade.png"
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_madredsbloodrazor.png"
       },
       {
         "id": "DA_GuinsoosRageblade",
@@ -1032,13 +1026,19 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_guinsoosrageblade.png"
       },
       {
-        "id": "DA_HandOfJustice",
+        "id": "TFT_Item_GuinsoosRageblade",
+        "name": "Guinsoo's Rageblade",
+        "kind": "completed",
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_guinsoosrageblade.png"
+      },
+      {
+        "id": "TFT_Item_UnstableConcoction",
         "name": "Hand Of Justice",
         "kind": "completed",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_unstableconcoction.png"
       },
       {
-        "id": "TFT_Item_UnstableConcoction",
+        "id": "DA_HandOfJustice",
         "name": "Hand Of Justice",
         "kind": "completed",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_unstableconcoction.png"
@@ -1056,22 +1056,16 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_hextechgunblade.png"
       },
       {
-        "id": "DA_InfinityEdge",
-        "name": "Infinity Edge",
-        "kind": "completed",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_infinityedge.png"
-      },
-      {
         "id": "TFT_Item_InfinityEdge",
         "name": "Infinity Edge",
         "kind": "completed",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_infinityedge.png"
       },
       {
-        "id": "TFT_Item_IonicSpark",
-        "name": "Ionic Spark",
+        "id": "DA_InfinityEdge",
+        "name": "Infinity Edge",
         "kind": "completed",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_ionicspark.png"
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_infinityedge.png"
       },
       {
         "id": "DA_IonicSpark",
@@ -1080,13 +1074,19 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_ionicspark.png"
       },
       {
-        "id": "DA_JeweledGauntlet",
+        "id": "TFT_Item_IonicSpark",
+        "name": "Ionic Spark",
+        "kind": "completed",
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_ionicspark.png"
+      },
+      {
+        "id": "TFT_Item_JeweledGauntlet",
         "name": "Jeweled Gauntlet",
         "kind": "completed",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_jeweledgauntlet.png"
       },
       {
-        "id": "TFT_Item_JeweledGauntlet",
+        "id": "DA_JeweledGauntlet",
         "name": "Jeweled Gauntlet",
         "kind": "completed",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_jeweledgauntlet.png"
@@ -1104,13 +1104,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_krakenslayer.png"
       },
       {
-        "id": "TFT_Item_LastWhisper",
+        "id": "DA_LastWhisper",
         "name": "Last Whisper",
         "kind": "completed",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_lastwhisper.png"
       },
       {
-        "id": "DA_LastWhisper",
+        "id": "TFT_Item_LastWhisper",
         "name": "Last Whisper",
         "kind": "completed",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_lastwhisper.png"
@@ -1128,13 +1128,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_morellonomicon.png"
       },
       {
-        "id": "TFT_Item_Leviathan",
+        "id": "DA_NashorsTooth",
         "name": "Nashor's Tooth",
         "kind": "completed",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_leviathan.png"
       },
       {
-        "id": "DA_NashorsTooth",
+        "id": "TFT_Item_Leviathan",
         "name": "Nashor's Tooth",
         "kind": "completed",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_leviathan.png"
@@ -1164,22 +1164,16 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_quicksilver.png"
       },
       {
-        "id": "DA_RabadonsDeathcap",
-        "name": "Rabadon's Deathcap",
-        "kind": "completed",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_rabadonsdeathcap.png"
-      },
-      {
         "id": "TFT_Item_RabadonsDeathcap",
         "name": "Rabadon's Deathcap",
         "kind": "completed",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_rabadonsdeathcap.png"
       },
       {
-        "id": "TFT_Item_RapidFireCannon",
-        "name": "Red Buff",
+        "id": "DA_RabadonsDeathcap",
+        "name": "Rabadon's Deathcap",
         "kind": "completed",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_rapidfirecannon.png"
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_rabadonsdeathcap.png"
       },
       {
         "id": "DA_RedBuff",
@@ -1188,13 +1182,19 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_rapidfirecannon.png"
       },
       {
-        "id": "TFT_Item_SpearOfShojin",
+        "id": "TFT_Item_RapidFireCannon",
+        "name": "Red Buff",
+        "kind": "completed",
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_rapidfirecannon.png"
+      },
+      {
+        "id": "DA_SpearOfShojin",
         "name": "Spear of Shojin",
         "kind": "completed",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_spearofshojin.png"
       },
       {
-        "id": "DA_SpearOfShojin",
+        "id": "TFT_Item_SpearOfShojin",
         "name": "Spear of Shojin",
         "kind": "completed",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_spearofshojin.png"
@@ -1236,13 +1236,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_steraksgage.png"
       },
       {
-        "id": "DA_StrikersFlail",
+        "id": "TFT_Item_PowerGauntlet",
         "name": "Striker's Flail",
         "kind": "completed",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_powergauntlet.png"
       },
       {
-        "id": "TFT_Item_PowerGauntlet",
+        "id": "DA_StrikersFlail",
         "name": "Striker's Flail",
         "kind": "completed",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_powergauntlet.png"
@@ -1260,13 +1260,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_redbuff.png"
       },
       {
-        "id": "TFT_Item_TacticiansRing",
+        "id": "DA_TacticiansCape",
         "name": "Tactician's Cape",
         "kind": "completed",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_tacticiansring.png"
       },
       {
-        "id": "DA_TacticiansCape",
+        "id": "TFT_Item_TacticiansRing",
         "name": "Tactician's Cape",
         "kind": "completed",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_tacticiansring.png"
@@ -1296,22 +1296,16 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_tacticiansscepter.png"
       },
       {
-        "id": "TFT_Item_ThiefsGloves",
-        "name": "Thief's Gloves",
-        "kind": "completed",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_thiefsgloves.png"
-      },
-      {
         "id": "DA_ThiefsGloves",
         "name": "Thief's Gloves",
         "kind": "completed",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_thiefsgloves.png"
       },
       {
-        "id": "TFT_Item_TitansResolve",
-        "name": "Titan's Resolve",
+        "id": "TFT_Item_ThiefsGloves",
+        "name": "Thief's Gloves",
         "kind": "completed",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_titansresolve.png"
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_thiefsgloves.png"
       },
       {
         "id": "DA_TitansResolve",
@@ -1320,10 +1314,10 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_titansresolve.png"
       },
       {
-        "id": "TFT_Item_StatikkShiv",
-        "name": "Void Staff",
+        "id": "TFT_Item_TitansResolve",
+        "name": "Titan's Resolve",
         "kind": "completed",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_voidstaff.png"
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_titansresolve.png"
       },
       {
         "id": "DA_VoidStaff",
@@ -1332,13 +1326,19 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_voidstaff.png"
       },
       {
-        "id": "DA_WarmogsArmor",
+        "id": "TFT_Item_StatikkShiv",
+        "name": "Void Staff",
+        "kind": "completed",
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_voidstaff.png"
+      },
+      {
+        "id": "TFT_Item_WarmogsArmor",
         "name": "Warmog's Armor",
         "kind": "completed",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_warmogsarmor.png"
       },
       {
-        "id": "TFT_Item_WarmogsArmor",
+        "id": "DA_WarmogsArmor",
         "name": "Warmog's Armor",
         "kind": "completed",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_warmogsarmor.png"
@@ -1386,13 +1386,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_aegisofthelegion.png"
       },
       {
-        "id": "TFT_Item_BFSword",
+        "id": "DA_Component_BFSword",
         "name": "B.F. Sword",
         "kind": "component",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_bfsword.png"
       },
       {
-        "id": "DA_Component_BFSword",
+        "id": "TFT_Item_BFSword",
         "name": "B.F. Sword",
         "kind": "component",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_bfsword.png"
@@ -1416,13 +1416,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft16_artifact_kappajuice.png"
       },
       {
-        "id": "DA_Component_ChainVest",
+        "id": "TFT_Item_ChainVest",
         "name": "Chain Vest",
         "kind": "component",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_chainvest.png"
       },
       {
-        "id": "TFT_Item_ChainVest",
+        "id": "DA_Component_ChainVest",
         "name": "Chain Vest",
         "kind": "component",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_chainvest.png"
@@ -1506,13 +1506,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_fryingpan.png"
       },
       {
-        "id": "TFT_Item_GiantsBelt",
+        "id": "DA_Component_GiantsBelt",
         "name": "Giant's Belt",
         "kind": "component",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_giantsbelt.png"
       },
       {
-        "id": "DA_Component_GiantsBelt",
+        "id": "TFT_Item_GiantsBelt",
         "name": "Giant's Belt",
         "kind": "component",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_giantsbelt.png"
@@ -1614,13 +1614,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_needlesslylargerod.png"
       },
       {
-        "id": "TFT_Item_NegatronCloak",
+        "id": "DA_Component_NegatronCloak",
         "name": "Negatron Cloak",
         "kind": "component",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_negatroncloak.png"
       },
       {
-        "id": "DA_Component_NegatronCloak",
+        "id": "TFT_Item_NegatronCloak",
         "name": "Negatron Cloak",
         "kind": "component",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_negatroncloak.png"
@@ -1656,13 +1656,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_artifact_rapidfirecannon.png"
       },
       {
-        "id": "DA_Component_RecurveBow",
+        "id": "TFT_Item_RecurveBow",
         "name": "Recurve Bow",
         "kind": "component",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_recurvebow.png"
       },
       {
-        "id": "TFT_Item_RecurveBow",
+        "id": "DA_Component_RecurveBow",
         "name": "Recurve Bow",
         "kind": "component",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_recurvebow.png"
@@ -1710,13 +1710,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_sparringgloves.png"
       },
       {
-        "id": "TFT_Item_Spatula",
+        "id": "DA_Component_Spatula",
         "name": "Spatula",
         "kind": "component",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_spatula.png"
       },
       {
-        "id": "DA_Component_Spatula",
+        "id": "TFT_Item_Spatula",
         "name": "Spatula",
         "kind": "component",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_spatula.png"
@@ -1890,13 +1890,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/particles/tft/item_icons/traits/spatula/set18/tft18_emblem_fae.png"
       },
       {
-        "id": "DA_18_EmblemFloraFatalisAugment",
+        "id": "DA_18_EmblemFloraFatalis",
         "name": "Flora Fatalis Emblem",
         "kind": "emblem",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/particles/tft/item_icons/traits/spatula/set18/tft18_emblem_florafatalis.png"
       },
       {
-        "id": "DA_18_EmblemFloraFatalis",
+        "id": "DA_18_EmblemFloraFatalisAugment",
         "name": "Flora Fatalis Emblem",
         "kind": "emblem",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/particles/tft/item_icons/traits/spatula/set18/tft18_emblem_florafatalis.png"
@@ -2286,13 +2286,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/particles/tft/item_icons/pairs/assistgivegold.png"
       },
       {
-        "id": "DA_AbandonShip18",
+        "id": "DA_AbandonShip18_Upgrade",
         "name": "Abandon Ship",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_AbandonShip18_Upgrade",
+        "id": "DA_AbandonShip18",
         "name": "Abandon Ship",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
@@ -2400,13 +2400,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/particles/tft/item_icons/pairs/assistrandomcomponent.png"
       },
       {
-        "id": "DA_AnimateShop18",
+        "id": "DA_AnimateShop18_Upgrade",
         "name": "Animate Shop",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_AnimateShop18_Upgrade",
+        "id": "DA_AnimateShop18",
         "name": "Animate Shop",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
@@ -2442,13 +2442,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/particles/tft/item_icons/pairs/doubleup_assistarmory_randomitem_ornn.png"
       },
       {
-        "id": "DA_Artifactinate18",
+        "id": "DA_Artifactinate18_Upgrade",
         "name": "Artifactinate",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_Artifactinate18_Upgrade",
+        "id": "DA_Artifactinate18",
         "name": "Artifactinate",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
@@ -2490,12 +2490,6 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_Barrier18_Upgrade",
-        "name": "Barrier",
-        "kind": "special",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
-      },
-      {
         "id": "DA_Barrier18_Prismatic",
         "name": "Barrier",
         "kind": "special",
@@ -2503,6 +2497,12 @@
       },
       {
         "id": "DA_Barrier18",
+        "name": "Barrier",
+        "kind": "special",
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
+      },
+      {
+        "id": "DA_Barrier18_Upgrade",
         "name": "Barrier",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
@@ -2526,25 +2526,25 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_BeggarsWisp18",
-        "name": "Beggar's Wisp",
-        "kind": "special",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
-      },
-      {
         "id": "DA_BeggarsWisp18_Upgrade",
         "name": "Beggar's Wisp",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_BigBoom18",
-        "name": "Big Boom",
+        "id": "DA_BeggarsWisp18",
+        "name": "Beggar's Wisp",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
         "id": "DA_BigBoom18_Upgrade",
+        "name": "Big Boom",
+        "kind": "special",
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
+      },
+      {
+        "id": "DA_BigBoom18",
         "name": "Big Boom",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
@@ -2568,6 +2568,12 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft9_item_ornnprototypeforge.png"
       },
       {
+        "id": "DA_BlastPotion18_Upgrade_Charm",
+        "name": "Blast Potion",
+        "kind": "special",
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
+      },
+      {
         "id": "DA_BlastPotion18",
         "name": "Blast Potion",
         "kind": "special",
@@ -2580,8 +2586,8 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_BlastPotion18_Upgrade_Charm",
-        "name": "Blast Potion",
+        "id": "DA_Blaze18_Prismatic",
+        "name": "Blaze",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
@@ -2593,12 +2599,6 @@
       },
       {
         "id": "DA_Blaze18",
-        "name": "Blaze",
-        "kind": "special",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
-      },
-      {
-        "id": "DA_Blaze18_Prismatic",
         "name": "Blaze",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
@@ -2622,25 +2622,25 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_BloodAndIron18",
-        "name": "Blood and Iron",
-        "kind": "special",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
-      },
-      {
         "id": "DA_BloodAndIron18_Upgrade",
         "name": "Blood and Iron",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_BoosterShot18",
-        "name": "Booster Shot",
+        "id": "DA_BloodAndIron18",
+        "name": "Blood and Iron",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
         "id": "DA_BoosterShot18_Upgrade",
+        "name": "Booster Shot",
+        "kind": "special",
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
+      },
+      {
+        "id": "DA_BoosterShot18",
         "name": "Booster Shot",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
@@ -2682,13 +2682,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_Bulwark18",
+        "id": "DA_Bulwark18_Upgrade",
         "name": "Bulwark",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_Bulwark18_Upgrade",
+        "id": "DA_Bulwark18",
         "name": "Bulwark",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
@@ -2718,13 +2718,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_consumable_neekoshelp.png"
       },
       {
-        "id": "DA_18_CircleofElders",
+        "id": "DA_18_CircleofElders_Upgrade",
         "name": "Circle of Elders",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_18_CircleofElders_Upgrade",
+        "id": "DA_18_CircleofElders",
         "name": "Circle of Elders",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
@@ -2748,13 +2748,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_CoinFlip18_Upgrade",
+        "id": "DA_CoinFlip18",
         "name": "Coin Flip",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_CoinFlip18",
+        "id": "DA_CoinFlip18_Upgrade",
         "name": "Coin Flip",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
@@ -2766,13 +2766,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_Combust18_Prismatic",
+        "id": "DA_Combust18_Upgrade",
         "name": "Combust",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_Combust18_Upgrade",
+        "id": "DA_Combust18_Prismatic",
         "name": "Combust",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
@@ -2790,13 +2790,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/characters/tft_armorykeycompleted/hud/icons2d/tft_armorykeycompleted_square.png"
       },
       {
-        "id": "DA_18_Counterspell_Prismatic",
+        "id": "DA_18_Counterspell_Upgrade",
         "name": "Counterspell",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_18_Counterspell_Upgrade",
+        "id": "DA_18_Counterspell_Prismatic",
         "name": "Counterspell",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
@@ -2820,13 +2820,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_Cutpurse18",
+        "id": "DA_Cutpurse18_Upgrade",
         "name": "Cutpurse",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_Cutpurse18_Upgrade",
+        "id": "DA_Cutpurse18",
         "name": "Cutpurse",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
@@ -2910,13 +2910,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_DoodadSack18",
+        "id": "DA_DoodadSack18_Upgrade",
         "name": "Doodad Sack",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_DoodadSack18_Upgrade",
+        "id": "DA_DoodadSack18",
         "name": "Doodad Sack",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
@@ -2970,25 +2970,25 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/characters/tft_trainingdummy/hud/icons2d/tft_trainingdummy_donothing.png"
       },
       {
-        "id": "DA_18_EarlyFix",
-        "name": "Early Fix",
-        "kind": "special",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
-      },
-      {
         "id": "DA_18_EarlyFix_Upgrade",
         "name": "Early Fix",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_EssenceTheft18_Upgrade",
-        "name": "Essence Theft",
+        "id": "DA_18_EarlyFix",
+        "name": "Early Fix",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
         "id": "DA_EssenceTheft18",
+        "name": "Essence Theft",
+        "kind": "special",
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
+      },
+      {
+        "id": "DA_EssenceTheft18_Upgrade",
         "name": "Essence Theft",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
@@ -3018,25 +3018,25 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_18_Fellowship_Upgrade",
-        "name": "Fellowship",
-        "kind": "special",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
-      },
-      {
         "id": "DA_18_Fellowship",
         "name": "Fellowship",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_18_Fertilize_Upgrade",
-        "name": "Fertilize",
+        "id": "DA_18_Fellowship_Upgrade",
+        "name": "Fellowship",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
         "id": "DA_18_Fertilize",
+        "name": "Fertilize",
+        "kind": "special",
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
+      },
+      {
+        "id": "DA_18_Fertilize_Upgrade",
         "name": "Fertilize",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
@@ -3048,13 +3048,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_artifact_fishbones.png"
       },
       {
-        "id": "DA_FlashFire18",
+        "id": "DA_FlashFire18_Upgrade",
         "name": "Flash Fire",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_FlashFire18_Upgrade",
+        "id": "DA_FlashFire18",
         "name": "Flash Fire",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
@@ -3066,25 +3066,25 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_artifact_navoriflickerplade.png"
       },
       {
-        "id": "DA_FlipFrenzy18_Upgrade",
-        "name": "Flip Frenzy",
-        "kind": "special",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
-      },
-      {
         "id": "DA_FlipFrenzy18",
         "name": "Flip Frenzy",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_Flow18",
-        "name": "Flow",
+        "id": "DA_FlipFrenzy18_Upgrade",
+        "name": "Flip Frenzy",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
         "id": "DA_Flow18_Upgrade",
+        "name": "Flow",
+        "kind": "special",
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
+      },
+      {
+        "id": "DA_Flow18",
         "name": "Flow",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
@@ -3108,20 +3108,14 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_18_ForestMage_Upgrade",
-        "name": "Forest Mage",
-        "kind": "special",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
-      },
-      {
         "id": "DA_18_ForestMage",
         "name": "Forest Mage",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_ForestTwinsUpgrade18",
-        "name": "Forest Twins",
+        "id": "DA_18_ForestMage_Upgrade",
+        "name": "Forest Mage",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
@@ -3132,8 +3126,8 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_FoundFriend18",
-        "name": "Found Friend",
+        "id": "DA_ForestTwinsUpgrade18",
+        "name": "Forest Twins",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
@@ -3144,8 +3138,8 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_18_Freeroller",
-        "name": "Freeroller",
+        "id": "DA_FoundFriend18",
+        "name": "Found Friend",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
@@ -3154,6 +3148,18 @@
         "name": "Freeroller",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
+      },
+      {
+        "id": "DA_18_Freeroller",
+        "name": "Freeroller",
+        "kind": "special",
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
+      },
+      {
+        "id": "TFT7_Item_ShimmerscaleGamblersBlade_HR",
+        "name": "Gambler's Blade",
+        "kind": "special",
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft7_item_shimmerscalegamblersblade_hr.png"
       },
       {
         "id": "TFT7_Item_ShimmerscaleGamblersBlade",
@@ -3168,12 +3174,6 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft7_item_shimmerscalegamblersblade.png"
       },
       {
-        "id": "TFT7_Item_ShimmerscaleGamblersBlade_HR",
-        "name": "Gambler's Blade",
-        "kind": "special",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft7_item_shimmerscalegamblersblade_hr.png"
-      },
-      {
         "id": "DA_18_GiantGrowth",
         "name": "Giant Growth",
         "kind": "special",
@@ -3186,7 +3186,7 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_GiantsAura18_Upgrade",
+        "id": "DA_GiantsAura18_Prismatic",
         "name": "Giant's Aura",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
@@ -3198,16 +3198,10 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_GiantsAura18_Prismatic",
+        "id": "DA_GiantsAura18_Upgrade",
         "name": "Giant's Aura",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
-      },
-      {
-        "id": "DA_Artifact_GoldCollector",
-        "name": "Gold Collector",
-        "kind": "special",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft4_item_ornnthecollector.png"
       },
       {
         "id": "TFT4_Item_OrnnTheCollector",
@@ -3216,10 +3210,10 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft4_item_ornnthecollector.png"
       },
       {
-        "id": "DA_GoldenGooseUpgrade18",
-        "name": "Golden Goose",
+        "id": "DA_Artifact_GoldCollector",
+        "name": "Gold Collector",
         "kind": "special",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft4_item_ornnthecollector.png"
       },
       {
         "id": "DA_GoldenGoose18",
@@ -3228,13 +3222,19 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "TFT9_Consumable_GoldenItemRemover",
+        "id": "DA_GoldenGooseUpgrade18",
+        "name": "Golden Goose",
+        "kind": "special",
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
+      },
+      {
+        "id": "DA_Consumable_GoldenItemRemover",
         "name": "Golden Item Remover",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft9_consumable_goldenitemremover.png"
       },
       {
-        "id": "DA_Consumable_GoldenItemRemover",
+        "id": "TFT9_Consumable_GoldenItemRemover",
         "name": "Golden Item Remover",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft9_consumable_goldenitemremover.png"
@@ -3282,13 +3282,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_GrowUp18",
+        "id": "DA_GrowUp18_Upgrade",
         "name": "Grow Up",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_GrowUp18_Upgrade",
+        "id": "DA_GrowUp18",
         "name": "Grow Up",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
@@ -3342,12 +3342,6 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/tft18/tft18_healthbooster.png"
       },
       {
-        "id": "DA_HealthPotion18_Upgrade_Charm",
-        "name": "Health Potion",
-        "kind": "special",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
-      },
-      {
         "id": "DA_HealthPotion18",
         "name": "Health Potion",
         "kind": "special",
@@ -3355,6 +3349,12 @@
       },
       {
         "id": "DA_HealthPotion18_Charm",
+        "name": "Health Potion",
+        "kind": "special",
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
+      },
+      {
+        "id": "DA_HealthPotion18_Upgrade_Charm",
         "name": "Health Potion",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
@@ -3378,20 +3378,14 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_artifact_hellfirehatchet.png"
       },
       {
-        "id": "DA_HeroOfProphecy18",
-        "name": "Hero Of Prophecy",
-        "kind": "special",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
-      },
-      {
         "id": "DA_HeroOfProphecy18_Upgrade",
         "name": "Hero Of Prophecy",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_HerosEntranceUpgrade18",
-        "name": "Hero's Entrance",
+        "id": "DA_HeroOfProphecy18",
+        "name": "Hero Of Prophecy",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
@@ -3402,13 +3396,19 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_18_HeroicSacrifice",
-        "name": "Heroic Sacrifice",
+        "id": "DA_HerosEntranceUpgrade18",
+        "name": "Hero's Entrance",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
         "id": "DA_18_HeroicSacrifice_Upgrade",
+        "name": "Heroic Sacrifice",
+        "kind": "special",
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
+      },
+      {
+        "id": "DA_18_HeroicSacrifice",
         "name": "Heroic Sacrifice",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
@@ -3432,13 +3432,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_HomingFireflies18",
+        "id": "DA_HomingFireflies18_Upgrade",
         "name": "Homing Fireflies",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_HomingFireflies18_Upgrade",
+        "id": "DA_HomingFireflies18",
         "name": "Homing Fireflies",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
@@ -3468,19 +3468,19 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_Artifact_Hullcrusher",
-        "name": "Hullcrusher",
-        "kind": "special",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/particles/tft/item_icons/ornn_items/tft9_ornnitem_hullbreaker.png"
-      },
-      {
         "id": "TFT9_Item_OrnnHullbreaker",
         "name": "Hullcrusher",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/particles/tft/item_icons/ornn_items/tft9_ornnitem_hullbreaker.png"
       },
       {
-        "id": "DA_18_Hummingbird_Upgrade",
+        "id": "DA_Artifact_Hullcrusher",
+        "name": "Hullcrusher",
+        "kind": "special",
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/particles/tft/item_icons/ornn_items/tft9_ornnitem_hullbreaker.png"
+      },
+      {
+        "id": "DA_18_Hummingbird",
         "name": "Hummingbird",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
@@ -3492,14 +3492,8 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_18_Hummingbird",
+        "id": "DA_18_Hummingbird_Upgrade",
         "name": "Hummingbird",
-        "kind": "special",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
-      },
-      {
-        "id": "DA_IdleCraftsman18",
-        "name": "Idle Craftsman",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
@@ -3510,8 +3504,8 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_ImprovedReach18_Upgrade",
-        "name": "Improved Reach",
+        "id": "DA_IdleCraftsman18",
+        "name": "Idle Craftsman",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
@@ -3522,13 +3516,19 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "TFT4_Item_OrnnInfinityForce",
+        "id": "DA_ImprovedReach18_Upgrade",
+        "name": "Improved Reach",
+        "kind": "special",
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
+      },
+      {
+        "id": "DA_Artifact_InfinityForce",
         "name": "Infinity Force",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft4_item_ornninfinityforce.png"
       },
       {
-        "id": "DA_Artifact_InfinityForce",
+        "id": "TFT4_Item_OrnnInfinityForce",
         "name": "Infinity Force",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft4_item_ornninfinityforce.png"
@@ -3546,25 +3546,25 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_IronCore18_Upgrade",
-        "name": "Iron Core",
-        "kind": "special",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
-      },
-      {
         "id": "DA_IronCore18",
         "name": "Iron Core",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_Ironwood18_Upgrade",
-        "name": "Ironwood",
+        "id": "DA_IronCore18_Upgrade",
+        "name": "Iron Core",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
         "id": "DA_Ironwood18",
+        "name": "Ironwood",
+        "kind": "special",
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
+      },
+      {
+        "id": "DA_Ironwood18_Upgrade",
         "name": "Ironwood",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
@@ -3588,20 +3588,14 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_Jungling18",
-        "name": "Jungling",
-        "kind": "special",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
-      },
-      {
         "id": "DA_Jungling18_Upgrade",
         "name": "Jungling",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_KillersRegretUpgrade18",
-        "name": "Killer's Regret",
+        "id": "DA_Jungling18",
+        "name": "Jungling",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
@@ -3612,13 +3606,19 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_18_KillingFrenzy_Upgrade",
-        "name": "Killing Frenzy",
+        "id": "DA_KillersRegretUpgrade18",
+        "name": "Killer's Regret",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
         "id": "DA_18_KillingFrenzy",
+        "name": "Killing Frenzy",
+        "kind": "special",
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
+      },
+      {
+        "id": "DA_18_KillingFrenzy_Upgrade",
         "name": "Killing Frenzy",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
@@ -3636,20 +3636,14 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_KnickKnackJar18",
-        "name": "Knick-Knack Jar",
-        "kind": "special",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
-      },
-      {
         "id": "DA_KnickKnackJar18_Upgrade",
         "name": "Knick-Knack Jar",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_KnickKnackSack18",
-        "name": "Knick-Knack Sack",
+        "id": "DA_KnickKnackJar18",
+        "name": "Knick-Knack Jar",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
@@ -3660,7 +3654,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_LateBloomer18_Prismatic",
+        "id": "DA_KnickKnackSack18",
+        "name": "Knick-Knack Sack",
+        "kind": "special",
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
+      },
+      {
+        "id": "DA_LateBloomer18_Upgrade",
         "name": "Late Bloomer",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
@@ -3672,7 +3672,7 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_LateBloomer18_Upgrade",
+        "id": "DA_LateBloomer18_Prismatic",
         "name": "Late Bloomer",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
@@ -3690,13 +3690,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_consumable_championduplicator_iii.png"
       },
       {
-        "id": "DA_LesserChaos18",
+        "id": "DA_LesserChaos18_Upgrade",
         "name": "Lesser Chaos",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_LesserChaos18_Upgrade",
+        "id": "DA_LesserChaos18",
         "name": "Lesser Chaos",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
@@ -3720,6 +3720,12 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
+        "id": "DA_18_LightningStorm",
+        "name": "Lightning Storm",
+        "kind": "special",
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
+      },
+      {
         "id": "DA_18_LightningStorm_Prismatic",
         "name": "Lightning Storm",
         "kind": "special",
@@ -3732,19 +3738,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_18_LightningStorm",
-        "name": "Lightning Storm",
-        "kind": "special",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
-      },
-      {
-        "id": "DA_18_LightningStrike",
+        "id": "DA_18_LightningStrike_Upgrade",
         "name": "Lightning Strike",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_18_LightningStrike_Upgrade",
+        "id": "DA_18_LightningStrike",
         "name": "Lightning Strike",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
@@ -3756,13 +3756,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_artifact_lightshieldcrest.png"
       },
       {
-        "id": "DA_LivingSoil18",
+        "id": "DA_LivingSoil18_Upgrade",
         "name": "Living Soil",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_LivingSoil18_Upgrade",
+        "id": "DA_LivingSoil18",
         "name": "Living Soil",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
@@ -3786,13 +3786,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_Lucky718_Upgrade",
+        "id": "DA_Lucky718",
         "name": "Lucky 7",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_Lucky718",
+        "id": "DA_Lucky718_Upgrade",
         "name": "Lucky 7",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
@@ -3888,6 +3888,12 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
+        "id": "DA_ManaPotion18_Charm",
+        "name": "Mana Potion",
+        "kind": "special",
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
+      },
+      {
         "id": "DA_ManaPotion18",
         "name": "Mana Potion",
         "kind": "special",
@@ -3900,25 +3906,19 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_ManaPotion18_Charm",
-        "name": "Mana Potion",
-        "kind": "special",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
-      },
-      {
         "id": "DA_ManaRegenBooster18",
         "name": "Mana Regen Booster",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/tft18/tft18_manaregenbooster.png"
       },
       {
-        "id": "DA_ManaRichSoil18_Upgrade",
+        "id": "DA_ManaRichSoil18",
         "name": "Mana-Rich Soil",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_ManaRichSoil18",
+        "id": "DA_ManaRichSoil18_Upgrade",
         "name": "Mana-Rich Soil",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
@@ -3960,13 +3960,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "TFT_Consumable_MasterworkUpgrade",
+        "id": "DA_MasterworkUpgrade",
         "name": "Masterwork Upgrade",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_consumable_masterworkupgrade.png"
       },
       {
-        "id": "DA_MasterworkUpgrade",
+        "id": "TFT_Consumable_MasterworkUpgrade",
         "name": "Masterwork Upgrade",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_consumable_masterworkupgrade.png"
@@ -4032,13 +4032,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft7_item_shimmerscalemogulsmail.png"
       },
       {
-        "id": "TFT7_Item_ShimmerscaleMogulsMail",
+        "id": "TFT7_Item_ShimmerscaleMogulsMail_HR",
         "name": "Mogul's Mail",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft7_item_shimmerscalemogulsmail.png"
       },
       {
-        "id": "TFT7_Item_ShimmerscaleMogulsMail_HR",
+        "id": "TFT7_Item_ShimmerscaleMogulsMail",
         "name": "Mogul's Mail",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft7_item_shimmerscalemogulsmail.png"
@@ -4056,13 +4056,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_18_MoonriseUpgrade",
+        "id": "DA_18_Moonrise",
         "name": "Moonrise",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_18_Moonrise",
+        "id": "DA_18_MoonriseUpgrade",
         "name": "Moonrise",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
@@ -4092,16 +4092,16 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "TFT7_Item_ShimmerscaleHeartOfGold",
-        "name": "Needlessly Big Gem",
-        "kind": "special",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/particles/tft/item_icons/traits/set7_shimmerscale/shimmerscale_heartofgold_base.png"
-      },
-      {
         "id": "TFT7_Item_ShimmerscaleHeartOfGold_HR",
         "name": "Needlessly Big Gem",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft7_item_shimmerscaleheartofgold_hr.png"
+      },
+      {
+        "id": "TFT7_Item_ShimmerscaleHeartOfGold",
+        "name": "Needlessly Big Gem",
+        "kind": "special",
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/particles/tft/item_icons/traits/set7_shimmerscale/shimmerscale_heartofgold_base.png"
       },
       {
         "id": "TFT4_Item_OrnnObsidianCleaver",
@@ -4110,13 +4110,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft4_item_ornnobsidiancleaver.png"
       },
       {
-        "id": "DA_18_PaydayUpgrade",
+        "id": "DA_18_Payday",
         "name": "Payday",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_18_Payday",
+        "id": "DA_18_PaydayUpgrade",
         "name": "Payday",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
@@ -4146,14 +4146,20 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
+        "id": "DA_PetrifyShields18_Upgrade",
+        "name": "Petrify Shields",
+        "kind": "special",
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
+      },
+      {
         "id": "DA_PetrifyShields18",
         "name": "Petrify Shields",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_PetrifyShields18_Upgrade",
-        "name": "Petrify Shields",
+        "id": "DA_PhantomArmor18_Upgrade",
+        "name": "Phantom Armor",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
@@ -4170,19 +4176,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_PhantomArmor18_Upgrade",
-        "name": "Phantom Armor",
-        "kind": "special",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
-      },
-      {
-        "id": "DA_PhantomGloves18_Upgrade",
+        "id": "DA_PhantomGloves18",
         "name": "Phantom Gloves",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_PhantomGloves18",
+        "id": "DA_PhantomGloves18_Upgrade",
         "name": "Phantom Gloves",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
@@ -4200,13 +4200,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_PhantomVest18",
+        "id": "DA_PhantomVest18_Upgrade",
         "name": "Phantom Vest",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_PhantomVest18_Upgrade",
+        "id": "DA_PhantomVest18",
         "name": "Phantom Vest",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
@@ -4224,13 +4224,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_18_PocketChange_Upgrade",
+        "id": "DA_18_PocketChange",
         "name": "Pocket Change",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_18_PocketChange",
+        "id": "DA_18_PocketChange_Upgrade",
         "name": "Pocket Change",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
@@ -4248,13 +4248,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_Potioncraft18_Upgrade",
+        "id": "DA_Potioncraft18",
         "name": "Potioncraft",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_Potioncraft18",
+        "id": "DA_Potioncraft18_Upgrade",
         "name": "Potioncraft",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
@@ -4284,25 +4284,25 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_18_Preppers_Upgrade",
-        "name": "Preppers",
-        "kind": "special",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
-      },
-      {
         "id": "DA_18_Preppers",
         "name": "Preppers",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_18_ProlificPower",
-        "name": "Prolific Power",
+        "id": "DA_18_Preppers_Upgrade",
+        "name": "Preppers",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
         "id": "DA_18_ProlificPower_Upgrade",
+        "name": "Prolific Power",
+        "kind": "special",
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
+      },
+      {
+        "id": "DA_18_ProlificPower",
         "name": "Prolific Power",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
@@ -4320,25 +4320,25 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_QuickenUpgrade18",
-        "name": "Quicken",
-        "kind": "special",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
-      },
-      {
         "id": "DA_Quicken18",
         "name": "Quicken",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_AdaptiveHelm_Radiant",
+        "id": "DA_QuickenUpgrade18",
+        "name": "Quicken",
+        "kind": "special",
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
+      },
+      {
+        "id": "TFT5_Item_AdaptiveHelmRadiant",
         "name": "Radiant Adaptive Helm",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft5_item_adaptivehelmradiant.png"
       },
       {
-        "id": "TFT5_Item_AdaptiveHelmRadiant",
+        "id": "DA_AdaptiveHelm_Radiant",
         "name": "Radiant Adaptive Helm",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft5_item_adaptivehelmradiant.png"
@@ -4362,25 +4362,25 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/tft18/tft18_blastpotion.png"
       },
       {
-        "id": "TFT5_Item_BloodthirsterRadiant",
-        "name": "Radiant Bloodthirster",
-        "kind": "special",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft5_item_bloodthirsterradiant.png"
-      },
-      {
         "id": "DA_BloodthirsterRadiant",
         "name": "Radiant Bloodthirster",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft5_item_bloodthirsterradiant.png"
       },
       {
-        "id": "DA_BlueBuffRadiant",
+        "id": "TFT5_Item_BloodthirsterRadiant",
+        "name": "Radiant Bloodthirster",
+        "kind": "special",
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft5_item_bloodthirsterradiant.png"
+      },
+      {
+        "id": "TFT5_Item_BlueBuffRadiant",
         "name": "Radiant Blue Buff",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft5_item_bluebuffradiant.png"
       },
       {
-        "id": "TFT5_Item_BlueBuffRadiant",
+        "id": "DA_BlueBuffRadiant",
         "name": "Radiant Blue Buff",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft5_item_bluebuffradiant.png"
@@ -4410,13 +4410,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft5_item_crownguardradiant.png"
       },
       {
-        "id": "DA_DeathbladeRadiant",
+        "id": "TFT5_Item_DeathbladeRadiant",
         "name": "Radiant Deathblade",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft5_item_deathbladeradiant.png"
       },
       {
-        "id": "TFT5_Item_DeathbladeRadiant",
+        "id": "DA_DeathbladeRadiant",
         "name": "Radiant Deathblade",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft5_item_deathbladeradiant.png"
@@ -4470,22 +4470,16 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft5_item_gargoylestoneplateradiant.png"
       },
       {
-        "id": "TFT5_Item_GiantSlayerRadiant",
-        "name": "Radiant Giant Slayer",
-        "kind": "special",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft5_item_giantslayerradiant.png"
-      },
-      {
         "id": "DA_GiantSlayer_Radiant",
         "name": "Radiant Giant Slayer",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft5_item_giantslayerradiant.png"
       },
       {
-        "id": "TFT5_Item_GuinsoosRagebladeRadiant",
-        "name": "Radiant Guinsoo's Rageblade",
+        "id": "TFT5_Item_GiantSlayerRadiant",
+        "name": "Radiant Giant Slayer",
         "kind": "special",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft5_item_guinsoosragebladeradiant.png"
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft5_item_giantslayerradiant.png"
       },
       {
         "id": "DA_GuinsoosRagebladeRadiant",
@@ -4494,13 +4488,19 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft5_item_guinsoosragebladeradiant.png"
       },
       {
-        "id": "DA_HandOfJusticeRadiant",
+        "id": "TFT5_Item_GuinsoosRagebladeRadiant",
+        "name": "Radiant Guinsoo's Rageblade",
+        "kind": "special",
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft5_item_guinsoosragebladeradiant.png"
+      },
+      {
+        "id": "TFT5_Item_HandOfJusticeRadiant",
         "name": "Radiant Hand of Justice",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft5_item_handofjusticeradiant.png"
       },
       {
-        "id": "TFT5_Item_HandOfJusticeRadiant",
+        "id": "DA_HandOfJusticeRadiant",
         "name": "Radiant Hand of Justice",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft5_item_handofjusticeradiant.png"
@@ -4524,25 +4524,25 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft5_item_hextechgunbladeradiant.png"
       },
       {
-        "id": "TFT5_Item_InfinityEdgeRadiant",
-        "name": "Radiant Infinity Edge",
-        "kind": "special",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft5_item_infinityedgeradiant.png"
-      },
-      {
         "id": "DA_InfinityEdgeRadiant",
         "name": "Radiant Infinity Edge",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft5_item_infinityedgeradiant.png"
       },
       {
-        "id": "DA_IonicSparkRadiant",
+        "id": "TFT5_Item_InfinityEdgeRadiant",
+        "name": "Radiant Infinity Edge",
+        "kind": "special",
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft5_item_infinityedgeradiant.png"
+      },
+      {
+        "id": "TFT5_Item_IonicSparkRadiant",
         "name": "Radiant Ionic Spark",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft5_item_ionicsparkradiant.png"
       },
       {
-        "id": "TFT5_Item_IonicSparkRadiant",
+        "id": "DA_IonicSparkRadiant",
         "name": "Radiant Ionic Spark",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft5_item_ionicsparkradiant.png"
@@ -4566,25 +4566,25 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft5_item_jeweledgauntletradiant.png"
       },
       {
-        "id": "TFT5_Item_RunaansHurricaneRadiant",
-        "name": "Radiant Kraken's Fury",
-        "kind": "special",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_krakenslayerradiant.png"
-      },
-      {
         "id": "DA_KrakensFury_Radiant",
         "name": "Radiant Kraken's Fury",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_krakenslayerradiant.png"
       },
       {
-        "id": "TFT5_Item_LastWhisperRadiant",
+        "id": "TFT5_Item_RunaansHurricaneRadiant",
+        "name": "Radiant Kraken's Fury",
+        "kind": "special",
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_krakenslayerradiant.png"
+      },
+      {
+        "id": "DA_LastWhisperRadiant",
         "name": "Radiant Last Whisper",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft5_item_lastwhisperradiant.png"
       },
       {
-        "id": "DA_LastWhisperRadiant",
+        "id": "TFT5_Item_LastWhisperRadiant",
         "name": "Radiant Last Whisper",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft5_item_lastwhisperradiant.png"
@@ -4602,13 +4602,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/tft18/tft18_manapotion.png"
       },
       {
-        "id": "TFT5_Item_MorellonomiconRadiant",
+        "id": "DA_MorellonomiconRadiant",
         "name": "Radiant Morellonomicon",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft5_item_morellonomiconradiant.png"
       },
       {
-        "id": "DA_MorellonomiconRadiant",
+        "id": "TFT5_Item_MorellonomiconRadiant",
         "name": "Radiant Morellonomicon",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft5_item_morellonomiconradiant.png"
@@ -4638,13 +4638,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft5_item_frozenheartradiant.png"
       },
       {
-        "id": "TFT5_Item_QuicksilverRadiant",
+        "id": "DA_QuicksilverRadiant",
         "name": "Radiant Quicksilver",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft5_item_quicksilverradiant.png"
       },
       {
-        "id": "DA_QuicksilverRadiant",
+        "id": "TFT5_Item_QuicksilverRadiant",
         "name": "Radiant Quicksilver",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft5_item_quicksilverradiant.png"
@@ -4662,13 +4662,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft5_item_rabadonsdeathcapradiant.png"
       },
       {
-        "id": "TFT5_Item_RapidFirecannonRadiant",
+        "id": "DA_RedBuffRadiant",
         "name": "Radiant Red Buff",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft5_item_rapidfirecannonradiant.png"
       },
       {
-        "id": "DA_RedBuffRadiant",
+        "id": "TFT5_Item_RapidFirecannonRadiant",
         "name": "Radiant Red Buff",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft5_item_rapidfirecannonradiant.png"
@@ -4686,13 +4686,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft5_item_spearofshojinradiant.png"
       },
       {
-        "id": "DA_SpiritVisage_Radiant",
+        "id": "TFT5_Item_RedemptionRadiant",
         "name": "Radiant Spirit Visage",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_spiritvisagerr.png"
       },
       {
-        "id": "TFT5_Item_RedemptionRadiant",
+        "id": "DA_SpiritVisage_Radiant",
         "name": "Radiant Spirit Visage",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_spiritvisagerr.png"
@@ -4746,25 +4746,25 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft5_item_sunfirecaperadiant.png"
       },
       {
-        "id": "TFT5_Item_ThiefsGlovesRadiant",
-        "name": "Radiant Thief's Gloves",
-        "kind": "special",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft5_item_thiefsglovesradiant.png"
-      },
-      {
         "id": "DA_ThiefsGlovesRadiant",
         "name": "Radiant Thief's Gloves",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft5_item_thiefsglovesradiant.png"
       },
       {
-        "id": "DA_TitansResolve_Radiant",
+        "id": "TFT5_Item_ThiefsGlovesRadiant",
+        "name": "Radiant Thief's Gloves",
+        "kind": "special",
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft5_item_thiefsglovesradiant.png"
+      },
+      {
+        "id": "TFT5_Item_TitansResolveRadiant",
         "name": "Radiant Titan's Resolve",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft5_item_titansresolveradiant.png"
       },
       {
-        "id": "TFT5_Item_TitansResolveRadiant",
+        "id": "DA_TitansResolve_Radiant",
         "name": "Radiant Titan's Resolve",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft5_item_titansresolveradiant.png"
@@ -4782,25 +4782,25 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft5_item_voidstaffradiant.png"
       },
       {
-        "id": "DA_WarmogsArmorRadiant",
-        "name": "Radiant Warmog's Armor",
-        "kind": "special",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft5_item_warmogsarmorradiant.png"
-      },
-      {
         "id": "TFT5_Item_WarmogsArmorRadiant",
         "name": "Radiant Warmog's Armor",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft5_item_warmogsarmorradiant.png"
       },
       {
-        "id": "DA_18_Radiantize",
+        "id": "DA_WarmogsArmorRadiant",
+        "name": "Radiant Warmog's Armor",
+        "kind": "special",
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft5_item_warmogsarmorradiant.png"
+      },
+      {
+        "id": "DA_18_Radiantize_Upgrade",
         "name": "Radiantize",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_18_Radiantize_Upgrade",
+        "id": "DA_18_Radiantize",
         "name": "Radiantize",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
@@ -4902,20 +4902,14 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_consumable_itemreroller_usesleft9.png"
       },
       {
-        "id": "DA_RefreshingLight18",
-        "name": "Refreshing Light",
-        "kind": "special",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
-      },
-      {
         "id": "DA_RefreshingLight18_Upgrade",
         "name": "Refreshing Light",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_Regeneration18",
-        "name": "Regeneration",
+        "id": "DA_RefreshingLight18",
+        "name": "Refreshing Light",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
@@ -4926,8 +4920,8 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_18_Resistant_Upgrade",
-        "name": "Resistant",
+        "id": "DA_Regeneration18",
+        "name": "Regeneration",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
@@ -4938,13 +4932,19 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_ReturningFriend",
-        "name": "Returning Friend",
+        "id": "DA_18_Resistant_Upgrade",
+        "name": "Resistant",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
         "id": "DA_ReturningFriendUpgrade",
+        "name": "Returning Friend",
+        "kind": "special",
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
+      },
+      {
+        "id": "DA_ReturningFriend",
         "name": "Returning Friend",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
@@ -4974,13 +4974,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_RollingBones18",
+        "id": "DA_RollingBones18_Upgrade",
         "name": "Rolling Bones",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_RollingBones18_Upgrade",
+        "id": "DA_RollingBones18",
         "name": "Rolling Bones",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
@@ -5010,13 +5010,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_SalvagerUpgrade18",
+        "id": "DA_Salvager18",
         "name": "Salvager",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_Salvager18",
+        "id": "DA_SalvagerUpgrade18",
         "name": "Salvager",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
@@ -5028,13 +5028,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft14_consumable_salvager.png"
       },
       {
-        "id": "DA_Scrappy18_Upgrade",
+        "id": "DA_Scrappy18",
         "name": "Scrappy",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_Scrappy18",
+        "id": "DA_Scrappy18_Upgrade",
         "name": "Scrappy",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
@@ -5118,19 +5118,19 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_SolitudesCloak18",
-        "name": "Solitude's Cloak",
-        "kind": "special",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
-      },
-      {
         "id": "DA_SolitudesCloakUpgrade18",
         "name": "Solitude's Cloak",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_StandAlone18_Upgrade",
+        "id": "DA_SolitudesCloak18",
+        "name": "Solitude's Cloak",
+        "kind": "special",
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
+      },
+      {
+        "id": "DA_StandAlone18",
         "name": "Stand Alone",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
@@ -5142,7 +5142,7 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_StandAlone18",
+        "id": "DA_StandAlone18_Upgrade",
         "name": "Stand Alone",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
@@ -5160,13 +5160,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_StartingTown18",
+        "id": "DA_StartingTown18_Upgrade",
         "name": "Starting Town",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_StartingTown18_Upgrade",
+        "id": "DA_StartingTown18",
         "name": "Starting Town",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
@@ -5190,25 +5190,25 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_18_SunfireSorcery",
-        "name": "Sunfire Sorcery",
-        "kind": "special",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
-      },
-      {
         "id": "DA_18_SunfireSorcery_Upgrade",
         "name": "Sunfire Sorcery",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_18_SupercriticalUpgrade",
-        "name": "Supercritical",
+        "id": "DA_18_SunfireSorcery",
+        "name": "Sunfire Sorcery",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
         "id": "DA_18_Supercritical",
+        "name": "Supercritical",
+        "kind": "special",
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
+      },
+      {
+        "id": "DA_18_SupercriticalUpgrade",
         "name": "Supercritical",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
@@ -5226,12 +5226,6 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_artifact_talismanofascension.png"
       },
       {
-        "id": "DA_18_TatteredArmor_Prismatic",
-        "name": "Tattered Armor",
-        "kind": "special",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
-      },
-      {
         "id": "DA_18_TatteredArmor_Upgrade",
         "name": "Tattered Armor",
         "kind": "special",
@@ -5244,13 +5238,19 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_Terraforming18_Upgrade",
-        "name": "Terraforming",
+        "id": "DA_18_TatteredArmor_Prismatic",
+        "name": "Tattered Armor",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
         "id": "DA_Terraforming18",
+        "name": "Terraforming",
+        "kind": "special",
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
+      },
+      {
+        "id": "DA_Terraforming18_Upgrade",
         "name": "Terraforming",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
@@ -5310,13 +5310,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_TigersVisit18_Wisp",
+        "id": "DA_BearsVisit18_Upgrade",
         "name": "Tiger's Visit",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_BearsVisit18_Upgrade",
+        "id": "DA_TigersVisit18_Wisp",
         "name": "Tiger's Visit",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
@@ -5346,19 +5346,19 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_consumable_trainingdummy.png"
       },
       {
-        "id": "DA_TrainingYard18",
-        "name": "Training Yard",
-        "kind": "special",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
-      },
-      {
         "id": "DA_TrainingYard18_Upgrade",
         "name": "Training Yard",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_TreetopArchers_Prismatic",
+        "id": "DA_TrainingYard18",
+        "name": "Training Yard",
+        "kind": "special",
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
+      },
+      {
+        "id": "DA_TreetopArchers_Upgrade",
         "name": "Treetop Archers",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
@@ -5370,8 +5370,14 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_TreetopArchers_Upgrade",
+        "id": "DA_TreetopArchers_Prismatic",
         "name": "Treetop Archers",
+        "kind": "special",
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
+      },
+      {
+        "id": "DA_18_Tremors_Prismatic",
+        "name": "Tremors",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
@@ -5383,12 +5389,6 @@
       },
       {
         "id": "DA_18_Tremors",
-        "name": "Tremors",
-        "kind": "special",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
-      },
-      {
-        "id": "DA_18_Tremors_Prismatic",
         "name": "Tremors",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
@@ -5412,19 +5412,19 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_TurtlesVisit18_Upgrade",
-        "name": "Turtle's Visit",
-        "kind": "special",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
-      },
-      {
         "id": "DA_TurtlesVisit18",
         "name": "Turtle's Visit",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_18_UltraAscension_Upgrade",
+        "id": "DA_TurtlesVisit18_Upgrade",
+        "name": "Turtle's Visit",
+        "kind": "special",
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
+      },
+      {
+        "id": "DA_18_UltraAscension",
         "name": "Ultra Ascension",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
@@ -5436,7 +5436,7 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_18_UltraAscension",
+        "id": "DA_18_UltraAscension_Upgrade",
         "name": "Ultra Ascension",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
@@ -5478,25 +5478,25 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "DA_18_YordleSpirit",
-        "name": "Yordle Spirit",
-        "kind": "special",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
-      },
-      {
         "id": "DA_18_YordleSpirit_Upgrade",
         "name": "Yordle Spirit",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
       },
       {
-        "id": "TFT4_Item_OrnnZhonyasParadox",
+        "id": "DA_18_YordleSpirit",
+        "name": "Yordle Spirit",
+        "kind": "special",
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/ux/tft/hud/zaps/wands/set18_mechanicicon.png"
+      },
+      {
+        "id": "DA_Artifact_ZhonyasParadox",
         "name": "Zhonya's Paradox",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft4_item_ornnzhonyasparadox.png"
       },
       {
-        "id": "DA_Artifact_ZhonyasParadox",
+        "id": "TFT4_Item_OrnnZhonyasParadox",
         "name": "Zhonya's Paradox",
         "kind": "special",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft4_item_ornnzhonyasparadox.png"
@@ -5874,13 +5874,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/questfortheseven_ii.png"
       },
       {
-        "id": "DA_AdvancedLoan",
+        "id": "TFT_Augment_AdvancedLoan",
         "name": "Advanced Loan",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/advancedloan_ii.png"
       },
       {
-        "id": "TFT_Augment_AdvancedLoan",
+        "id": "DA_AdvancedLoan",
         "name": "Advanced Loan",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/advancedloan_ii.png"
@@ -5928,13 +5928,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/anotherone_ii.png"
       },
       {
-        "id": "DA_ArcaneViktory",
+        "id": "TFT_Augment_ArcaneViktory",
         "name": "Arcane Viktor-y",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/arcaneviktory_ii.png"
       },
       {
-        "id": "TFT_Augment_ArcaneViktory",
+        "id": "DA_ArcaneViktory",
         "name": "Arcane Viktor-y",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/arcaneviktory_ii.png"
@@ -5958,13 +5958,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/aurafarming_ii.png"
       },
       {
-        "id": "TFT_Augment_BacklineBlueprint",
+        "id": "DA_BacklineBlueprint",
         "name": "Backline Blueprint",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/backlineblueprint_ii.png"
       },
       {
-        "id": "DA_BacklineBlueprint",
+        "id": "TFT_Augment_BacklineBlueprint",
         "name": "Backline Blueprint",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/backlineblueprint_ii.png"
@@ -5976,25 +5976,25 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/backupdancers_ii.png"
       },
       {
-        "id": "DA_18_PrimalAugment_Sivir",
-        "name": "Beast Within",
-        "tier": "Gold",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/missing-t2.png"
-      },
-      {
         "id": "DA_18_PrimalAugment_Nidalee",
         "name": "Beast Within",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/missing-t2.png"
       },
       {
-        "id": "DA_18_PrimalAugmentPlus_Sivir",
-        "name": "Beast Within+",
+        "id": "DA_18_PrimalAugment_Sivir",
+        "name": "Beast Within",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/missing-t2.png"
       },
       {
         "id": "DA_18_PrimalAugmentPlus_Nidalee",
+        "name": "Beast Within+",
+        "tier": "Gold",
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/missing-t2.png"
+      },
+      {
+        "id": "DA_18_PrimalAugmentPlus_Sivir",
         "name": "Beast Within+",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/missing-t2.png"
@@ -6012,25 +6012,25 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/big-friend-ii.png"
       },
       {
-        "id": "DA_18_BigGrabBag",
-        "name": "Big Grab Bag",
-        "tier": "Gold",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/grab-bag-ii.png"
-      },
-      {
         "id": "TFT9_Augment_BigGrabBag",
         "name": "Big Grab Bag",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/grab-bag-ii.png"
       },
       {
-        "id": "TFT_Augment_BirthdayReunion",
+        "id": "DA_18_BigGrabBag",
+        "name": "Big Grab Bag",
+        "tier": "Gold",
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/grab-bag-ii.png"
+      },
+      {
+        "id": "DA_BirthdayReunion",
         "name": "Birthday Reunion",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/birthdayreunion_ii.png"
       },
       {
-        "id": "DA_BirthdayReunion",
+        "id": "TFT_Augment_BirthdayReunion",
         "name": "Birthday Reunion",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/birthdayreunion_ii.png"
@@ -6060,13 +6060,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/missing-t2.png"
       },
       {
-        "id": "TFT_Augment_BodyguardTraining",
+        "id": "DA_BodyguardTraining",
         "name": "Bodyguard Training",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/bodyguardstraining_ii.png"
       },
       {
-        "id": "DA_BodyguardTraining",
+        "id": "TFT_Augment_BodyguardTraining",
         "name": "Bodyguard Training",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/bodyguardstraining_ii.png"
@@ -6096,13 +6096,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/boosterpack1_ii.png"
       },
       {
-        "id": "TFT_Augment_BoosterPackPlus",
+        "id": "DA_BoosterPackPlus",
         "name": "Booster Pack+",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/boosterpack1_ii.png"
       },
       {
-        "id": "DA_BoosterPackPlus",
+        "id": "TFT_Augment_BoosterPackPlus",
         "name": "Booster Pack+",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/boosterpack1_ii.png"
@@ -6120,25 +6120,25 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/boosterpack1_ii.png"
       },
       {
-        "id": "TFT_Augment_BronzeForLifeI",
-        "name": "Bronze For Life I",
-        "tier": "Gold",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/bronzeforlife_ii.png"
-      },
-      {
         "id": "DA_BronzeForLifeI",
         "name": "Bronze For Life I",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/bronzeforlife_ii.png"
       },
       {
-        "id": "TFT6_Augment_CalculatedLoss",
+        "id": "TFT_Augment_BronzeForLifeI",
+        "name": "Bronze For Life I",
+        "tier": "Gold",
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/bronzeforlife_ii.png"
+      },
+      {
+        "id": "DA_CalculatedLoss",
         "name": "Calculated Loss",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/calculatedloss2.png"
       },
       {
-        "id": "DA_CalculatedLoss",
+        "id": "TFT6_Augment_CalculatedLoss",
         "name": "Calculated Loss",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/calculatedloss2.png"
@@ -6186,13 +6186,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/chargetransfer2_ii.png"
       },
       {
-        "id": "DA_ClearMind",
+        "id": "TFT6_Augment_ClearMind",
         "name": "Clear Mind",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/clearmind2.png"
       },
       {
-        "id": "TFT6_Augment_ClearMind",
+        "id": "DA_ClearMind",
         "name": "Clear Mind",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/clearmind2.png"
@@ -6222,25 +6222,25 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/trickmirror_ii.png"
       },
       {
-        "id": "TFT7_Augment_ClutteredMind",
-        "name": "Cluttered Mind",
-        "tier": "Gold",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/dizzy-ii.png"
-      },
-      {
         "id": "DA_ClutteredMind",
         "name": "Cluttered Mind",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/dizzy-ii.png"
       },
       {
-        "id": "DA_CognitiveOverload",
+        "id": "TFT7_Augment_ClutteredMind",
+        "name": "Cluttered Mind",
+        "tier": "Gold",
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/dizzy-ii.png"
+      },
+      {
+        "id": "TFT_Augment_CognitiveOverload",
         "name": "Cognitive Overload",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/cognitiveoverload_ii.png"
       },
       {
-        "id": "TFT_Augment_CognitiveOverload",
+        "id": "DA_CognitiveOverload",
         "name": "Cognitive Overload",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/cognitiveoverload_ii.png"
@@ -6264,13 +6264,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/missing-t2.png"
       },
       {
-        "id": "TFT_Augment_CookingPot",
+        "id": "DA_CookingPot",
         "name": "Cooking Pot",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/cookingpot_ii.png"
       },
       {
-        "id": "DA_CookingPot",
+        "id": "TFT_Augment_CookingPot",
         "name": "Cooking Pot",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/cookingpot_ii.png"
@@ -6300,13 +6300,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/will-of-the-crown-ii.png"
       },
       {
-        "id": "DA_CryMeARiver",
+        "id": "TFT_Augment_CryMeARiver",
         "name": "Cry Me A River",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/crymeariver_ii.png"
       },
       {
-        "id": "TFT_Augment_CryMeARiver",
+        "id": "DA_CryMeARiver",
         "name": "Cry Me A River",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/crymeariver_ii.png"
@@ -6360,13 +6360,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/duoqueue_ii.png"
       },
       {
-        "id": "DA_EarlyLearnings",
+        "id": "TFT_Augment_EarlyLearning",
         "name": "Early Learnings",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/earlylearning_ii.png"
       },
       {
-        "id": "TFT_Augment_EarlyLearning",
+        "id": "DA_EarlyLearnings",
         "name": "Early Learnings",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/earlylearning_ii.png"
@@ -6390,22 +6390,16 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/missing-t2.png"
       },
       {
-        "id": "DA_EpicRolldown",
-        "name": "Epic Rolldown",
-        "tier": "Gold",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/epicrolldown_ii.png"
-      },
-      {
         "id": "TFT_Augment_EpicRolldown",
         "name": "Epic Rolldown",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/epicrolldown_ii.png"
       },
       {
-        "id": "DA_Epoch",
-        "name": "Epoch",
+        "id": "DA_EpicRolldown",
+        "name": "Epic Rolldown",
         "tier": "Gold",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/epoch_ii.png"
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/epicrolldown_ii.png"
       },
       {
         "id": "TFT11_Augment_Epoch",
@@ -6414,13 +6408,19 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/epoch_ii.png"
       },
       {
-        "id": "TFT11_Augment_EpochPlus",
-        "name": "Epoch+",
+        "id": "DA_Epoch",
+        "name": "Epoch",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/epoch_ii.png"
       },
       {
         "id": "DA_EpochPlus",
+        "name": "Epoch+",
+        "tier": "Gold",
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/epoch_ii.png"
+      },
+      {
+        "id": "TFT11_Augment_EpochPlus",
         "name": "Epoch+",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/epoch_ii.png"
@@ -6432,13 +6432,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/evilbeyondmeasure_ii.png"
       },
       {
-        "id": "DA_ExclusiveCustomization",
+        "id": "TFT_Augment_ExclusiveCustomization",
         "name": "Exclusive Customization",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/exclusivecustomization_ii.png"
       },
       {
-        "id": "TFT_Augment_ExclusiveCustomization",
+        "id": "DA_ExclusiveCustomization",
         "name": "Exclusive Customization",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/exclusivecustomization_ii.png"
@@ -6450,25 +6450,25 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/exiles2.png"
       },
       {
-        "id": "DA_ExplosiveGrowth",
-        "name": "Explosive Growth",
-        "tier": "Gold",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/explosivegrowth_ii.png"
-      },
-      {
         "id": "TFT_Augment_ExplosiveGrowth",
         "name": "Explosive Growth",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/explosivegrowth_ii.png"
       },
       {
-        "id": "DA_ExplosiveGrowthPlus",
-        "name": "Explosive Growth+",
+        "id": "DA_ExplosiveGrowth",
+        "name": "Explosive Growth",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/explosivegrowth_ii.png"
       },
       {
         "id": "TFT_Augment_ExplosiveGrowthPlus",
+        "name": "Explosive Growth+",
+        "tier": "Gold",
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/explosivegrowth_ii.png"
+      },
+      {
+        "id": "DA_ExplosiveGrowthPlus",
         "name": "Explosive Growth+",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/explosivegrowth_ii.png"
@@ -6492,13 +6492,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/forwardthinking_ii.png"
       },
       {
-        "id": "TFT_Augment_FrontlineFoundation",
+        "id": "DA_FrontlineFoundation",
         "name": "Frontline Foundation",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/frontlinefoundation_ii.png"
       },
       {
-        "id": "DA_FrontlineFoundation",
+        "id": "TFT_Augment_FrontlineFoundation",
         "name": "Frontline Foundation",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/frontlinefoundation_ii.png"
@@ -6522,13 +6522,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/windfall2.png"
       },
       {
-        "id": "TFT_Augment_GildedSteel",
+        "id": "DA_GildedSteel",
         "name": "Gilded Steel",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/gildedsteel_ii.png"
       },
       {
-        "id": "DA_GildedSteel",
+        "id": "TFT_Augment_GildedSteel",
         "name": "Gilded Steel",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/gildedsteel_ii.png"
@@ -6546,25 +6546,25 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/glasscannon_ii.png"
       },
       {
-        "id": "TFT_Augment_GoldDestiny",
-        "name": "Gold Destiny",
-        "tier": "Gold",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/goldendestiny_ii.png"
-      },
-      {
         "id": "DA_GoldDestiny",
         "name": "Gold Destiny",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/goldendestiny_ii.png"
       },
       {
-        "id": "TFT_Augment_GoldDestinyPlus",
-        "name": "Gold Destiny+",
+        "id": "TFT_Augment_GoldDestiny",
+        "name": "Gold Destiny",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/goldendestiny_ii.png"
       },
       {
         "id": "DA_GoldDestinyPlus",
+        "name": "Gold Destiny+",
+        "tier": "Gold",
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/goldendestiny_ii.png"
+      },
+      {
+        "id": "TFT_Augment_GoldDestinyPlus",
         "name": "Gold Destiny+",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/goldendestiny_ii.png"
@@ -6582,25 +6582,25 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/golemify_ii.png"
       },
       {
-        "id": "TFT_Augment_GroupHug2",
-        "name": "Group Hug II",
-        "tier": "Gold",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/grouphug2_ii.png"
-      },
-      {
         "id": "DA_GroupHugII",
         "name": "Group Hug II",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/grouphug2_ii.png"
       },
       {
-        "id": "TFT_Augment_HardBargain",
+        "id": "TFT_Augment_GroupHug2",
+        "name": "Group Hug II",
+        "tier": "Gold",
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/grouphug2_ii.png"
+      },
+      {
+        "id": "DA_HardBargain",
         "name": "Hard Bargain",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/hardbargain_ii.png"
       },
       {
-        "id": "DA_HardBargain",
+        "id": "TFT_Augment_HardBargain",
         "name": "Hard Bargain",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/hardbargain_ii.png"
@@ -6648,25 +6648,25 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/heroic-grab-bag-ii.png"
       },
       {
-        "id": "TFT_Augment_HeroicGrabBagPlus",
-        "name": "Heroic Grab Bag+",
-        "tier": "Gold",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/heroic-grab-bag-ii.png"
-      },
-      {
         "id": "DA_HeroicGrabBagPlus",
         "name": "Heroic Grab Bag+",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/heroic-grab-bag-ii.png"
       },
       {
-        "id": "DA_HeroicGrabBagPlusPlus",
-        "name": "Heroic Grab Bag++",
+        "id": "TFT_Augment_HeroicGrabBagPlus",
+        "name": "Heroic Grab Bag+",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/heroic-grab-bag-ii.png"
       },
       {
         "id": "TFT_Augment_HeroicGrabBagPlusPlus",
+        "name": "Heroic Grab Bag++",
+        "tier": "Gold",
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/heroic-grab-bag-ii.png"
+      },
+      {
+        "id": "DA_HeroicGrabBagPlusPlus",
         "name": "Heroic Grab Bag++",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/heroic-grab-bag-ii.png"
@@ -6714,13 +6714,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/infinityprotection_ii.png"
       },
       {
-        "id": "DA_InvestmentStrategyI",
+        "id": "TFT_Augment_InvestmentStrategy1",
         "name": "Investment Strategy I",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/investmentstrategy_ii.png"
       },
       {
-        "id": "TFT_Augment_InvestmentStrategy1",
+        "id": "DA_InvestmentStrategyI",
         "name": "Investment Strategy I",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/investmentstrategy_ii.png"
@@ -6828,22 +6828,16 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/a-magical-roll-ii.png"
       },
       {
-        "id": "TFT6_Augment_MakeshiftArmor2",
-        "name": "Makeshift Armor II",
-        "tier": "Gold",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/makeshift2.png"
-      },
-      {
         "id": "DA_MakeshiftArmorII",
         "name": "Makeshift Armor II",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/makeshift2.png"
       },
       {
-        "id": "DA_MaliciousMonetization",
-        "name": "Malicious Monetization",
+        "id": "TFT6_Augment_MakeshiftArmor2",
+        "name": "Makeshift Armor II",
         "tier": "Gold",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/mirroredmonetization_ii.png"
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/makeshift2.png"
       },
       {
         "id": "TFT_Augment_MirroredMonetization",
@@ -6852,13 +6846,19 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/mirroredmonetization_ii.png"
       },
       {
-        "id": "TFT_Augment_MaxBuild",
+        "id": "DA_MaliciousMonetization",
+        "name": "Malicious Monetization",
+        "tier": "Gold",
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/mirroredmonetization_ii.png"
+      },
+      {
+        "id": "DA_MaxBuild",
         "name": "Max Build",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/maxbuild_ii.png"
       },
       {
-        "id": "DA_MaxBuild",
+        "id": "TFT_Augment_MaxBuild",
         "name": "Max Build",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/maxbuild_ii.png"
@@ -6876,13 +6876,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/misfits_ii.png"
       },
       {
-        "id": "DA_MoneyHungry_NotBroken",
+        "id": "TFT_Augment_MoneyHungry",
         "name": "Money Hungry",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/moneyhungry1_ii.png"
       },
       {
-        "id": "TFT_Augment_MoneyHungry",
+        "id": "DA_MoneyHungry_NotBroken",
         "name": "Money Hungry",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/moneyhungry1_ii.png"
@@ -6900,13 +6900,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/moonlight_ii.png"
       },
       {
-        "id": "TFT_Augment_NoScoutNoPivot",
+        "id": "DA_NoScoutNoPivot",
         "name": "NO SCOUT NO PIVOT",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/noscoutnopivot_ii.png"
       },
       {
-        "id": "DA_NoScoutNoPivot",
+        "id": "TFT_Augment_NoScoutNoPivot",
         "name": "NO SCOUT NO PIVOT",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/noscoutnopivot_ii.png"
@@ -6984,25 +6984,25 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/crossfire_ii.png"
       },
       {
-        "id": "DA_Pilfer",
-        "name": "Pilfer",
-        "tier": "Gold",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/pilfer_ii.png"
-      },
-      {
         "id": "TFT_Augment_Pilfer",
         "name": "Pilfer",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/pilfer_ii.png"
       },
       {
-        "id": "DA_PlotArmor",
+        "id": "DA_Pilfer",
+        "name": "Pilfer",
+        "tier": "Gold",
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/pilfer_ii.png"
+      },
+      {
+        "id": "TFT_Augment_PlotArmor",
         "name": "Plot Armor",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/plotarmor_ii.png"
       },
       {
-        "id": "TFT_Augment_PlotArmor",
+        "id": "DA_PlotArmor",
         "name": "Plot Armor",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/plotarmor_ii.png"
@@ -7092,13 +7092,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/replication-ii.png"
       },
       {
-        "id": "TFT6_Augment_SalvageBinHR",
+        "id": "DA_SalvageBin",
         "name": "Salvage Bin",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/salvage2.png"
       },
       {
-        "id": "DA_SalvageBin",
+        "id": "TFT6_Augment_SalvageBinHR",
         "name": "Salvage Bin",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/salvage2.png"
@@ -7146,13 +7146,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/second--wind-ii.png"
       },
       {
-        "id": "DA_SeraphimsStaff",
+        "id": "TFT_Augment_SeraphimsStaff",
         "name": "Seraphim's Staff",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/seraphimsstaff_ii.png"
       },
       {
-        "id": "TFT_Augment_SeraphimsStaff",
+        "id": "DA_SeraphimsStaff",
         "name": "Seraphim's Staff",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/seraphimsstaff_ii.png"
@@ -7164,25 +7164,25 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/sideeffects_ii.png"
       },
       {
-        "id": "TFT11_Augment_Slammin",
-        "name": "Slammin'",
-        "tier": "Gold",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/slammin_ii.png"
-      },
-      {
         "id": "DA_Slammin",
         "name": "Slammin'",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/slammin_ii.png"
       },
       {
-        "id": "DA_SlamminPlus",
-        "name": "Slammin'+",
+        "id": "TFT11_Augment_Slammin",
+        "name": "Slammin'",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/slammin_ii.png"
       },
       {
         "id": "TFT11_Augment_Slammin_Plus",
+        "name": "Slammin'+",
+        "tier": "Gold",
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/slammin_ii.png"
+      },
+      {
+        "id": "DA_SlamminPlus",
         "name": "Slammin'+",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/slammin_ii.png"
@@ -7194,13 +7194,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/missing-t2.png"
       },
       {
-        "id": "TFT_Augment_SoloLeveling",
+        "id": "DA_SoloLeveling",
         "name": "Solo Leveling",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/sololeveling_ii.png"
       },
       {
-        "id": "DA_SoloLeveling",
+        "id": "TFT_Augment_SoloLeveling",
         "name": "Solo Leveling",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/sololeveling_ii.png"
@@ -7224,13 +7224,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/will-of-the-spear-ii.png"
       },
       {
-        "id": "TFT_Augment_SpeedyDoubleKill",
+        "id": "DA_SpeedyDoubleKill",
         "name": "Speedy Double Kill",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/speedydoublekill_ii.png"
       },
       {
-        "id": "DA_SpeedyDoubleKill",
+        "id": "TFT_Augment_SpeedyDoubleKill",
         "name": "Speedy Double Kill",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/speedydoublekill_ii.png"
@@ -7260,20 +7260,14 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/spoils-of-war-legend-ii.png"
       },
       {
-        "id": "DA_SpreadingRoots",
-        "name": "Spreading Roots",
-        "tier": "Gold",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/spreadingroots_ii.png"
-      },
-      {
         "id": "TFT_Augment_SpreadingRoots",
         "name": "Spreading Roots",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/spreadingroots_ii.png"
       },
       {
-        "id": "DA_SpreadingRootsPlus",
-        "name": "Spreading Roots+",
+        "id": "DA_SpreadingRoots",
+        "name": "Spreading Roots",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/spreadingroots_ii.png"
       },
@@ -7284,13 +7278,19 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/spreadingroots_ii.png"
       },
       {
-        "id": "TFT_Augment_ForgeRod",
+        "id": "DA_SpreadingRootsPlus",
+        "name": "Spreading Roots+",
+        "tier": "Gold",
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/spreadingroots_ii.png"
+      },
+      {
+        "id": "DA_Staffsmith",
         "name": "Staffsmith",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/rodsmith_ii.png"
       },
       {
-        "id": "DA_Staffsmith",
+        "id": "TFT_Augment_ForgeRod",
         "name": "Staffsmith",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/rodsmith_ii.png"
@@ -7320,13 +7320,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/sunfireboard2.png"
       },
       {
-        "id": "DA_Swordsmith",
+        "id": "TFT_Augment_ForgeSword",
         "name": "Swordsmith",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/swordsmith_ii.png"
       },
       {
-        "id": "TFT_Augment_ForgeSword",
+        "id": "DA_Swordsmith",
         "name": "Swordsmith",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/swordsmith_ii.png"
@@ -7338,13 +7338,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/teslacoil_ii.png"
       },
       {
-        "id": "DA_TheGoldenDragon",
+        "id": "TFT_Augment_TheGoldenDragon",
         "name": "The Golden Dragon",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/thegoldendragon_ii.png"
       },
       {
-        "id": "TFT_Augment_TheGoldenDragon",
+        "id": "DA_TheGoldenDragon",
         "name": "The Golden Dragon",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/thegoldendragon_ii.png"
@@ -7356,13 +7356,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/thornplatedarmor_ii.png"
       },
       {
-        "id": "TFT_Augment_TimeSkip",
+        "id": "DA_TimeSkip",
         "name": "Time Skip",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/timeskip_ii.png"
       },
       {
-        "id": "DA_TimeSkip",
+        "id": "TFT_Augment_TimeSkip",
         "name": "Time Skip",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/timeskip_ii.png"
@@ -7374,13 +7374,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/tombraider_ii.png"
       },
       {
-        "id": "DA_TonsOfStatsI",
+        "id": "TFT9_Augment_TonsOfStats",
         "name": "Tons of Stats!",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/tons-of-stats-ii.png"
       },
       {
-        "id": "TFT9_Augment_TonsOfStats",
+        "id": "DA_TonsOfStatsI",
         "name": "Tons of Stats!",
         "tier": "Gold",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/tons-of-stats-ii.png"
@@ -7536,25 +7536,25 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/atwhatcost_iii.png"
       },
       {
-        "id": "DA_BandOfThievesII",
-        "name": "Band of Thieves II",
-        "tier": "Prismatic",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/bandthieves3.png"
-      },
-      {
         "id": "TFT6_Augment_BandOfThieves2",
         "name": "Band of Thieves II",
         "tier": "Prismatic",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/bandthieves3.png"
       },
       {
-        "id": "TFT6_Augment_BandOfThieves2Plus",
-        "name": "Band of Thieves II+",
+        "id": "DA_BandOfThievesII",
+        "name": "Band of Thieves II",
         "tier": "Prismatic",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/bandthieves3.png"
       },
       {
         "id": "DA_BandOfThievesIIPlus",
+        "name": "Band of Thieves II+",
+        "tier": "Prismatic",
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/bandthieves3.png"
+      },
+      {
+        "id": "TFT6_Augment_BandOfThieves2Plus",
         "name": "Band of Thieves II+",
         "tier": "Prismatic",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/bandthieves3.png"
@@ -7572,13 +7572,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/bandthieves3.png"
       },
       {
-        "id": "DA_BaronsLair",
+        "id": "TFT_Augment_TheBaronsLair",
         "name": "Baron's Lair",
         "tier": "Prismatic",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/thebaronslair_iii.png"
       },
       {
-        "id": "TFT_Augment_TheBaronsLair",
+        "id": "DA_BaronsLair",
         "name": "Baron's Lair",
         "tier": "Prismatic",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/thebaronslair_iii.png"
@@ -7596,13 +7596,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/beltoverflow_iii.png"
       },
       {
-        "id": "DA_BirthdayPresent",
+        "id": "TFT7_Augment_BirthdayPresents",
         "name": "Birthday Present",
         "tier": "Prismatic",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/golden-gifts-iii.png"
       },
       {
-        "id": "TFT7_Augment_BirthdayPresents",
+        "id": "DA_BirthdayPresent",
         "name": "Birthday Present",
         "tier": "Prismatic",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/golden-gifts-iii.png"
@@ -7674,25 +7674,25 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/celestialblessing3.png"
       },
       {
-        "id": "TFT_Augment_ComebackStory",
-        "name": "Comeback Story",
-        "tier": "Prismatic",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/comebackstory_iii.png"
-      },
-      {
         "id": "DA_ComebackStory",
         "name": "Comeback Story",
         "tier": "Prismatic",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/comebackstory_iii.png"
       },
       {
-        "id": "DA_CommerceCore",
+        "id": "TFT_Augment_ComebackStory",
+        "name": "Comeback Story",
+        "tier": "Prismatic",
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/comebackstory_iii.png"
+      },
+      {
+        "id": "TFT6_Augment_TradeSector2",
         "name": "Commerce Core",
         "tier": "Prismatic",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/trade3.png"
       },
       {
-        "id": "TFT6_Augment_TradeSector2",
+        "id": "DA_CommerceCore",
         "name": "Commerce Core",
         "tier": "Prismatic",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/trade3.png"
@@ -7734,25 +7734,25 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/cybernetic-uplink-iii.png"
       },
       {
-        "id": "TFT_Augment_TragicalBlade",
-        "name": "Deadlier Blades",
-        "tier": "Prismatic",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/deadlierblades_ii.png"
-      },
-      {
         "id": "DA_DeadlierBlades",
         "name": "Deadlier Blades",
         "tier": "Prismatic",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/deadlierblades_ii.png"
       },
       {
-        "id": "DA_DeadlierCaps",
+        "id": "TFT_Augment_TragicalBlade",
+        "name": "Deadlier Blades",
+        "tier": "Prismatic",
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/deadlierblades_ii.png"
+      },
+      {
+        "id": "TFT_Augment_DeadlierCaps",
         "name": "Deadlier Caps",
         "tier": "Prismatic",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/deadliercaps_ii.png"
       },
       {
-        "id": "TFT_Augment_DeadlierCaps",
+        "id": "DA_DeadlierCaps",
         "name": "Deadlier Caps",
         "tier": "Prismatic",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/deadliercaps_ii.png"
@@ -7818,25 +7818,25 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/giantandmighty_iii.png"
       },
       {
-        "id": "DA_GoingLong",
-        "name": "Going Long",
-        "tier": "Prismatic",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/going-long-iii.png"
-      },
-      {
         "id": "TFT10_Augment_GoingLong",
         "name": "Going Long",
         "tier": "Prismatic",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/going-long-iii.png"
       },
       {
-        "id": "DA_GoldenGamble",
+        "id": "DA_GoingLong",
+        "name": "Going Long",
+        "tier": "Prismatic",
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/going-long-iii.png"
+      },
+      {
+        "id": "TFT_Augment_GoldenGamble",
         "name": "Golden Gamble",
         "tier": "Prismatic",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/goldengamble_iii.png"
       },
       {
-        "id": "TFT_Augment_GoldenGamble",
+        "id": "DA_GoldenGamble",
         "name": "Golden Gamble",
         "tier": "Prismatic",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/goldengamble_iii.png"
@@ -7866,25 +7866,25 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/goldengamble_iii.png"
       },
       {
-        "id": "DA_HardCommit",
-        "name": "Hard Commit",
-        "tier": "Prismatic",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/hardcommit_iii.png"
-      },
-      {
         "id": "TFT_Augment_HardCommit",
         "name": "Hard Commit",
         "tier": "Prismatic",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/hardcommit_iii.png"
       },
       {
-        "id": "DA_HedgeFund",
+        "id": "DA_HardCommit",
+        "name": "Hard Commit",
+        "tier": "Prismatic",
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/hardcommit_iii.png"
+      },
+      {
+        "id": "TFT9_Augment_HedgeFund",
         "name": "Hedge Fund",
         "tier": "Prismatic",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/richgetricher3.png"
       },
       {
-        "id": "TFT9_Augment_HedgeFund",
+        "id": "DA_HedgeFund",
         "name": "Hedge Fund",
         "tier": "Prismatic",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/richgetricher3.png"
@@ -7896,22 +7896,16 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/richgetricher3.png"
       },
       {
-        "id": "TFT_Augment_HoldTheLine",
-        "name": "Hold the Line",
-        "tier": "Prismatic",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/holdtheline_iii.png"
-      },
-      {
         "id": "DA_HoldTheLine",
         "name": "Hold the Line",
         "tier": "Prismatic",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/holdtheline_iii.png"
       },
       {
-        "id": "TFT_Augment_InvestedPlus",
-        "name": "Invested+",
+        "id": "TFT_Augment_HoldTheLine",
+        "name": "Hold the Line",
         "tier": "Prismatic",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/invested-iii.png"
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/holdtheline_iii.png"
       },
       {
         "id": "DA_InvestedPlus",
@@ -7920,13 +7914,19 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/invested-iii.png"
       },
       {
-        "id": "DA_InvestedPlusPlus",
-        "name": "Invested++",
+        "id": "TFT_Augment_InvestedPlus",
+        "name": "Invested+",
         "tier": "Prismatic",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/invested-iii.png"
       },
       {
         "id": "TFT_Augment_InvestedPlusPlus",
+        "name": "Invested++",
+        "tier": "Prismatic",
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/invested-iii.png"
+      },
+      {
+        "id": "DA_InvestedPlusPlus",
         "name": "Invested++",
         "tier": "Prismatic",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/invested-iii.png"
@@ -7980,13 +7980,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/living-forge-iii.png"
       },
       {
-        "id": "DA_LuckyGloves",
+        "id": "TFT7_Augment_LuckyGloves",
         "name": "Lucky Gloves",
         "tier": "Prismatic",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/lucky-gloves-iii.png"
       },
       {
-        "id": "TFT7_Augment_LuckyGloves",
+        "id": "DA_LuckyGloves",
         "name": "Lucky Gloves",
         "tier": "Prismatic",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/lucky-gloves-iii.png"
@@ -8004,13 +8004,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/lucky-gloves-iii.png"
       },
       {
-        "id": "DA_LuxurySubscription",
+        "id": "TFT_Augment_LuxurySubscription",
         "name": "Luxury Subscription",
         "tier": "Prismatic",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/luxurysubscription_iii.png"
       },
       {
-        "id": "TFT_Augment_LuxurySubscription",
+        "id": "DA_LuxurySubscription",
         "name": "Luxury Subscription",
         "tier": "Prismatic",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/luxurysubscription_iii.png"
@@ -8022,13 +8022,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/missing-t3.png"
       },
       {
-        "id": "TFT_Augment_MinMaxer",
+        "id": "DA_Min_Max",
         "name": "Min-Max",
         "tier": "Prismatic",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/minmax_iii.png"
       },
       {
-        "id": "DA_Min_Max",
+        "id": "TFT_Augment_MinMaxer",
         "name": "Min-Max",
         "tier": "Prismatic",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/minmax_iii.png"
@@ -8100,13 +8100,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/pandora3.png"
       },
       {
-        "id": "DA_PrismaticDestiny",
+        "id": "TFT_Augment_PrismaticDestiny",
         "name": "Prismatic Destiny",
         "tier": "Prismatic",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/prismaticdestiny_iii.png"
       },
       {
-        "id": "TFT_Augment_PrismaticDestiny",
+        "id": "DA_PrismaticDestiny",
         "name": "Prismatic Destiny",
         "tier": "Prismatic",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/prismaticdestiny_iii.png"
@@ -8118,13 +8118,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/prismaticdestiny_iii.png"
       },
       {
-        "id": "DA_PrismaticTicket",
+        "id": "TFT6_Augment_GachaAddict",
         "name": "Prismatic Ticket",
         "tier": "Prismatic",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/goldenticket3.png"
       },
       {
-        "id": "TFT6_Augment_GachaAddict",
+        "id": "DA_PrismaticTicket",
         "name": "Prismatic Ticket",
         "tier": "Prismatic",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/goldenticket3.png"
@@ -8166,22 +8166,16 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/radiantrefactor_iii.png"
       },
       {
-        "id": "TFT6_Augment_RadiantRelics",
-        "name": "Radiant Relics",
-        "tier": "Prismatic",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/radiantrelic-iii.png"
-      },
-      {
         "id": "DA_RadiantRelic",
         "name": "Radiant Relics",
         "tier": "Prismatic",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/radiantrelic-iii.png"
       },
       {
-        "id": "DA_Retribution",
-        "name": "Retribution",
+        "id": "TFT6_Augment_RadiantRelics",
+        "name": "Radiant Relics",
         "tier": "Prismatic",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/retribution_iii.png"
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/radiantrelic-iii.png"
       },
       {
         "id": "TFT_Augment_Retribution",
@@ -8190,10 +8184,10 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/retribution_iii.png"
       },
       {
-        "id": "DA_ShimmerscaleEssence",
-        "name": "Shimmerscale Essence",
+        "id": "DA_Retribution",
+        "name": "Retribution",
         "tier": "Prismatic",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/shimmerscaleessence_iii.png"
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/retribution_iii.png"
       },
       {
         "id": "TFT_Augment_ShimmerscaleEssence",
@@ -8202,13 +8196,19 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/shimmerscaleessence_iii.png"
       },
       {
-        "id": "DA_ShoppingSpree",
+        "id": "DA_ShimmerscaleEssence",
+        "name": "Shimmerscale Essence",
+        "tier": "Prismatic",
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/shimmerscaleessence_iii.png"
+      },
+      {
+        "id": "TFT9_Augment_Legend_HighEndSector",
         "name": "Shopping Spree",
         "tier": "Prismatic",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/silver-ticket-iii.png"
       },
       {
-        "id": "TFT9_Augment_Legend_HighEndSector",
+        "id": "DA_ShoppingSpree",
         "name": "Shopping Spree",
         "tier": "Prismatic",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/silver-ticket-iii.png"
@@ -8220,13 +8220,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/silver-ticket-iii.png"
       },
       {
-        "id": "TFT_Augment_AwakenedSoul",
+        "id": "DA_SoulAwakening",
         "name": "Soul Awakening",
         "tier": "Prismatic",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/awakenedsoul_iii.png"
       },
       {
-        "id": "DA_SoulAwakening",
+        "id": "TFT_Augment_AwakenedSoul",
         "name": "Soul Awakening",
         "tier": "Prismatic",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/awakenedsoul_iii.png"
@@ -8262,13 +8262,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/sweettreats_iii.png"
       },
       {
-        "id": "TFT_Augment_SwordOverflow",
+        "id": "DA_SwordOverflow",
         "name": "Sword Overflow",
         "tier": "Prismatic",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/bladeoverflow_iii.png"
       },
       {
-        "id": "DA_SwordOverflow",
+        "id": "TFT_Augment_SwordOverflow",
         "name": "Sword Overflow",
         "tier": "Prismatic",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/bladeoverflow_iii.png"
@@ -8304,13 +8304,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/the-golden-egg-iii.png"
       },
       {
-        "id": "TFT_Augment_TraitTree",
+        "id": "DA_TheTraitTree",
         "name": "The Trait Tree",
         "tier": "Prismatic",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/thetraittree_iii.png"
       },
       {
-        "id": "DA_TheTraitTree",
+        "id": "TFT_Augment_TraitTree",
         "name": "The Trait Tree",
         "tier": "Prismatic",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/thetraittree_iii.png"
@@ -8436,13 +8436,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/wisespending3.png"
       },
       {
-        "id": "DA_WorththeWaitII",
+        "id": "TFT_Augment_WorthTheWaitPrismatic",
         "name": "Worth the Wait II",
         "tier": "Prismatic",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/worththewait_iii.png"
       },
       {
-        "id": "TFT_Augment_WorthTheWaitPrismatic",
+        "id": "DA_WorththeWaitII",
         "name": "Worth the Wait II",
         "tier": "Prismatic",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/worththewait_iii.png"
@@ -8454,25 +8454,25 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/afk-i.png"
       },
       {
-        "id": "TFT_Augment_PowerUp",
-        "name": "Augmented Power",
-        "tier": "Silver",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/powerup_i.png"
-      },
-      {
         "id": "DA_AugmentedPower",
         "name": "Augmented Power",
         "tier": "Silver",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/powerup_i.png"
       },
       {
-        "id": "DA_BackupBows",
+        "id": "TFT_Augment_PowerUp",
+        "name": "Augmented Power",
+        "tier": "Silver",
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/powerup_i.png"
+      },
+      {
+        "id": "TFT_Augment_ComponentQuestBow",
         "name": "Backup Bows",
         "tier": "Silver",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/recurvewrecker_i.png"
       },
       {
-        "id": "TFT_Augment_ComponentQuestBow",
+        "id": "DA_BackupBows",
         "name": "Backup Bows",
         "tier": "Silver",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/recurvewrecker_i.png"
@@ -8526,13 +8526,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/branching-out-i.png"
       },
       {
-        "id": "TFT_Augment_BranchingOutPlus",
+        "id": "DA_18_BranchingOutPlus",
         "name": "Branching Out+",
         "tier": "Silver",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/branching-out-i.png"
       },
       {
-        "id": "DA_18_BranchingOutPlus",
+        "id": "TFT_Augment_BranchingOutPlus",
         "name": "Branching Out+",
         "tier": "Silver",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/branching-out-i.png"
@@ -8556,25 +8556,25 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/missing-t1.png"
       },
       {
-        "id": "DA_18_CaretakersAlly",
-        "name": "Caretaker's Ally",
-        "tier": "Silver",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/caretaker_s-chosen-i.png"
-      },
-      {
         "id": "TFT9_Augment_BardPlaybook1",
         "name": "Caretaker's Ally",
         "tier": "Silver",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/caretaker_s-chosen-i.png"
       },
       {
-        "id": "TFT_Augment_ComponentQuestSword",
+        "id": "DA_18_CaretakersAlly",
+        "name": "Caretaker's Ally",
+        "tier": "Silver",
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/caretaker_s-chosen-i.png"
+      },
+      {
+        "id": "DA_CarveAPath",
         "name": "Carve a Path",
         "tier": "Silver",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/carveapath_i.png"
       },
       {
-        "id": "DA_CarveAPath",
+        "id": "TFT_Augment_ComponentQuestSword",
         "name": "Carve a Path",
         "tier": "Silver",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/carveapath_i.png"
@@ -8628,13 +8628,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/climbtheladder_i.png"
       },
       {
-        "id": "DA_CognitiveTax",
+        "id": "TFT_Augment_CognitiveTax",
         "name": "Cognitive Tax",
         "tier": "Silver",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/cognitivetax_i.png"
       },
       {
-        "id": "TFT_Augment_CognitiveTax",
+        "id": "DA_CognitiveTax",
         "name": "Cognitive Tax",
         "tier": "Silver",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/cognitivetax_i.png"
@@ -8736,13 +8736,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/exiles1.png"
       },
       {
-        "id": "TFT_Augment_Expedition",
+        "id": "DA_Expedition",
         "name": "Expedition",
         "tier": "Silver",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/expedition_i.png"
       },
       {
-        "id": "DA_Expedition",
+        "id": "TFT_Augment_Expedition",
         "name": "Expedition",
         "tier": "Silver",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/expedition_i.png"
@@ -8778,13 +8778,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/feelinglucky_i.png"
       },
       {
-        "id": "TFT_Augment_FindYourCenter",
+        "id": "DA_FindYourCenter",
         "name": "Find Your Center",
         "tier": "Silver",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/findyourcenter_i.png"
       },
       {
-        "id": "DA_FindYourCenter",
+        "id": "TFT_Augment_FindYourCenter",
         "name": "Find Your Center",
         "tier": "Silver",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/findyourcenter_i.png"
@@ -8856,22 +8856,16 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/glasscannon_i.png"
       },
       {
-        "id": "TFT10_Augment_GoodForSomethingSilver",
-        "name": "Good For Something I",
-        "tier": "Silver",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/good-for-something-i.png"
-      },
-      {
         "id": "DA_18_GoodForSomethingI",
         "name": "Good For Something I",
         "tier": "Silver",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/good-for-something-i.png"
       },
       {
-        "id": "TFT_Augment_GroupHug1",
-        "name": "Group Hug I",
+        "id": "TFT10_Augment_GoodForSomethingSilver",
+        "name": "Good For Something I",
         "tier": "Silver",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/grouphug1_i.png"
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/good-for-something-i.png"
       },
       {
         "id": "DA_GroupHugI",
@@ -8880,13 +8874,19 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/grouphug1_i.png"
       },
       {
-        "id": "DA_HealingOrbsI",
+        "id": "TFT_Augment_GroupHug1",
+        "name": "Group Hug I",
+        "tier": "Silver",
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/grouphug1_i.png"
+      },
+      {
+        "id": "TFT9_Augment_HealingOrbsI",
         "name": "Healing Orbs I",
         "tier": "Silver",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/healing-orbs-i.png"
       },
       {
-        "id": "TFT9_Augment_HealingOrbsI",
+        "id": "DA_HealingOrbsI",
         "name": "Healing Orbs I",
         "tier": "Silver",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/healing-orbs-i.png"
@@ -9030,13 +9030,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/threes-company-i.png"
       },
       {
-        "id": "DA_18_OneTwoFive",
+        "id": "TFT6_Augment_OneTwoFive",
         "name": "One, Two, Five!",
         "tier": "Silver",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/one-two-five-i.png"
       },
       {
-        "id": "TFT6_Augment_OneTwoFive",
+        "id": "DA_18_OneTwoFive",
         "name": "One, Two, Five!",
         "tier": "Silver",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/one-two-five-i.png"
@@ -9072,13 +9072,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/pandora1.png"
       },
       {
-        "id": "DA_PartialAscension",
+        "id": "TFT9_Augment_Commander_PartialAscension",
         "name": "Partial Ascension",
         "tier": "Silver",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/ascension1.png"
       },
       {
-        "id": "TFT9_Augment_Commander_PartialAscension",
+        "id": "DA_PartialAscension",
         "name": "Partial Ascension",
         "tier": "Silver",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/ascension1.png"
@@ -9132,13 +9132,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/missing-t1.png"
       },
       {
-        "id": "DA_Recombobulator",
+        "id": "TFT6_Augment_Recombobulator",
         "name": "Recombobulator",
         "tier": "Silver",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/recombobulator-i.png"
       },
       {
-        "id": "TFT6_Augment_Recombobulator",
+        "id": "DA_Recombobulator",
         "name": "Recombobulator",
         "tier": "Silver",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/recombobulator-i.png"
@@ -9204,25 +9204,25 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/second--wind-i.png"
       },
       {
-        "id": "TFT_Augment_SilverDestiny",
-        "name": "Silver Destiny",
-        "tier": "Silver",
-        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/silverdestiny_i.png"
-      },
-      {
         "id": "DA_SilverDestiny",
         "name": "Silver Destiny",
         "tier": "Silver",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/silverdestiny_i.png"
       },
       {
-        "id": "TFT_Augment_SilverDestinyPlus",
-        "name": "Silver Destiny+",
+        "id": "TFT_Augment_SilverDestiny",
+        "name": "Silver Destiny",
         "tier": "Silver",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/silverdestiny_i.png"
       },
       {
         "id": "DA_SilverDestinyPlus",
+        "name": "Silver Destiny+",
+        "tier": "Silver",
+        "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/silverdestiny_i.png"
+      },
+      {
+        "id": "TFT_Augment_SilverDestinyPlus",
         "name": "Silver Destiny+",
         "tier": "Silver",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/silverdestiny_i.png"
@@ -9240,13 +9240,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/silverdestiny_i.png"
       },
       {
-        "id": "DA_SilverSpoon",
+        "id": "TFT9_Augment_SilverSpoon",
         "name": "Silver Spoon",
         "tier": "Silver",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/silver-spoon-i.png"
       },
       {
-        "id": "TFT9_Augment_SilverSpoon",
+        "id": "DA_SilverSpoon",
         "name": "Silver Spoon",
         "tier": "Silver",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/silver-spoon-i.png"
@@ -9282,13 +9282,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/slightlymagicroll_i.png"
       },
       {
-        "id": "DA_SmallGrabBag",
+        "id": "TFT_Augment_SmallGrabBag",
         "name": "Small Grab Bag",
         "tier": "Silver",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/smallgrabbag_i.png"
       },
       {
-        "id": "TFT_Augment_SmallGrabBag",
+        "id": "DA_SmallGrabBag",
         "name": "Small Grab Bag",
         "tier": "Silver",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/smallgrabbag_i.png"
@@ -9300,13 +9300,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/spoils-of-war-legend-i.png"
       },
       {
-        "id": "DA_StandUnited",
+        "id": "TFT6_Augment_Diversify1",
         "name": "Stand United",
         "tier": "Silver",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/standunited1.png"
       },
       {
-        "id": "TFT6_Augment_Diversify1",
+        "id": "DA_StandUnited",
         "name": "Stand United",
         "tier": "Silver",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/standunited1.png"
@@ -9408,13 +9408,13 @@
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/missing-t1.png"
       },
       {
-        "id": "TFT9_Augment_YoungAndWildAndFree",
+        "id": "DA_YoungAndWildAndFree",
         "name": "Young and Wild and Free",
         "tier": "Silver",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/young-and-wild-and-free-i.png"
       },
       {
-        "id": "DA_YoungAndWildAndFree",
+        "id": "TFT9_Augment_YoungAndWildAndFree",
         "name": "Young and Wild and Free",
         "tier": "Silver",
         "imageUrl": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/young-and-wild-and-free-i.png"
