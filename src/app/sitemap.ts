@@ -18,6 +18,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/comps/stats",
     "/teambuilder",
     "/guides",
+    "/players",
     "/tier-lists",
     "/coaching",
     "/about",

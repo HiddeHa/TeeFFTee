@@ -66,7 +66,71 @@ export type PlayerPage =
   | { kind: "missing" }
   | { kind: "ok"; player: PlayerProfile; summary: PlayerSummary; matches: PlayerMatch[] };
 
+/** A ladder row without the per-player queries — what the index needs. */
+export type TrackedPlayer = PlayerProfile;
+
+export type PlayerList =
+  | { kind: "unavailable" }
+  | { kind: "ok"; players: TrackedPlayer[]; total: number };
+
 let warnedAboutDatabase = false;
+
+/**
+ * The tracked ladder, highest LP first.
+ *
+ * `total` is the whole pool, not the page: a seeded ladder is capped by
+ * `CRAWL_SEED_MAX_PLAYERS`, and the index should say how many players the
+ * crawler is actually tracking rather than how many fit on one screen.
+ *
+ * LP is not a score we computed — it is what the last seed read off the ladder.
+ * Nothing here pretends to be a live ranking.
+ */
+export async function listTrackedPlayers(limit = 100): Promise<PlayerList> {
+  if (!process.env.DATABASE_URL) return { kind: "unavailable" };
+
+  let db: ReturnType<typeof getDb>;
+  try {
+    db = getDb();
+  } catch {
+    return { kind: "unavailable" };
+  }
+
+  try {
+    const [totalRow] = await db
+      .select({ total: sql<number>`count(*)::int` })
+      .from(players);
+
+    const rows = await db
+      .select({
+        puuid: players.puuid,
+        region: players.region,
+        tier: players.tier,
+        lp: players.lp,
+        lastSeenAt: players.lastSeenAt,
+      })
+      .from(players)
+      // LP alone leaves ties in whatever order the planner produced, which makes
+      // the same page reshuffle between requests; the PUUID makes it stable.
+      .orderBy(desc(players.lp), asc(players.puuid))
+      .limit(limit);
+
+    return {
+      kind: "ok",
+      total: totalRow?.total ?? 0,
+      players: rows.map((row) => ({ ...row, lastSeenAt: toIso(row.lastSeenAt) })),
+    };
+  } catch (error) {
+    if (!warnedAboutDatabase) {
+      warnedAboutDatabase = true;
+      console.warn(
+        `[players] Postgres unavailable, the player index cannot render: ${
+          error instanceof Error ? error.message : String(error)
+        }`,
+      );
+    }
+    return { kind: "unavailable" };
+  }
+}
 
 function toIso(value: Date | string | null): string | null {
   if (value === null) return null;
