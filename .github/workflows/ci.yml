@@ -1,8 +1,9 @@
 name: CI
 
 # Every push, on every branch: the three gates this project actually relies on.
-# `npm run test:e2e` starts its own dev server on :3100 with DATABASE_URL blanked,
-# so the job needs no database, no secrets and no prior build.
+# `npx playwright test` builds and serves the app on :3100 itself, with
+# DATABASE_URL blanked, so the job needs no database, no secrets and no prior
+# build of its own.
 on:
   push:
 

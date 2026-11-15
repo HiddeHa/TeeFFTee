@@ -3,6 +3,9 @@
 A TFT meta/stats site with a coaching funnel: high-elo comp stats, a curated meta
 layer, and the analysis seam that will hold the crawler.
 
+- **Source:** [github.com/HiddeHa/TeeFFTee](https://github.com/HiddeHa/TeeFFTee) (private)
+- **Live:** [production](https://site-1900fe11ad604367a670f605b0e64000.freebuff.page) · [preview](https://site-0d9595db583b49bc89a7346f70ea7437.freebuff.page)
+
 ## Planning documents
 
 | Document | What's in it |
@@ -35,7 +38,7 @@ desktop project and a mobile one.
 
 ```bash
 npx playwright install chromium   # once, per machine
-npm run test:e2e                  # starts its own dev server on :3100
+npm run test:e2e                  # builds, then serves the app on :3100
 npm run test:e2e:ui               # same suite, with the time-travel UI
 ```
 
@@ -354,9 +357,32 @@ comps, run `sync-comps`, and the next aggregation pass fills `comp_stats`.
 
 ## Deploying
 
-Any Node host works (Vercel is the obvious fit for Next.js). You need a **public
-HTTPS URL** before applying for a Riot production key, because the application is
-reviewed against a live site with working terms and privacy pages.
+Hosted on **Freebuff Sites** — one project, two environments, Cloudflare Workers
+the OpenNext adapter packaged from `next build`:
+
+| Environment | URL |
+|---|---|
+| Production | https://site-1900fe11ad604367a670f605b0e64000.freebuff.page |
+| Preview | https://site-0d9595db583b49bc89a7346f70ea7437.freebuff.page |
+
+A deploy is two steps: prepare (installs the adapter, builds, and writes
+`freebuff-sites-build/manifest.json`), then deploy that manifest to the target
+environment. Publishing the production environment is deliberate and never a
+side effect of deploying code.
+
+```bash
+DATABASE_URL= npm run build   # the build the deploy ships; CI runs this too
+```
+
+Two things to know before publishing. **The deploy builds the working tree, not
+`HEAD`** — commit first, or unreviewed edits ride along. And an environment stays
+visible after its code is replaced: `.github/workflows/ci.yml` is the gate that
+must be green (typecheck, build, and the Playwright suite on Node 22), not a
+green deploy.
+
+A public HTTPS URL is a precondition for a Riot production key: the application
+is reviewed against a live site with working terms and privacy pages, which the
+Freebuff URLs above provide.
 
 ## Status
 
@@ -365,7 +391,10 @@ Built and verified: all v1 pages, the schema and legal pages, the crawl pipeline
 tier list and comp pages reading `comp_stats` with a content fallback, and the
 continuous containerised loop above.
 
-Not yet done: the comps are still placeholders, so aggregation classifies 0% of
-boards; there is no Riot **production** key yet (dev keys expire every 24 h); and
-nothing is deployed. See [Phase 1](docs/roadmap.md#phase-1--crawler--aggregation)
-onward.
+Deployed: production and preview both serve the current build from Freebuff Sites
+(above).
+
+Not yet done: the content is still placeholder (`PLACEHOLDER_CONTENT` in
+[src/content/flags.ts](src/content/flags.ts)) and there is no Riot **production**
+key yet (dev keys expire every 24 h). See
+[Phase 1](docs/roadmap.md#phase-1--crawler--aggregation) onward.
