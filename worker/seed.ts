@@ -39,19 +39,32 @@ export async function seedLadders(
 
       const ladder = await client.ladder(region, tier);
       const entries = ladder.entries ?? [];
-      const usable = entries
-        .filter((entry) => typeof entry.puuid === "string" && entry.puuid.length > 0)
-        .slice(0, budget)
-        .map((entry) => ({
-          puuid: entry.puuid as string,
-          region,
-          tier: tier.toUpperCase(),
-          lp: entry.leaguePoints ?? 0,
-        }));
+      const withPuuid = entries.filter(
+        (entry) => typeof entry.puuid === "string" && entry.puuid.length > 0,
+      );
+      const usable = withPuuid.slice(0, budget).map((entry) => ({
+        puuid: entry.puuid as string,
+        region,
+        tier: tier.toUpperCase(),
+        lp: entry.leaguePoints ?? 0,
+      }));
 
-      const skipped = entries.length - usable.length;
-      if (skipped > 0) {
-        log.warn("ladder entries without a puuid — not storable", { region, tier, skipped });
+      // Two different reasons for dropping an entry, reported separately: one is
+      // a Riot payload detail (no puuid, so there is nothing to store), the other
+      // is our own player cap. Collapsing them made a capped master ladder read
+      // as "7,926 entries without a puuid", which is not what happened.
+      const missingPuuid = entries.length - withPuuid.length;
+      const overBudget = withPuuid.length - usable.length;
+      if (missingPuuid > 0) {
+        log.warn("ladder entries without a puuid — not storable", { region, tier, missingPuuid });
+      }
+      if (overBudget > 0) {
+        log.warn("ladder truncated by CRAWL_SEED_MAX_PLAYERS", {
+          region,
+          tier,
+          overBudget,
+          cap: config.seedMaxPlayers,
+        });
       }
 
       if (usable.length === 0) {
