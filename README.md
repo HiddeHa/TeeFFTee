@@ -28,6 +28,28 @@ No environment variables are required to run the site. Copy `.env.example` to
 `next` and the crawler read that file (see [worker/load-env.ts](worker/load-env.ts)),
 and real environment variables take precedence over it.
 
+## Tests
+
+The end-to-end suite is Playwright: it drives the real pages in Chromium, in a
+desktop project and a mobile one.
+
+```bash
+npx playwright install chromium   # once, per machine
+npm run test:e2e                  # starts its own dev server on :3100
+npm run test:e2e:ui               # same suite, with the time-travel UI
+```
+
+`playwright.config.ts` runs `next dev` on port 3100 with `DATABASE_URL` blanked,
+so every assertion reads the committed catalogue snapshot and the curated content
+files. Nothing depends on live Postgres or on when the crawler last ran, and the
+suite needs no build first. `npm run typecheck` covers the specs too.
+
+The builder specs wait for React to take over before clicking (the page renders
+fully server-side, so a click in that window does nothing), and the base URL is
+`localhost` rather than `127.0.0.1` because Next's dev server rejects the HMR
+socket from an origin it does not recognise — and the page never hydrates
+without it.
+
 ## What exists
 
 | Route | State |

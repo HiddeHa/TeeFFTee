@@ -17,6 +17,11 @@ build/
 /.open-next/
 /.wrangler/
 
+# Playwright: reports, traces and screenshots from failed runs
+/test-results/
+/playwright-report/
+/playwright/.cache/
+
 # Hosted Postgres connection string, provided by the owner for deploys.
 .neon-url.txt
 .env.backup-local-db
