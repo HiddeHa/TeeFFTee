@@ -4,7 +4,7 @@ A TFT meta/stats site built by a top player: **objective numbers plus your read*
 
 - **Live set at time of writing:** Set 18 "Enchanted Wilds", patch 18.5 (Oct 20, 2026)
 - **Target launch:** Set 19, week of **Dec 1, 2026**
-- **Working title:** `metaread` (placeholder — see [Naming](#13-legal--riot-compliance))
+- **Name:** `TeeFFTee` (was `metaread` while unnamed — see [Naming](#13-legal--riot-compliance))
 
 ---
 

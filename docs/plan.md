@@ -317,7 +317,7 @@ exit 0, `DATABASE_URL= npm run build` exit 0, sitemap 9 URLs with one comp URL, 
 
 **Still open for S1:** `PLACEHOLDER_CONTENT` stays `true`. D3/D4/D6 need the owner's contact
 email, the author confirmation/proof line, and the Calendly replacement — I did not invent any of
-them, and `site.name` is still `metaread`, not TeeFfTee.
+them, and `site.name` is still `metaread`, not TeeFFTee.
 
 **S2 wiring note** *(superseded 16:23 — the file *is* wired now; see the convergence entry at the
 end of §8)*: `src/content/catalogue.json` existed but nothing read it, because `src/lib/units.ts`
@@ -368,7 +368,7 @@ successful write.
 `src/lib/units.ts`, new `src/content/catalogue.json`, deleted `src/lib/catalogue/**`.
 
 **S1 content flag, checked on the live origin (same deploy):** `PLACEHOLDER_CONTENT` is `false`
-and the content behind it is real — `TeeFfTee`, author `Hitmoney`, prices €45/€90/€240, and every
+and the content behind it is real — `TeeFFTee`, author `Hitmoney`, prices €45/€90/€240, and every
 CTA a `mailto:` to the owner's own address. Live `/`, `/coaching`, `/about` return 200 with 0
 occurrences of `metaread`, `Your Name`, `you@example.com`, `your-invite`, `your-handle` or a
 `calendly.com/your-*` link, and no placeholder banner. That is a truthful state, not just a

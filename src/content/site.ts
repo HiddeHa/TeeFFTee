@@ -11,7 +11,7 @@ import type { Region, RankBucket } from "./types";
  */
 export const site = {
   /** Keep "Riot" out of the name and the domain. "TFT" is referenced in copy, never in the name. */
-  name: "TeeFfTee",
+  name: "TeeFFTee",
   tagline: "High-elo TFT stats, read by someone who plays there.",
   description:
     "Tier lists, comp stats and patch reads for Teamfight Tactics, built from Challenger and Grandmaster games on EUW and KR.",
@@ -23,7 +23,7 @@ export const site = {
   // at Calendly or a Stripe link when one exists — every component reads it here.
   bookingUrl:
     process.env.NEXT_PUBLIC_BOOKING_URL ??
-    "mailto:hidde.hanning.bee@gmail.com?subject=TeeFfTee%20coaching",
+    "mailto:hidde.hanning.bee@gmail.com?subject=TeeFFTee%20coaching",
 
   /** Current live set. Set 19 lands the week of 2026-12-01. */
   setNumber: 18,

@@ -1,4 +1,4 @@
-# TFT meta site
+# TeeFFTee
 
 A TFT meta/stats site with a coaching funnel: high-elo comp stats, a curated meta
 layer, and the analysis seam that will hold the crawler.

@@ -12,7 +12,7 @@ are building. Where they disagree, this file wins.
 |---|---|---|
 | **D1** | **Both hosts.** Freebuff Sites carries the Riot production-key application; **Vercel** is the launch host. | The Sites URL needs unit names without a database → catalogue snapshot (`src/content/catalogue.json`). Vercel needs a Postgres it can reach → hosted Postgres is a new dependency. |
 | **D2** | **If the production key is late, launch on dev-key pilot numbers, clearly labelled.** | The sample is small and must be presented as small: dated, region-scoped, with the game count next to every figure. Never "the meta", always "this sample". |
-| **D3** | **Name: TeeFfTee.** | `site.name` plus metadata, banner, footer, legal and OG copy. **Domain still unknown** — `site.url` and the canonical/sitemap base cannot be finished without it. |
+| **D3** | **Name: TeeFFTee.** | `site.name` plus metadata, banner, footer, legal and OG copy. **Domain still unknown** — `site.url` and the canonical/sitemap base cannot be finished without it. |
 | **D4** | **Author: Hitmoney, current Master EUW, peak Challenger.** | `site.author` block, `/about`, coaching CTA proof line, FAQ server answer. |
 | **D5** | **Delete the three `Example …` comps.** Ship the real guides that exist. | No invented game counts anywhere public. The tier list will be short and honest — acceptable, and better than seven comps where four are fake. |
 | **D6** | **Keep the prices (€45 / €90 / €240), no booking tool.** | CTAs fall back to the contact email. `bookingUrl` must stop pointing at a fake Calendly. Conversion tracking gets weaker; note it as a known cost, do not invent a workaround. |
@@ -21,7 +21,7 @@ are building. Where they disagree, this file wins.
 
 Two risks I am recording rather than silently accepting:
 
-- **"TeeFfTee" is phonetically TFT.** The blueprint's own rule is to keep Riot marks out of the
+- **"TeeFFTee" is phonetically TFT.** The blueprint's own rule is to keep Riot marks out of the
   name and domain, and Riot's review looks at exactly this. It is not a takedown risk, it is an
   approval risk. If there is a second-choice name, keep it warm.
 - **Pilot numbers from a dev key are a small, expiring sample.** D2 is a credibility decision,
@@ -46,7 +46,7 @@ Ordered by what unblocks the next thing, not by effort.
 
 | Step | What | Lane | Done when |
 |---|---|---|---|
-| **S1** | Content truth: TeeFfTee, Hitmoney, delete examples, real contact email, no fake Calendly → `PLACEHOLDER_CONTENT = false` | CONTENT | No page shows the banner; no page shows an invented number |
+| **S1** | Content truth: TeeFFTee, Hitmoney, delete examples, real contact email, no fake Calendly → `PLACEHOLDER_CONTENT = false` | CONTENT | No page shows the banner; no page shows an invented number |
 | **S2** | Catalogue snapshot, so the Sites URL renders names and icons without Postgres | MANAGER (claimed) | `/comps/draven-fast-9` on the Sites preview shows Draven, not `DA_Draven18` |
 | **S3** | Redeploy the Sites preview; walk every route | PLATFORM | `/`, `/comps`, one comp, `/patch/18.6`, `/coaching`, `/about`, `/terms`, `/privacy` all render |
 | **S4** | **Submit the Riot production-key application** against that URL | OWNER | Application submitted, date recorded |
@@ -64,7 +64,7 @@ until S1 and S3 are done, and it is the longest-lead item in the project.
 Precise enough to execute without asking back. Lane boundaries from plan.md §5 still apply.
 
 ### CONTENT — S1
-- `src/content/site.ts`: `name: "TeeFfTee"`; `tagline`, `description` unchanged in substance;
+- `src/content/site.ts`: `name: "TeeFFTee"`; `tagline`, `description` unchanged in substance;
   `author` → Hitmoney, Master EUW, peak Challenger, real proof line; `contactEmail` → the real
   address (owner supplies); `bookingUrl` → remove the fake Calendly, route CTAs to the contact
   email; `socials` → drop any handle that does not exist rather than ship a dead link.
@@ -183,7 +183,7 @@ Then `npm run crawl -- sync-comps` (the `comps` table still holds 4 rows while s
 
 
 ## 5. What I still need from you
-1. **A domain.** `TeeFfTee` is a name, not a URL. Everything canonical — sitemap, metadata,
+1. **A domain.** `TeeFFTee` is a name, not a URL. Everything canonical — sitemap, metadata,
    OG, the application — is waiting on it. If you have not bought one, say so and I will pick a
    shortlist; the Riot application needs a live HTTPS URL.
 2. **A real contact email** for the coaching CTA now that there is no booking tool.
