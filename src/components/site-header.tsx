@@ -26,12 +26,12 @@ export function SiteHeader() {
           </Link>
 
           <div className="flex items-center gap-3">
-            <SiteNav className="hidden lg:flex" />
+            <SiteNav className="hidden xl:flex" />
             <CoachingCTA variant="header" placement="header" />
           </div>
         </div>
 
-        <SiteNav className="flex overflow-x-auto pb-2 lg:hidden" />
+        <SiteNav className="flex overflow-x-auto pb-2 xl:hidden" />
       </div>
     </header>
   );

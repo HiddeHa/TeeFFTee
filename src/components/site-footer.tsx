@@ -6,6 +6,7 @@ const PRODUCT_LINKS = [
   { href: "/meta", label: "Meta" },
   { href: "/teambuilder", label: "Teambuilder" },
   { href: `/patch/${site.currentPatch}`, label: "Patch notes" },
+  { href: "/set-19", label: "Set 19" },
   { href: "/coaching", label: "Coaching" },
 ];
 

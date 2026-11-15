@@ -12,8 +12,10 @@ const NAV = [
   { href: "/leaderboards", label: "Leaderboards" },
   { href: "/tier-lists", label: "My tier lists" },
   { href: "/teambuilder", label: "Teambuilder" },
+  { href: "/ainalyses", label: "AInalyses" },
   { href: "/guides", label: "Guides" },
   { href: `/patch/${site.currentPatch}`, label: "Patch notes" },
+  { href: "/set-19", label: "Set 19" },
   { href: "/coaching", label: "Coaching" },
   { href: "/about", label: "About" },
 ];

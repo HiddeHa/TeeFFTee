@@ -63,6 +63,7 @@ without it.
 | `/` | Home: current patch, top comps, meta read teaser, coaching band |
 | `/meta` | Meta tier list, URL-driven patch / region / rank filters (`/comps` redirects here) |
 | `/meta/[slug]` | Comp detail: board, stats, leveling, augments, matchups, your notes, inline CTA |
+| `/ainalyses` | Pattern mining over the crawled boards: units, the unit pairs played together, items, popular and best-finishing item × unit pairings, traits |
 | `/leaderboards` | Tracked Master+ ladder by region, searchable by Riot ID or PUUID |
 | `/players/[puuid]` | One tracked account: Riot ID, ladder snapshot, its crawled placements |
 | `/patch/[patch]` | Patch summary, change list, movers, meta read |
