@@ -155,6 +155,65 @@ test("a broken share link renders what it can parse", async ({ page }) => {
   await expect(hex(page, 3)).toHaveAttribute("aria-label", "Kobuko — 2 star — 3 of 3 items");
 });
 
+test("the board is the game's four rows of seven", async ({ page }) => {
+  await expect(page.locator("[data-hex]")).toHaveCount(28);
+
+  const perRow = await page.evaluate(() => {
+    const counts = new Map<number, number>();
+    for (const node of document.querySelectorAll("[data-hex]")) {
+      const top = Math.round(node.getBoundingClientRect().top);
+      counts.set(top, (counts.get(top) ?? 0) + 1);
+    }
+    return [...counts.values()];
+  });
+
+  expect(perRow).toEqual([7, 7, 7, 7]);
+  // Captioned the way it is played: front line nearest the enemy, at the top.
+  await expect(page.getByText("Front line", { exact: true })).toBeVisible();
+  await expect(page.getByText("28 hexes", { exact: true })).toBeVisible();
+});
+
+test("a champion can be dragged from the pool onto a chosen hex", async ({ page }) => {
+  await championTile(page, "Akali").dragTo(hex(page, 9));
+
+  await expect(hex(page, 9)).toHaveAttribute("aria-label", "Akali — 1 star — 0 of 3 items");
+  await expect(hex(page, 0)).toHaveAttribute("aria-label", "Empty hex");
+  await expect(progress(page)).toContainText("1 of 28 hexes filled");
+});
+
+test("a placed champion drags to another hex, star level and all", async ({ page }) => {
+  await championTile(page, "Akali").click();
+  await hex(page, 0).click();
+  await page.getByRole("button", { name: "Set 2 star" }).click();
+
+  await hex(page, 0).dragTo(hex(page, 12));
+
+  await expect(hex(page, 12)).toHaveAttribute("aria-label", "Akali — 2 star — 0 of 3 items");
+  await expect(hex(page, 0)).toHaveAttribute("aria-label", "Empty hex");
+  await expect(progress(page)).toContainText("1 of 28 hexes filled");
+});
+
+test("dragging one champion onto another swaps them", async ({ page }) => {
+  await championTile(page, "Akali").click();
+  await championTile(page, "Leona").click();
+
+  await hex(page, 0).dragTo(hex(page, 1));
+
+  await expect(hex(page, 0)).toHaveAttribute("aria-label", /^Leona — 1 star/);
+  await expect(hex(page, 1)).toHaveAttribute("aria-label", /^Akali — 1 star/);
+  await expect(progress(page)).toContainText("2 of 28 hexes filled");
+});
+
+test("a pool champion dropped on an occupied hex leaves it alone", async ({ page }) => {
+  await championTile(page, "Akali").click();
+
+  await championTile(page, "Leona").dragTo(hex(page, 0));
+
+  // Replacing a champion would throw away its star level and items without a word.
+  await expect(hex(page, 0)).toHaveAttribute("aria-label", /^Akali — 1 star/);
+  await expect(progress(page)).toContainText("1 of 28 hexes filled");
+});
+
 test("a click from a scrolled pool leaves the unit visible and the page still", async ({ page }) => {
   await page.evaluate(() => window.scrollTo(0, 600));
 

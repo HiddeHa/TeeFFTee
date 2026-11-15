@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type DragEvent as ReactDragEvent } from "react";
 
 import {
   BOARD_COLS,
@@ -139,6 +139,13 @@ export function TeamBuilder({ units, items, traits, initialBoard, setNumber, pat
   const [lastPlaced, setLastPlaced] = useState<number | null>(null);
   const boardRef = useRef<HTMLElement | null>(null);
 
+  /** What is in flight: a champion from the pool, or one already on the board. */
+  const [drag, setDrag] = useState<
+    { kind: "unit"; unitId: string } | { kind: "hex"; index: number } | null
+  >(null);
+  /** Hex the pointer is over while dragging, so the drop is visible before it lands. */
+  const [dropTarget, setDropTarget] = useState<number | null>(null);
+
   const [unitQuery, setUnitQuery] = useState("");
   const [costFilter, setCostFilter] = useState<"all" | number>("all");
   const [itemQuery, setItemQuery] = useState("");
@@ -263,6 +270,96 @@ export function TeamBuilder({ units, items, traits, initialBoard, setNumber, pat
     setLastPlaced(target);
   }
 
+  /**
+   * Drag and drop.
+   *
+   * HTML5 drag events, which covers mouse and trackpad: a pool champion lands on
+   * a hex of your choosing, and a champion already on the board can be dragged to
+   * another hex (items and star level travel with it). Touch has no drag events,
+   * so click-to-place stays the path there — the two share every state update.
+   */
+  function startUnitDrag(unitId: string) {
+    return (event: ReactDragEvent<HTMLButtonElement>) => {
+      setDrag({ kind: "unit", unitId });
+      event.dataTransfer.effectAllowed = "copy";
+      // Firefox refuses to start a drag with an empty payload; the value is a formality.
+      event.dataTransfer.setData("text/plain", unitId);
+    };
+  }
+
+  function startHexDrag(index: number) {
+    const slot = board[index];
+    return (event: ReactDragEvent<HTMLButtonElement>) => {
+      if (!slot) return;
+      setDrag({ kind: "hex", index });
+      event.dataTransfer.effectAllowed = "move";
+      event.dataTransfer.setData("text/plain", slot.unitId);
+    };
+  }
+
+  function endDrag() {
+    setDrag(null);
+    setDropTarget(null);
+  }
+
+  /**
+   * A pool champion only lands on an empty hex — dropping it on an occupied one
+   * would silently throw away that champion's star level and items. A champion
+   * from the board swaps instead, which keeps both.
+   */
+  function canDropOn(index: number): boolean {
+    if (!drag) return false;
+    if (drag.kind === "hex" && drag.index === index) return false;
+    if (drag.kind === "unit") return board[index] === null;
+    return true;
+  }
+
+  function handleDragOver(index: number) {
+    return (event: ReactDragEvent<HTMLButtonElement>) => {
+      if (!canDropOn(index)) return;
+      // Without preventDefault the browser refuses the drop, which also suppresses
+      // the dragged tile's "move"/"copy" cursor on a valid target.
+      event.preventDefault();
+      event.dataTransfer.dropEffect = drag?.kind === "hex" ? "move" : "copy";
+      if (dropTarget !== index) setDropTarget(index);
+    };
+  }
+
+  function handleDragLeave(index: number) {
+    return () => setDropTarget((current) => (current === index ? null : current));
+  }
+
+  function handleDrop(index: number) {
+    return (event: ReactDragEvent<HTMLButtonElement>) => {
+      const source = drag;
+      event.preventDefault();
+      endDrag();
+      if (!source || !canDropOn(index)) return;
+
+      if (source.kind === "unit") {
+        setBoard((prev) => {
+          const next = [...prev];
+          next[index] = { unitId: source.unitId, items: [], star: 1 };
+          return next;
+        });
+        setSelectedHex(null);
+        setLastPlaced(index);
+        return;
+      }
+
+      setBoard((prev) => {
+        const moving = prev[source.index];
+        if (!moving || source.index === index) return prev;
+        const next = [...prev];
+        next[source.index] = prev[index] ?? null;
+        next[index] = moving;
+        return next;
+      });
+      setSelectedHex(null);
+      setLastPlaced(index);
+    };
+  }
+
   function handleHexClick(index: number) {
     const slot = board[index];
 
@@ -365,7 +462,18 @@ export function TeamBuilder({ units, items, traits, initialBoard, setNumber, pat
           </div>
         </div>
 
-        <div className="mx-auto mt-4 w-full max-w-[620px]">
+        {/* Front line is the top row: the game's board is four rows of seven
+            hexes, and this half is drawn the way it is played, front nearest the
+            enemy. */}
+        <div className="mx-auto mt-4 flex w-full max-w-[620px] items-center gap-2 text-[10px] uppercase tracking-wider text-muted">
+          <span>Front line</span>
+          <span aria-hidden className="h-px flex-1 bg-line" />
+          <span className="normal-case tracking-normal">
+            {BOARD_ROWS} × {BOARD_COLS}
+          </span>
+        </div>
+
+        <div className="mx-auto mt-2 w-full max-w-[620px]">
           {Array.from({ length: BOARD_ROWS }).map((_, row) => (
             <div
               key={row}
@@ -380,6 +488,7 @@ export function TeamBuilder({ units, items, traits, initialBoard, setNumber, pat
                 const slot = board[index] ?? null;
                 const unit = slot ? (unitsById.get(slot.unitId) ?? null) : null;
                 const isSelected = selectedHex === index;
+                const isDropTarget = dropTarget === index && canDropOn(index);
                 const canEquip =
                   brush !== null &&
                   slot !== null &&
@@ -392,6 +501,12 @@ export function TeamBuilder({ units, items, traits, initialBoard, setNumber, pat
                     type="button"
                     data-hex={index}
                     onClick={() => handleHexClick(index)}
+                    draggable={slot !== null}
+                    onDragStart={startHexDrag(index)}
+                    onDragEnd={endDrag}
+                    onDragOver={handleDragOver(index)}
+                    onDragLeave={handleDragLeave(index)}
+                    onDrop={handleDrop(index)}
                     aria-label={
                       slot
                         ? `${unit?.name ?? slot.unitId} — ${slot.star} star — ${slot.items.length} of ${MAX_ITEMS} items`
@@ -413,7 +528,9 @@ export function TeamBuilder({ units, items, traits, initialBoard, setNumber, pat
                     style={{ clipPath: HEX_CLIP, backgroundColor: "var(--color-line)" }}
                     className={classNames(
                       "relative aspect-square flex-1 transition",
+                      slot ? "cursor-grab active:cursor-grabbing" : null,
                       canEquip && "cursor-copy",
+                      drag?.kind === "unit" && !slot && "cursor-copy",
                     )}
                   >
                     <span
@@ -468,6 +585,14 @@ export function TeamBuilder({ units, items, traits, initialBoard, setNumber, pat
                       />
                     ) : null}
 
+                    {isDropTarget ? (
+                      <span
+                        aria-hidden
+                        style={{ clipPath: HEX_CLIP }}
+                        className="pointer-events-none absolute inset-0 border-2 border-accent bg-accent/20"
+                      />
+                    ) : null}
+
                     {slot && slot.items.length > 0 ? (
                       <span className="absolute bottom-[2px] left-1/2 flex -translate-x-1/2 items-center gap-[2px]">
                         {slot.items.map((itemId, itemIndex) => {
@@ -495,9 +620,10 @@ export function TeamBuilder({ units, items, traits, initialBoard, setNumber, pat
           ))}
         </div>
 
-        <div className="mx-auto mt-3 flex max-w-[620px] items-center justify-between text-[10px] uppercase tracking-wider text-muted">
-          <span>Front line</span>
+        <div className="mx-auto mt-2 flex w-full max-w-[620px] items-center gap-2 text-[10px] uppercase tracking-wider text-muted">
           <span>Back line</span>
+          <span aria-hidden className="h-px flex-1 bg-line" />
+          <span className="normal-case tracking-normal">{BOARD_HEXES} hexes</span>
         </div>
 
         {/* Traits, counted from the champions currently on the board. */}
@@ -667,8 +793,9 @@ export function TeamBuilder({ units, items, traits, initialBoard, setNumber, pat
           </div>
         ) : (
           <p className="mt-4 text-xs leading-relaxed text-muted">
-            Click a champion to drop it on the front line. Click a hex to select the
-            champion standing there, or an item icon to take it back off.
+            Drag a champion onto a hex, or click one to drop it on the front line. Drag
+            a placed champion to move it, and onto another champion to swap them. Click
+            a hex to select it, or an item icon to take it back off.
           </p>
         )}
       </section>
@@ -727,9 +854,12 @@ export function TeamBuilder({ units, items, traits, initialBoard, setNumber, pat
                     key={unit.id}
                     type="button"
                     onClick={() => placeUnit(unit.id)}
+                    draggable
+                    onDragStart={startUnitDrag(unit.id)}
+                    onDragEnd={endDrag}
                     title={`${unit.name} · ${COST_LABEL[unit.cost] ?? `${unit.cost} cost`}`}
                     className={classNames(
-                      "group flex flex-col items-center gap-1 rounded-md border border-l-2 border-line bg-raised p-1.5 text-center transition-colors hover:border-accent/50 hover:bg-surface",
+                      "group flex cursor-grab flex-col items-center gap-1 rounded-md border border-l-2 border-line bg-raised p-1.5 text-center transition-colors hover:border-accent/50 hover:bg-surface active:cursor-grabbing",
                       COST_EDGE[unit.cost] ?? "border-l-line",
                     )}
                   >
