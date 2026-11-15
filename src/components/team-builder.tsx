@@ -139,9 +139,15 @@ export function TeamBuilder({ units, items, traits, initialBoard, setNumber, pat
   const [lastPlaced, setLastPlaced] = useState<number | null>(null);
   const boardRef = useRef<HTMLElement | null>(null);
 
-  /** What is in flight: a champion from the pool, or one already on the board. */
+  /**
+   * What is in flight: a champion from the pool, an item from the palette, or a
+   * champion already on the board.
+   */
   const [drag, setDrag] = useState<
-    { kind: "unit"; unitId: string } | { kind: "hex"; index: number } | null
+    | { kind: "unit"; unitId: string }
+    | { kind: "item"; itemId: string }
+    | { kind: "hex"; index: number }
+    | null
   >(null);
   /** Hex the pointer is over while dragging, so the drop is visible before it lands. */
   const [dropTarget, setDropTarget] = useState<number | null>(null);
@@ -287,6 +293,14 @@ export function TeamBuilder({ units, items, traits, initialBoard, setNumber, pat
     };
   }
 
+  function startItemDrag(itemId: string) {
+    return (event: ReactDragEvent<HTMLButtonElement>) => {
+      setDrag({ kind: "item", itemId });
+      event.dataTransfer.effectAllowed = "copy";
+      event.dataTransfer.setData("text/plain", itemId);
+    };
+  }
+
   function startHexDrag(index: number) {
     const slot = board[index];
     return (event: ReactDragEvent<HTMLButtonElement>) => {
@@ -305,13 +319,17 @@ export function TeamBuilder({ units, items, traits, initialBoard, setNumber, pat
   /**
    * A pool champion only lands on an empty hex — dropping it on an occupied one
    * would silently throw away that champion's star level and items. A champion
-   * from the board swaps instead, which keeps both.
+   * from the board swaps instead, which keeps both. An item needs a champion that
+   * can take it: the same three-item cap and no-duplicate rule as clicking one on.
    */
   function canDropOn(index: number): boolean {
     if (!drag) return false;
-    if (drag.kind === "hex" && drag.index === index) return false;
-    if (drag.kind === "unit") return board[index] === null;
-    return true;
+    if (drag.kind === "hex") return drag.index !== index;
+
+    const slot = board[index];
+    if (drag.kind === "unit") return slot === null;
+    if (!slot) return false;
+    return slot.items.length < MAX_ITEMS && !slot.items.includes(drag.itemId);
   }
 
   function handleDragOver(index: number) {
@@ -335,6 +353,21 @@ export function TeamBuilder({ units, items, traits, initialBoard, setNumber, pat
       event.preventDefault();
       endDrag();
       if (!source || !canDropOn(index)) return;
+
+      if (source.kind === "item") {
+        setBoard((prev) => {
+          const target = prev[index];
+          if (!target) return prev;
+          if (target.items.length >= MAX_ITEMS) return prev;
+          if (target.items.includes(source.itemId)) return prev;
+          const next = [...prev];
+          next[index] = { ...target, items: [...target.items, source.itemId] };
+          return next;
+        });
+        // Open the champion's panel, the same place a click on it lands.
+        setSelectedHex(index);
+        return;
+      }
 
       if (source.kind === "unit") {
         setBoard((prev) => {
@@ -531,6 +564,7 @@ export function TeamBuilder({ units, items, traits, initialBoard, setNumber, pat
                       slot ? "cursor-grab active:cursor-grabbing" : null,
                       canEquip && "cursor-copy",
                       drag?.kind === "unit" && !slot && "cursor-copy",
+                      drag?.kind === "item" && canDropOn(index) && "cursor-copy",
                     )}
                   >
                     <span
@@ -895,7 +929,7 @@ export function TeamBuilder({ units, items, traits, initialBoard, setNumber, pat
             Items
           </h2>
           <p className="mt-1 text-xs text-muted">
-            Pick an item, then click a champion on the board to put it on.
+            Drag an item onto a champion, or pick one and click the champion to put it on.
           </p>
 
           <div className="mt-3 flex flex-wrap items-center gap-1.5">
@@ -929,9 +963,12 @@ export function TeamBuilder({ units, items, traits, initialBoard, setNumber, pat
                     <button
                       type="button"
                       onClick={() => setBrush(active ? null : item.id)}
+                      draggable
+                      onDragStart={startItemDrag(item.id)}
+                      onDragEnd={endDrag}
                       aria-pressed={active}
                       className={classNames(
-                        "flex w-full items-center gap-2 rounded-md border px-1.5 py-1 text-left transition-colors",
+                        "flex w-full cursor-grab items-center gap-2 rounded-md border px-1.5 py-1 text-left transition-colors active:cursor-grabbing",
                         active
                           ? "border-accent bg-accent/15 text-fg"
                           : "border-line bg-raised text-fg/85 hover:border-accent/50 hover:text-fg",

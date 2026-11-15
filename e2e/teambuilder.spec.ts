@@ -210,6 +210,42 @@ test("dragging one champion onto another swaps them", async ({ page }) => {
   await expect(progress(page)).toContainText("2 of 28 hexes filled");
 });
 
+test("an item can be dragged from the palette onto a champion", async ({ page }) => {
+  await championTile(page, "Akali").click();
+  const akali = hex(page, 0);
+
+  const palette = page
+    .locator("section")
+    .filter({ has: page.getByRole("heading", { name: "Items", exact: true }) });
+
+  await palette.getByRole("button", { name: "Infinity Edge", exact: true }).dragTo(akali);
+
+  await expect(akali).toHaveAttribute("aria-label", "Akali — 1 star — 1 of 3 items");
+
+  // The same item cannot be stacked by drag either, and an empty hex takes none.
+  await palette.getByRole("button", { name: "Infinity Edge", exact: true }).dragTo(akali);
+  await expect(akali).toHaveAttribute("aria-label", "Akali — 1 star — 1 of 3 items");
+
+  await palette.getByRole("button", { name: "Blue Buff", exact: true }).dragTo(hex(page, 5));
+  await expect(hex(page, 5)).toHaveAttribute("aria-label", "Empty hex");
+  await expect(akali).toHaveAttribute("aria-label", "Akali — 1 star — 1 of 3 items");
+});
+
+test("a fourth item is refused by drag", async ({ page }) => {
+  await championTile(page, "Akali").click();
+  const akali = hex(page, 0);
+
+  const palette = page
+    .locator("section")
+    .filter({ has: page.getByRole("heading", { name: "Items", exact: true }) });
+
+  for (const item of ["Infinity Edge", "Blue Buff", "Rabadon's Deathcap", "Bloodthirster"]) {
+    await palette.getByRole("button", { name: item, exact: true }).dragTo(akali);
+  }
+
+  await expect(akali).toHaveAttribute("aria-label", "Akali — 1 star — 3 of 3 items");
+});
+
 test("a pool champion dropped on an occupied hex leaves it alone", async ({ page }) => {
   await championTile(page, "Akali").click();
 
