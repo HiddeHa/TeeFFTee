@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { site } from "@/content/site";
 
+import { AuthControl } from "./auth-control";
 import { CoachingCTA } from "./coaching-cta";
 import { SiteNav } from "./site-nav";
 
@@ -27,14 +28,9 @@ export function SiteHeader() {
 
           <div className="flex items-center gap-3">
             <SiteNav className="hidden xl:flex" />
-            {/* A plain link, not the session hook: the header is on every page,
-                and reading the session here would make all of them dynamic. */}
-            <Link
-              href="/login"
-              className="hidden text-xs font-medium text-muted transition-colors hover:text-accent sm:block"
-            >
-              Sign in
-            </Link>
+            {/* A client island: reading the session server-side would make every
+                page dynamic, because this header is in the root layout. */}
+            <AuthControl />
             <CoachingCTA variant="header" placement="header" />
           </div>
         </div>
