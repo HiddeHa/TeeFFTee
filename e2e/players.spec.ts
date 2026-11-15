@@ -11,14 +11,21 @@ import { expect, test } from "@playwright/test";
  * committed fixtures do not contain.
  */
 test.describe("player page", () => {
-  test("the index says so when no crawl database is attached", async ({ page }) => {
-    const response = await page.goto("/players");
+  test("the leaderboard says so when no crawl database is attached", async ({ page }) => {
+    const response = await page.goto("/leaderboards");
 
     expect(response?.status()).toBe(200);
-    await expect(page.getByRole("heading", { level: 1 })).toContainText(/players we crawl/i);
+    await expect(page.getByRole("heading", { level: 1 })).toContainText(/1,000 in Europe/i);
     await expect(page.getByText(/No crawl data is attached here/)).toBeVisible();
     // No ladder rows: the site header has its own list, so scope to the page body.
     await expect(page.locator("ol li")).toHaveCount(0);
+  });
+
+  test("the old tracked-player index redirects to the leaderboard", async ({ page }) => {
+    const response = await page.goto("/players");
+
+    expect(response?.status()).toBe(200);
+    expect(new URL(page.url()).pathname).toBe("/leaderboards");
   });
 
   test("says plainly that no crawl database is attached", async ({ page }) => {

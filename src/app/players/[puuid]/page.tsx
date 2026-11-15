@@ -118,8 +118,8 @@ export default async function PlayerPage({ params }: { params: Params }) {
   return (
     <div className="mx-auto max-w-4xl px-4 sm:px-6">
       <nav className="pt-6 text-xs text-muted">
-        <Link href="/players" className="hover:text-accent">
-          Players
+        <Link href="/leaderboards" className="hover:text-accent">
+          Leaderboards
         </Link>
         <span className="px-2">/</span>
         <span className="text-fg/70">{shortPuuid(puuid)}</span>

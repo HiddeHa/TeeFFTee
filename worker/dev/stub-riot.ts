@@ -20,7 +20,8 @@ import type { TftMatchDto, TftTraitDto, TftUnitDto } from "../riot-types";
  *    identical data and the idempotent insert can be verified.
  *
  * Set STUB_429_EVERY=7 to make every 7th request a 429 with Retry-After: 1,
- * which exercises the limiter's global pause.
+ * which exercises the limiter's global pause. Set STUB_PLAYERS_PER_TIER to grow
+ * the ladders past the default twenty per tier.
  */
 
 const PORT = Number(process.env.STUB_PORT ?? 4010);
@@ -32,7 +33,13 @@ const SET_NUMBER = Number(process.env.STUB_SET_NUMBER ?? 18);
 const GAME_VERSION = process.env.STUB_GAME_VERSION ?? "18.5.712.1234";
 
 const TIERS = ["challenger", "grandmaster", "master"] as const;
-const PLAYERS_PER_TIER = 20;
+/**
+ * Stub ladder size per tier. The default is small enough to read; raise it
+ * (`STUB_PLAYERS_PER_TIER=500`) to rehearse a real-size ladder — 500 per tier in
+ * one region is the thousand-row leaderboard page, which is the case worth
+ * checking before pointing the crawler at Riot.
+ */
+const PLAYERS_PER_TIER = Math.max(1, Number(process.env.STUB_PLAYERS_PER_TIER ?? 20));
 const SHARED_MATCH_COUNT = 12;
 
 const UNITS = [

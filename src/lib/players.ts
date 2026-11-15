@@ -71,7 +71,14 @@ export type TrackedPlayer = PlayerProfile;
 
 export type PlayerList =
   | { kind: "unavailable" }
-  | { kind: "ok"; players: TrackedPlayer[]; total: number };
+  | { kind: "ok"; players: TrackedPlayer[]; total: number; region: string | null };
+
+export type LeaderboardQuery = {
+  /** undefined = every region the crawler tracks. */
+  region?: string;
+  limit?: number;
+  offset?: number;
+};
 
 let warnedAboutDatabase = false;
 
@@ -85,7 +92,11 @@ let warnedAboutDatabase = false;
  * LP is not a score we computed — it is what the last seed read off the ladder.
  * Nothing here pretends to be a live ranking.
  */
-export async function listTrackedPlayers(limit = 100): Promise<PlayerList> {
+export async function listTrackedPlayers({
+  region,
+  limit = 100,
+  offset = 0,
+}: LeaderboardQuery = {}): Promise<PlayerList> {
   if (!process.env.DATABASE_URL) return { kind: "unavailable" };
 
   let db: ReturnType<typeof getDb>;
@@ -98,7 +109,8 @@ export async function listTrackedPlayers(limit = 100): Promise<PlayerList> {
   try {
     const [totalRow] = await db
       .select({ total: sql<number>`count(*)::int` })
-      .from(players);
+      .from(players)
+      .where(region ? eq(players.region, region) : undefined);
 
     const rows = await db
       .select({
@@ -109,14 +121,18 @@ export async function listTrackedPlayers(limit = 100): Promise<PlayerList> {
         lastSeenAt: players.lastSeenAt,
       })
       .from(players)
+      .where(region ? eq(players.region, region) : undefined)
       // LP alone leaves ties in whatever order the planner produced, which makes
-      // the same page reshuffle between requests; the PUUID makes it stable.
+      // the same page reshuffle between requests; the PUUID makes it stable — and
+      // it is what makes an offset a stable page boundary.
       .orderBy(desc(players.lp), asc(players.puuid))
-      .limit(limit);
+      .limit(limit)
+      .offset(offset);
 
     return {
       kind: "ok",
       total: totalRow?.total ?? 0,
+      region: region ?? null,
       players: rows.map((row) => ({ ...row, lastSeenAt: toIso(row.lastSeenAt) })),
     };
   } catch (error) {
