@@ -22,6 +22,12 @@ build/
 /playwright-report/
 /playwright/.cache/
 
+# Screenshots of the running site taken to check a page by eye. Captures, not
+# assets — they carry the browser's own chrome, and any real image belongs
+# somewhere under src/ or public/ where its path says what it is.
+/*.png
+/*.jpg
+
 # Hosted Postgres connection string, provided by the owner for deploys.
 .neon-url.txt
 .env.backup-local-db
