@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 
 import { AssetImage } from "@/components/asset-image";
 import { DataNote } from "@/components/data-note";
+import { ItemIcon } from "@/components/item-icon";
 import { site } from "@/content/site";
 import { classNames, formatDate, formatPercent, formatPlace } from "@/lib/format";
 import { getPlayerPage, playerLabel, shortPuuid, type PlayerMatch } from "@/lib/players";
@@ -70,27 +71,42 @@ function MatchRow({ match }: { match: PlayerMatch }) {
       </div>
 
       {match.units.length > 0 ? (
-        <ul className="mt-2 flex flex-wrap gap-1">
-          {match.units.map((unit) => (
+        <ul className="mt-2 flex flex-wrap items-start gap-1">
+          {match.units.map((unit, index) => (
             <li
-              key={`${match.matchId}-${unit.id}`}
-              title={unit.name ?? unit.id}
-              className="relative h-7 w-7 overflow-hidden rounded border border-line bg-surface"
-            >
-              <AssetImage
-                src={unit.imageUrl}
-                width={28}
-                height={28}
-                className="h-7 w-7"
-                fallback={
-                  <span className="flex h-7 w-7 items-center justify-center text-[9px] text-muted">
-                    {unit.id.slice(-4)}
+              key={`${match.matchId}-${unit.id}-${index}`}
+                              className="flex w-10 flex-col items-center gap-0.5"
+              >
+              <span
+                title={unit.name ?? unit.id}
+                className="relative h-7 w-7 overflow-hidden rounded border border-line bg-surface"
+              >
+                <AssetImage
+                  src={unit.imageUrl}
+                  width={28}
+                  height={28}
+                  className="h-7 w-7"
+                  fallback={
+                    <span className="flex h-7 w-7 items-center justify-center text-[9px] text-muted">
+                      {unit.id.slice(-4)}
+                    </span>
+                  }
+                />
+                {unit.star > 1 ? (
+                  <span className="absolute bottom-0 right-0 rounded-tl bg-black/60 px-0.5 text-[9px] leading-tight text-white">
+                    {unit.star}
                   </span>
-                }
-              />
-              {unit.star > 1 ? (
-                <span className="absolute bottom-0 right-0 rounded-tl bg-black/60 px-0.5 text-[9px] leading-tight text-white">
-                  {unit.star}
+                ) : null}
+              </span>
+
+              {/* Items sit under the unit that held them, because "three items on
+                  the carry" and "three items spread across the board" are the same
+                  count and a completely different game. */}
+              {unit.items.length > 0 ? (
+                <span className="flex flex-wrap justify-center gap-0.5">
+                  {unit.items.map((item, itemIndex) => (
+                    <ItemIcon key={`${item.id}-${itemIndex}`} item={item} size={12} />
+                  ))}
                 </span>
               ) : null}
             </li>
@@ -102,6 +118,42 @@ function MatchRow({ match }: { match: PlayerMatch }) {
           carries them).
         </p>
       )}
+
+      {match.traits.length > 0 ? (
+        <ul className="mt-2 flex flex-wrap gap-1">
+          {match.traits.map((trait) => (
+            <li
+              key={`${match.matchId}-${trait.id}`}
+              title={`${trait.name ?? trait.id} — ${trait.units} ${
+                trait.units === 1 ? "unit" : "units"
+              }, trait tier ${trait.tier}`}
+              className={classNames(
+                "flex items-center gap-1 rounded border px-1 py-0.5",
+                trait.tier >= 2
+                  ? "border-accent/50 bg-accent/10 text-fg"
+                  : "border-line bg-raised/40 text-muted",
+              )}
+            >
+              <AssetImage
+                src={trait.imageUrl}
+                width={14}
+                height={14}
+                className="h-3.5 w-3.5 shrink-0 rounded-sm border border-line bg-surface object-cover"
+                fallback={
+                  <span
+                    aria-hidden
+                    className="h-3.5 w-3.5 shrink-0 rounded-sm border border-dashed border-line bg-surface"
+                  />
+                }
+              />
+              <span className="max-w-28 truncate text-[10px] leading-tight">
+                {trait.name ?? trait.id}
+              </span>
+              <span className="stat-value text-[10px] leading-tight">{trait.units}</span>
+            </li>
+          ))}
+        </ul>
+      ) : null}
     </li>
   );
 }
@@ -181,7 +233,12 @@ export default async function PlayerPage({ params }: { params: Params }) {
             <h2 className="text-xl font-semibold">Recent matches</h2>
             <p className="mt-1 text-xs text-muted">
               Newest first. Placement is what the match payload recorded; the board is the one
-              that player finished on, with star level from the same payload.
+              that player finished on, with star levels and items from the same payload. Items
+              are icons only — an id the set catalogue does not know keeps a dashed tile and
+              names itself on hover rather than in a guessed label. The traits below a board are
+              the ones that were actually active when the game ended, strongest activation first,
+              with the unit count that earned them; a trait that never reached a breakpoint is
+              not listed, because it is not something the board achieved.
             </p>
 
             {page.matches.length === 0 ? (

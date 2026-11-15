@@ -1,7 +1,15 @@
-import { and, asc, desc, eq, ilike, inArray, or, sql } from "drizzle-orm";
+import { and, asc, desc, eq, gt, ilike, inArray, or, sql } from "drizzle-orm";
 
 import { getDb } from "@/db/client";
-import { matches, participants, participantUnits, players } from "@/db/schema";
+import {
+  matches,
+  participants,
+  participantTraits,
+  participantUnits,
+  players,
+} from "@/db/schema";
+import { loadItemCatalogue } from "./items";
+import { loadTraitCatalogue } from "./traits";
 import { loadUnitCatalogue } from "./units";
 
 /**
@@ -22,12 +30,35 @@ import { loadUnitCatalogue } from "./units";
  *    matches themselves.
  */
 
+export type PlayerMatchItem = {
+  id: string;
+  /** Catalogue name, or null when the set catalogue does not know the id. */
+  name: string | null;
+  imageUrl: string | null;
+};
+
 export type PlayerMatchUnit = {
   id: string;
   /** Catalogue name, or null when the loaded set's catalogue does not know the id. */
   name: string | null;
   imageUrl: string | null;
   star: number;
+  /**
+   * That unit's items, in payload order. Empty is a real answer: the normaliser
+   * wrote no item ids for this slot, which is not the same as a catalogue miss.
+   */
+  items: PlayerMatchItem[];
+};
+
+export type PlayerMatchTrait = {
+  id: string;
+  /** Catalogue name, or null when the set catalogue does not know the id. */
+  name: string | null;
+  imageUrl: string | null;
+  /** Units on the board with this trait, as the payload counted them. */
+  units: number;
+  /** Activation tier: 1 is the first breakpoint, 2 the second. Only active traits are kept. */
+  tier: number;
 };
 
 export type PlayerMatch = {
@@ -41,6 +72,8 @@ export type PlayerMatch = {
   lastRound: number | null;
   goldLeft: number | null;
   units: PlayerMatchUnit[];
+  /** Only traits that were active when the game ended — an inactive trait is not a result. */
+  traits: PlayerMatchTrait[];
 };
 
 export type PlayerProfile = {
@@ -270,11 +303,25 @@ export async function getPlayerPage(puuid: string, limit = 20): Promise<PlayerPa
       .orderBy(desc(matches.gameDatetime))
       .limit(limit);
 
+    // One load per set, for all three catalogues, rather than a load per row.
     const sets = [...new Set(matchRows.map((row) => row.setNumber))];
-    const catalogues = new Map(
-      await Promise.all(
-        sets.map(async (setNumber) => [setNumber, await loadUnitCatalogue(setNumber)] as const),
+    const loaded = await Promise.all(
+      sets.map(
+        async (setNumber) =>
+          [
+            setNumber,
+            await Promise.all([
+              loadUnitCatalogue(setNumber),
+              loadItemCatalogue(setNumber),
+              loadTraitCatalogue(setNumber),
+            ]),
+          ] as const,
       ),
+    );
+    const catalogues = new Map(loaded.map(([setNumber, [unitsForSet]]) => [setNumber, unitsForSet]));
+    const itemCatalogues = new Map(loaded.map(([setNumber, [, itemsForSet]]) => [setNumber, itemsForSet]));
+    const traitCatalogues = new Map(
+      loaded.map(([setNumber, [, , traitsForSet]]) => [setNumber, traitsForSet]),
     );
 
     const unitRows =
@@ -286,6 +333,9 @@ export async function getPlayerPage(puuid: string, limit = 20): Promise<PlayerPa
               unitId: participantUnits.unitId,
               star: participantUnits.starLevel,
               slot: participantUnits.slot,
+              item0: participantUnits.item0,
+              item1: participantUnits.item1,
+              item2: participantUnits.item2,
             })
             .from(participantUnits)
             .where(
@@ -302,15 +352,73 @@ export async function getPlayerPage(puuid: string, limit = 20): Promise<PlayerPa
     const unitsByMatch = new Map<string, PlayerMatchUnit[]>();
     const setByMatch = new Map(matchRows.map((row) => [row.matchId, row.setNumber]));
     for (const row of unitRows) {
-      const unit = catalogues.get(setByMatch.get(row.matchId) ?? -1)?.get(row.unitId) ?? null;
+      const setNumber = setByMatch.get(row.matchId) ?? -1;
+      const unit = catalogues.get(setNumber)?.get(row.unitId) ?? null;
+      const itemIndex = itemCatalogues.get(setNumber) ?? null;
       const list = unitsByMatch.get(row.matchId) ?? [];
       list.push({
         id: row.unitId,
         name: unit?.name ?? null,
         imageUrl: unit?.imageUrl ?? null,
         star: row.star,
+        // A slot holds at most three items (TFT's own cap), so the three columns
+        // are the whole story — no fourth is silently dropped.
+        items: [row.item0, row.item1, row.item2]
+          .filter((itemId): itemId is string => Boolean(itemId))
+          .map((itemId) => {
+            const item = itemIndex?.get(itemId) ?? null;
+            return { id: itemId, name: item?.name ?? null, imageUrl: item?.imageUrl ?? null };
+          }),
       });
       unitsByMatch.set(row.matchId, list);
+    }
+
+    const traitRows =
+      matchRows.length === 0
+        ? []
+        : await db
+            .select({
+              matchId: participantTraits.matchId,
+              traitId: participantTraits.traitId,
+              units: participantTraits.numUnits,
+              tier: participantTraits.tierCurrent,
+            })
+            .from(participantTraits)
+            .where(
+              and(
+                eq(participantTraits.puuid, puuid),
+                // Tier 0 means the trait never reached its first breakpoint, which
+                // is not something that board achieved.
+                gt(participantTraits.tierCurrent, 0),
+                inArray(
+                  participantTraits.matchId,
+                  matchRows.map((row) => row.matchId),
+                ),
+              ),
+            );
+
+    const traitsByMatch = new Map<string, PlayerMatchTrait[]>();
+    for (const row of traitRows) {
+      const setNumber = setByMatch.get(row.matchId) ?? -1;
+      const trait = traitCatalogues.get(setNumber)?.get(row.traitId) ?? null;
+      const list = traitsByMatch.get(row.matchId) ?? [];
+      list.push({
+        id: row.traitId,
+        name: trait?.name ?? null,
+        imageUrl: trait?.imageUrl ?? null,
+        units: row.units,
+        tier: row.tier,
+      });
+      traitsByMatch.set(row.matchId, list);
+    }
+
+    // A gold trait says more about the board than a bronze one, so the strongest
+    // activation leads rather than whichever one Riot happened to list first.
+    for (const [matchId, list] of traitsByMatch) {
+      traitsByMatch.set(
+        matchId,
+        list.sort((a, b) => b.tier - a.tier || b.units - a.units || a.id.localeCompare(b.id)),
+      );
     }
 
     const matchesOut: PlayerMatch[] = matchRows.map((row) => ({
@@ -324,6 +432,7 @@ export async function getPlayerPage(puuid: string, limit = 20): Promise<PlayerPa
       lastRound: row.lastRound,
       goldLeft: row.goldLeft,
       units: unitsByMatch.get(row.matchId) ?? [],
+      traits: traitsByMatch.get(row.matchId) ?? [],
     }));
 
     return {
