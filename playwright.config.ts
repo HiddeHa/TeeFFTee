@@ -5,10 +5,12 @@ import { defineConfig, devices } from "@playwright/test";
  *
  * Two deliberate choices:
  *
- *  - The suite runs `next dev` on its own port instead of the built Worker, so
- *    `npm run test:e2e` needs no prior build, never fights a dev server you left
- *    running, and fails on application bugs rather than on stale output. The
- *    production build stays a separate gate (`npm run build`).
+ *  - The suite builds and serves the production output on its own port. `next
+ *    dev` would be quicker to start, but it allows only one dev server per
+ *    directory: any stray (or the one you are already running) makes the suite
+ *    fail to boot, and its HMR socket requirement is one more thing that can
+ *    leave the page unhydrated. `next start` has neither problem, and it is what
+ *    ships.
  *
  *  - `DATABASE_URL` is blanked for that server, so every assertion reads the
  *    committed catalogue snapshot and the curated content files. A suite that
@@ -52,10 +54,11 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: `npx next dev --port ${PORT}`,
+    command: `npm run build && npx next start --port ${PORT}`,
     url: baseURL,
+    // Builds once, then reuses the running server on later runs.
     reuseExistingServer: !process.env.CI,
-    timeout: 120_000,
+    timeout: 300_000,
     env: { DATABASE_URL: "" },
   },
 });

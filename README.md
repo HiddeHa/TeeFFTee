@@ -39,10 +39,13 @@ npm run test:e2e                  # starts its own dev server on :3100
 npm run test:e2e:ui               # same suite, with the time-travel UI
 ```
 
-`playwright.config.ts` runs `next dev` on port 3100 with `DATABASE_URL` blanked,
-so every assertion reads the committed catalogue snapshot and the curated content
-files. Nothing depends on live Postgres or on when the crawler last ran, and the
-suite needs no build first. `npm run typecheck` covers the specs too.
+`playwright.config.ts` builds the app and serves the production output on port
+3100 with `DATABASE_URL` blanked, so every assertion reads the committed
+catalogue snapshot and the curated content files. Nothing depends on live
+Postgres or on when the crawler last ran, and the server is not `next dev` — that
+allows one server per directory, so a stray dev server (or the one you are
+running) would stop the suite from booting. `npm run typecheck` covers the specs
+too.
 
 The builder specs wait for React to take over before clicking (the page renders
 fully server-side, so a click in that window does nothing), and the base URL is
