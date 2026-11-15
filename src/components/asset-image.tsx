@@ -47,6 +47,11 @@ export function AssetImage({
     <img
       src={resolved}
       alt=""
+      // Artwork is decoration, never the thing being moved: these tiles sit inside
+      // draggable buttons, and a draggable image wins the gesture. That failed
+      // outright on the deployed origin, where the proxied image is not something
+      // Chromium will pick up — so the drag never reached the tile at all.
+      draggable={false}
       width={width}
       height={height}
       style={style}

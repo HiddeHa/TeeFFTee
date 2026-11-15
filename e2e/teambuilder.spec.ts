@@ -174,6 +174,12 @@ test("the board is the game's four rows of seven", async ({ page }) => {
 });
 
 test("a champion can be dragged from the pool onto a chosen hex", async ({ page }) => {
+  // The tile's artwork must not win the drag gesture, or the button never gets it.
+  await expect(page.locator('button[title$=" cost"] img').first()).toHaveAttribute(
+    "draggable",
+    "false",
+  );
+
   await championTile(page, "Akali").dragTo(hex(page, 9));
 
   await expect(hex(page, 9)).toHaveAttribute("aria-label", "Akali — 1 star — 0 of 3 items");
