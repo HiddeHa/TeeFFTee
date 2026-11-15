@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 
 import { comps } from "@/content/comps";
+import { guides } from "@/content/guides";
 import { patches } from "@/content/patches";
 import { site } from "@/content/site";
 
@@ -16,6 +17,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/comps",
     "/comps/stats",
     "/teambuilder",
+    "/guides",
     "/tier-lists",
     "/coaching",
     "/about",
@@ -38,6 +40,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
     }));
 
+  const guideRoutes = guides.map((guide) => ({
+    url: `${base}/guides/${guide.slug}`,
+    lastModified: new Date(guide.updatedAt),
+    changeFrequency: "monthly" as const,
+    priority: 0.6,
+  }));
+
   const patchRoutes = patches.map((patch) => ({
     url: `${base}/patch/${patch.patch}`,
     lastModified: new Date(patch.releasedAt),
@@ -45,5 +54,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
-  return [...staticRoutes, ...compRoutes, ...patchRoutes];
+  return [...staticRoutes, ...compRoutes, ...guideRoutes, ...patchRoutes];
 }

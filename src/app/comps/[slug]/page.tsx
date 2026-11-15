@@ -11,6 +11,7 @@ import { PositioningBoard } from "@/components/positioning-board";
 import { StagePlan } from "@/components/stage-plan";
 import { TierBadge } from "@/components/tier-badge";
 import { comps } from "@/content/comps";
+import { guides } from "@/content/guides";
 import { METHODOLOGY, site } from "@/content/site";
 import { encodeCompBoard } from "@/lib/board-codec";
 import { getComp, getRelatedComps } from "@/lib/data";
@@ -83,6 +84,9 @@ export default async function CompPage({ params }: { params: Params }) {
   if (!comp) notFound();
 
   const related = await getRelatedComps(slug, 3);
+  const relatedGuides = guides
+    .filter((guide) => guide.compSlugs.includes(comp.slug))
+    .slice(0, 3);
   const stats = comp.visibleStats;
   const builderHref = `/teambuilder?b=${encodeCompBoard(comp.board, comp.positioning)}`;
   const core = comp.visibleBoard.filter((unit) => comp.coreUnits.includes(unit.id));
@@ -240,6 +244,42 @@ export default async function CompPage({ params }: { params: Params }) {
           <Section kicker="Avoid" title="What goes wrong">
             <p>{comp.notes.mistakes}</p>
           </Section>
+
+          {relatedGuides.length > 0 ? (
+            <section className="mt-10">
+              <h2 className="text-xs font-semibold uppercase tracking-wider text-muted">
+                The method behind this page
+              </h2>
+              <ul className="mt-3 space-y-2">
+                {relatedGuides.map((guide) => (
+                  <li key={guide.slug}>
+                    <Link
+                      href={`/guides/${guide.slug}`}
+                      className="card group flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1 p-4 transition-colors hover:border-accent/40 hover:bg-raised"
+                    >
+                      <span className="min-w-0">
+                        <span className="block text-sm font-semibold group-hover:text-accent">
+                          {guide.title}
+                        </span>
+                        <span className="mt-1 block text-xs leading-relaxed text-muted">
+                          {guide.dek}
+                        </span>
+                      </span>
+                      <span className="shrink-0 text-[11px] text-muted">
+                        {guide.readingMinutes} min read
+                      </span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+              <p className="mt-3 text-xs text-muted">
+                <Link href="/guides" className="text-accent hover:underline">
+                  All guides
+                </Link>{" "}
+                — the method, and the fundamentals underneath it.
+              </p>
+            </section>
+          ) : null}
 
           <div className="mt-10">
             <CoachingCTA variant="inline" placement={`comp_detail_${comp.slug}`} />

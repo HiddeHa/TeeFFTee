@@ -307,3 +307,52 @@ export type Patch = {
   momentum?: PatchMomentum | null;
   sourceUrl: string;
 };
+
+/** One block of guide prose. Authored, so a list is a list rather than a paragraph. */
+export type GuideBlock =
+  | { kind: "paragraph"; text: string }
+  | { kind: "list"; items: string[] };
+
+export type GuideSection = {
+  id: string;
+  heading: string;
+  blocks: GuideBlock[];
+};
+
+/**
+ * A long-form guide.
+ *
+ * Deliberately carries no stats payload: a guide that stops working when the
+ * database is empty is a table with prose around it (docs/guide-standard.md §5).
+ * `measured` and `judgement` are the visible labels the standard requires, and
+ * `counterCase` is the one situation in which the guide is wrong.
+ */
+export type Guide = {
+  slug: string;
+  title: string;
+  /** One line for the index card. */
+  dek: string;
+  /** The question this guide answers, in the reader's words. */
+  answers: string;
+  setNumber: number;
+  patch: string;
+  readingMinutes: number;
+  updatedAt: string;
+  /** What the numbers on this page are, and where they come from. */
+  measured: string;
+  /** What is the author's read rather than a measurement. */
+  judgement: string;
+  /** The line the guide says it is wrong on. Never omitted. */
+  counterCase: string;
+  /**
+   * Mechanics references for the rules quoted in the guide — Riot's numbers, not
+   * our measurements. Optional, because not every guide quotes game rules.
+   */
+  sources?: { label: string; href: string }[];
+  /**
+   * Comp pages that surface this guide. Authored here rather than on the comp, so
+   * the relevance is decided once, next to the argument it supports.
+   */
+  compSlugs: string[];
+  sections: GuideSection[];
+};

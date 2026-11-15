@@ -8,6 +8,7 @@ const NAV = [
   { href: "/comps", label: "Tier list" },
   { href: "/tier-lists", label: "My tier lists" },
   { href: "/teambuilder", label: "Teambuilder" },
+  { href: "/guides", label: "Guides" },
   { href: `/patch/${site.currentPatch}`, label: "Patch notes" },
   { href: "/coaching", label: "Coaching" },
   { href: "/about", label: "About" },
@@ -50,12 +51,12 @@ export function SiteHeader() {
           </Link>
 
           <div className="flex items-center gap-3">
-            <NavLinks className="hidden items-center gap-1 md:flex" />
+            <NavLinks className="hidden items-center gap-1 lg:flex" />
             <CoachingCTA variant="header" placement="header" />
           </div>
         </div>
 
-        <NavLinks className="flex items-center gap-1 overflow-x-auto pb-2 md:hidden" />
+        <NavLinks className="flex items-center gap-1 overflow-x-auto pb-2 lg:hidden" />
       </div>
     </header>
   );
