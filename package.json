@@ -20,6 +20,7 @@
     "momentum:measure": "tsx scripts/measure-momentum.ts"
   },
   "dependencies": {
+    "@freebuff/auth": "^0.1.0",
     "@neondatabase/serverless": "^1.2.0",
     "drizzle-orm": "^0.45.4",
     "next": "^16.4.3",
