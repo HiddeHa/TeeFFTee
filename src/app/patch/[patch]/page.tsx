@@ -63,8 +63,8 @@ export default async function PatchPage({ params }: { params: Params }) {
   return (
     <div className="mx-auto max-w-3xl px-4 sm:px-6">
       <nav className="pt-6 text-xs text-muted">
-        <Link href="/comps" className="hover:text-accent">
-          Tier list
+        <Link href="/meta" className="hover:text-accent">
+          Meta
         </Link>
         <span className="px-2">/</span>
         <span className="text-fg/70">Patch {patch.patch}</span>
@@ -117,7 +117,7 @@ export default async function PatchPage({ params }: { params: Params }) {
                     <li key={entry.compSlug} className="flex justify-between gap-3">
                       <span className="min-w-0">
                         <Link
-                          href={`/comps/${entry.compSlug}`}
+                          href={`/meta/${entry.compSlug}`}
                           className="block truncate hover:text-accent"
                         >
                           {entry.label}
@@ -142,7 +142,7 @@ export default async function PatchPage({ params }: { params: Params }) {
                     <li key={entry.compSlug} className="flex justify-between gap-3">
                       <span className="min-w-0">
                         <Link
-                          href={`/comps/${entry.compSlug}`}
+                          href={`/meta/${entry.compSlug}`}
                           className="block truncate hover:text-accent"
                         >
                           {entry.label}
@@ -200,7 +200,7 @@ export default async function PatchPage({ params }: { params: Params }) {
                     className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 py-2"
                   >
                     <Link
-                      href={`/comps/${entry.compSlug}`}
+                      href={`/meta/${entry.compSlug}`}
                       className="font-medium hover:text-accent"
                     >
                       {entry.label}
@@ -266,8 +266,8 @@ export default async function PatchPage({ params }: { params: Params }) {
 
       <p className="mt-8 text-sm text-muted">
         Back to the{" "}
-        <Link href="/comps" className="font-semibold text-accent hover:underline">
-          tier list
+        <Link href="/meta" className="font-semibold text-accent hover:underline">
+          meta
         </Link>
         .
       </p>

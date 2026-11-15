@@ -7,7 +7,7 @@ import type { Comp } from "./types";
  * rather than by taste. `tier` is the band of `consensus.score`, which is the mean
  * of the letters nine published tier lists gave the comp (S/S+ = 4, A = 3, B = 2,
  * C = 1, D = 0). Every letter used is stored on the comp, so the average can be
- * audited instead of trusted; /comps renders the arithmetic.
+ * audited instead of trusted; /meta renders the arithmetic.
  *
  * Sources averaged: TFT Academy, TFTactics, EmblemComp, MetaTFT, SeeMeta, Blitz,
  * tft.ninja, MID.GG, Mobalytics, TFT Flow. Where a site names the same board

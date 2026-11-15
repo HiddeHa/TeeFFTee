@@ -11,10 +11,10 @@ import { TIER_ORDER, listComps, type CompListItem } from "@/lib/data";
 import { classNames, formatGames, formatPercent, formatPlace } from "@/lib/format";
 
 export const metadata: Metadata = {
-  title: "Tier list",
+  title: "Meta",
   description:
     "A Teamfight Tactics tier list built from the average of nine published tier lists, with every source's letter shown so the consensus can be checked.",
-  alternates: { canonical: "/comps" },
+  alternates: { canonical: "/meta" },
 };
 
 export const revalidate = 300;
@@ -82,7 +82,7 @@ function ConsensusCard({ comp }: { comp: CompListItem }) {
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <Link
-            href={`/comps/${comp.slug}`}
+            href={`/meta/${comp.slug}`}
             className="block truncate font-semibold hover:text-accent"
           >
             {comp.name}
@@ -226,7 +226,7 @@ export default async function CompsPage() {
         <p className="text-xs font-semibold uppercase tracking-wider text-accent">
           Set {site.setNumber} · patch {site.currentPatch}
         </p>
-        <h1 className="mt-3 text-3xl font-semibold sm:text-4xl">Tier list</h1>
+        <h1 className="mt-3 text-3xl font-semibold sm:text-4xl">Meta</h1>
         <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted">
           {comps.length} comps, each lettered by the average of the published tier
           lists that cover it. Every site&apos;s verdict is printed next to the score,
@@ -241,7 +241,7 @@ export default async function CompsPage() {
       <p className="mt-6 text-sm text-muted">
         Every comp here has a full guide — preconditions, the leave signal, and where the
         guide is wrong.{" "}
-        <Link href={`/comps/${comps[0]?.slug ?? ""}`} className="font-semibold text-accent hover:underline">
+        <Link href={`/meta/${comps[0]?.slug ?? ""}`} className="font-semibold text-accent hover:underline">
           Start with the top one
         </Link>
         .

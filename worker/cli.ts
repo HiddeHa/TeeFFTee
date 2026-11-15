@@ -14,6 +14,7 @@ import { createLogger, sleepUnless } from "./log";
 import { RateLimiter } from "./limiter";
 import { queueStats } from "./queue";
 import { reprocessMatches } from "./reprocess";
+import { resolveRiotIds } from "./names";
 import { RiotClient } from "./riot";
 import { seedLadders } from "./seed";
 import { syncComps } from "./sync-comps";
@@ -27,6 +28,7 @@ Usage: npm run crawl -- <command> [options]
 
 Commands
   seed        Load the ranked ladders into the player pool
+  names       Resolve Riot IDs (game name + tag) for tracked players
   discover    Turn tracked players into queued match ids
   fetch       Drain the queue: fetch matches, normalise, persist
   reprocess   Rebuild rows from stored raw payloads (after a normaliser fix)
@@ -40,7 +42,7 @@ Commands
   stats       Queue health and table counts
 
 Options
-  --limit <n>        Max matches to fetch, or rows to reprocess  (default 1000)
+  --limit <n>        Max matches to fetch, rows to reprocess, or names to resolve  (default 1000)
   --players <n>      Max players to process in discovery        (default from env)
   --region <list>    Comma separated: EUW,KR                    (default from env)
   --patch <id>       Limit aggregation to one patch, e.g. 18.5
@@ -218,6 +220,16 @@ async function main(): Promise<void> {
       const results = await seedLadders(client, regions);
       const total = results.reduce((sum, entry) => sum + entry.usable, 0);
       log.info("seed complete", { ladders: results.length, players: total });
+      break;
+    }
+
+    case "names": {
+      const client = makeClient();
+      logSettings(regions);
+      const results = await resolveRiotIds(client, regions, intOption(values.limit, config.namesPerRun));
+      const resolved = results.reduce((sum, entry) => sum + entry.resolved, 0);
+      const attempted = results.reduce((sum, entry) => sum + entry.attempted, 0);
+      log.info("names complete", { attempted, resolved, pending: attempted - resolved });
       break;
     }
 

@@ -37,8 +37,8 @@ export default async function HomePage() {
           what the tier list says.
         </p>
         <div className="mt-7 flex flex-wrap items-center gap-3">
-          <Link href="/comps" className="btn btn-primary">
-            See the tier list
+          <Link href="/meta" className="btn btn-primary">
+            See the meta
           </Link>
           <Link href={`/patch/${site.currentPatch}`} className="btn btn-ghost">
             Patch {site.currentPatch} read
@@ -67,8 +67,8 @@ export default async function HomePage() {
       <section className="pb-4">
         <div className="flex items-baseline justify-between gap-4">
           <h2 className="text-lg font-semibold">Top of the meta</h2>
-          <Link href="/comps" className="text-sm text-muted hover:text-accent">
-            Full tier list →
+          <Link href="/meta" className="text-sm text-muted hover:text-accent">
+            Full meta →
           </Link>
         </div>
         <p className="mt-1 text-sm text-muted">
@@ -88,7 +88,7 @@ export default async function HomePage() {
               return (
                 <Link
                   key={comp.slug}
-                  href={`/comps/${comp.slug}`}
+                  href={`/meta/${comp.slug}`}
                   className="group flex items-center gap-4 rounded-xl border border-line bg-surface px-4 py-3 transition-colors hover:border-accent/40 hover:bg-raised"
                 >
                   <TierBadge tier={comp.tier} />

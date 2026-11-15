@@ -86,7 +86,10 @@ export default function AboutPage() {
       <section className="mt-10">
         <h2 className="text-xl font-semibold">What this site does not do</h2>
         <ul className="mt-3 space-y-2 text-sm leading-relaxed text-fg/80">
-          <li>No player profiles, match histories or names — aggregates only.</li>
+          <li>
+            No lookup of arbitrary players: the only player pages are the tracked Master+
+            ladder accounts, shown by Riot ID with their own crawled placements.
+          </li>
           <li>
             No live in-game recommendations or opponent tracking. Riot's policy rules that
             out, and it would make the game worse anyway.

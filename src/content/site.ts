@@ -116,5 +116,5 @@ export const METHODOLOGY = {
   confidence:
     "Comps are ranked by the Wilson 95% lower bound of their top-4 rate, so a small sample cannot outrank a large one. Games played is always shown next to the number.",
   privacy:
-    "Player names, PUUIDs and match histories are never published. Only aggregates are displayed.",
+    "Aggregates never identify a game. Player-level pages exist only for the accounts the crawler tracks from the Master+ ladders: their Riot ID, the ladder snapshot that found them, and their own crawled placements. The other players in a lobby are never named.",
 } as const;

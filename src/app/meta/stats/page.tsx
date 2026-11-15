@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   title: "Comp stats",
   description:
     "Every figure measured for each Teamfight Tactics comp: games, average placement, top-4, win and pick rates, board cost, core units and the consensus letters behind the tier list.",
-  alternates: { canonical: "/comps/stats" },
+  alternates: { canonical: "/meta/stats" },
 };
 
 export const revalidate = 300;
@@ -43,8 +43,8 @@ export default async function CompStatsPage() {
 
       <p className="mt-6 text-sm text-muted">
         Prefer the bands?{" "}
-        <Link href="/comps" className="font-semibold text-accent hover:underline">
-          Back to the tier list
+        <Link href="/meta" className="font-semibold text-accent hover:underline">
+          Back to the meta
         </Link>
         .
       </p>

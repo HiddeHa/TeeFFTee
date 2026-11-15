@@ -15,6 +15,13 @@
       "when": 1793208833953,
       "tag": "0001_traits_image_url",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1794742379836,
+      "tag": "0002_spooky_giant_man",
+      "breakpoints": true
     }
   ]
 }

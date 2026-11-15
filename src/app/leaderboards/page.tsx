@@ -4,7 +4,7 @@ import Link from "next/link";
 import { DataNote } from "@/components/data-note";
 import { site } from "@/content/site";
 import { classNames, formatDate } from "@/lib/format";
-import { listTrackedPlayers } from "@/lib/players";
+import { listTrackedPlayers, playerLabel } from "@/lib/players";
 
 /**
  * The tracked ladder, one region at a time.
@@ -42,19 +42,19 @@ function pageNumber(value: string | undefined): number {
   return Math.min(parsed, Math.ceil(MAX_RANK / PAGE_SIZE));
 }
 
-function shortPuuid(puuid: string): string {
-  return puuid.length > 16 ? `${puuid.slice(0, 10)}…${puuid.slice(-4)}` : puuid;
-}
-
-type SearchParams = Promise<{ region?: string; page?: string }>;
+type SearchParams = Promise<{ region?: string; page?: string; q?: string }>;
 
 export default async function LeaderboardsPage({ searchParams }: { searchParams: SearchParams }) {
   const params = await searchParams;
   const region: RegionCode = isRegion(params.region) ? params.region : "EUW";
   const page = pageNumber(params.page);
+  const query = params.q?.trim() ?? "";
+  /** Carries a live search through the region and page links. */
+  const querySuffix = query ? `&q=${encodeURIComponent(query)}` : "";
 
   const board = await listTrackedPlayers({
     region,
+    query: query || undefined,
     limit: PAGE_SIZE,
     offset: (page - 1) * PAGE_SIZE,
   });
@@ -89,7 +89,7 @@ export default async function LeaderboardsPage({ searchParams }: { searchParams:
         {REGIONS.map((entry) => (
           <Link
             key={entry.code}
-            href={`/leaderboards?region=${entry.code}`}
+            href={`/leaderboards?region=${entry.code}${querySuffix}`}
             aria-current={entry.code === region ? "page" : undefined}
             className={classNames(
               "chip transition-colors",
@@ -103,6 +103,36 @@ export default async function LeaderboardsPage({ searchParams }: { searchParams:
         ))}
       </div>
 
+      {/* Server-rendered GET form: a search should work with JS off, and the URL
+          stays shareable so a filtered board can be linked. */}
+      <form
+        action="/leaderboards"
+        method="get"
+        role="search"
+        className="mt-3 flex flex-wrap items-center gap-2"
+      >
+        <input type="hidden" name="region" value={region} />
+        <input
+          type="search"
+          name="q"
+          defaultValue={query}
+          placeholder="Search a Riot ID or PUUID"
+          aria-label="Search players"
+          className="min-w-0 flex-1 rounded-lg border border-line bg-raised px-3 py-2 text-sm text-fg placeholder:text-muted/70 focus:border-accent focus:outline-none"
+        />
+        <button type="submit" className="btn btn-primary btn-sm">
+          Search
+        </button>
+        {query ? (
+          <Link
+            href={`/leaderboards?region=${region}`}
+            className="text-xs text-muted hover:text-accent"
+          >
+            Clear
+          </Link>
+        ) : null}
+      </form>
+
       {board.kind === "unavailable" ? (
         <div className="mt-6">
           <DataNote>
@@ -113,14 +143,32 @@ export default async function LeaderboardsPage({ searchParams }: { searchParams:
       ) : board.total === 0 ? (
         <div className="mt-6">
           <DataNote>
-            The database is connected but no {label} ladder has been seeded yet. Run{" "}
-            <code className="text-fg/70">npm run crawl -- seed</code> and the board fills in.
+            {query ? (
+              <>
+                No tracked player in {label} matches “{query}”. This board only searches the
+                accounts the crawler follows — the Master+ ladders — and a Riot ID appears once{" "}
+                <code className="text-fg/70">npm run crawl -- names</code> has resolved it. Until
+                then the player is listed by PUUID, so searching a PUUID still finds them.
+              </>
+            ) : (
+              <>
+                The database is connected but no {label} ladder has been seeded yet. Run{" "}
+                <code className="text-fg/70">npm run crawl -- seed</code> and the board fills in.
+              </>
+            )}
           </DataNote>
         </div>
       ) : (
         <>
           <p className="mt-4 text-xs text-muted">
-            {board.total.toLocaleString("en-GB")} tracked in {label} · showing{" "}
+            {query ? (
+              <>
+                {board.total.toLocaleString("en-GB")} matching “{query}” in {label} ·{" "}
+              </>
+            ) : (
+              <>{board.total.toLocaleString("en-GB")} tracked in {label} · </>
+            )}
+            showing{" "}
             {(page - 1) * PAGE_SIZE + 1}–{(page - 1) * PAGE_SIZE + board.players.length}
             {board.total > MAX_RANK
               ? ` of the top ${MAX_RANK.toLocaleString("en-GB")}`
@@ -139,8 +187,14 @@ export default async function LeaderboardsPage({ searchParams }: { searchParams:
                     <span className="w-8 shrink-0 text-right text-[11px] tabular-nums text-muted">
                       {rank}
                     </span>
-                    <span className="min-w-0 break-all font-mono text-sm group-hover:text-accent">
-                      {shortPuuid(player.puuid)}
+                    <span
+                      className={classNames(
+                        "min-w-0 truncate text-sm group-hover:text-accent",
+                        player.gameName ? "font-medium" : "font-mono",
+                      )}
+                      title={player.puuid}
+                    >
+                      {playerLabel(player)}
                     </span>
                     <span className="ml-auto flex shrink-0 items-baseline gap-2 text-[11px] text-muted">
                       <span className="chip">{player.tier}</span>
@@ -159,7 +213,7 @@ export default async function LeaderboardsPage({ searchParams }: { searchParams:
               {Array.from({ length: pages }, (_, index) => index + 1).map((candidate) => (
                 <Link
                   key={candidate}
-                  href={`/leaderboards?region=${region}&page=${candidate}`}
+                  href={`/leaderboards?region=${region}&page=${candidate}${querySuffix}`}
                   aria-current={candidate === page ? "page" : undefined}
                   className={classNames(
                     "inline-flex h-7 min-w-7 items-center justify-center rounded-md border px-1.5 text-xs tabular-nums transition-colors",
@@ -177,8 +231,9 @@ export default async function LeaderboardsPage({ searchParams }: { searchParams:
           <p className="mt-6 text-[11px] leading-relaxed text-muted">
             LP and tier are the last seed&apos;s snapshot, not a live standing — Riot&apos;s ladder
             endpoints are read when the crawler re-seeds, so a promotion between seeds shows up on
-            the next pass. Names are PUUIDs because resolving a Riot ID costs one request per
-            player, which the crawler spends on matches instead.
+            the next pass. Riot IDs are resolved one request per player by{" "}
+            <code className="text-fg/70">npm run crawl -- names</code>; a player that run has not
+            reached yet is listed by PUUID rather than by a guessed handle.
             {board.players.some((player) => player.lastSeenAt)
               ? ` Most recent seed read: ${formatDate(
                   board.players

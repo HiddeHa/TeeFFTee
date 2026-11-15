@@ -61,8 +61,10 @@ without it.
 | Route | State |
 |---|---|
 | `/` | Home: current patch, top comps, meta read teaser, coaching band |
-| `/comps` | Tier list, URL-driven patch / region / rank filters |
-| `/comps/[slug]` | Comp detail: board, stats, leveling, augments, matchups, your notes, inline CTA |
+| `/meta` | Meta tier list, URL-driven patch / region / rank filters (`/comps` redirects here) |
+| `/meta/[slug]` | Comp detail: board, stats, leveling, augments, matchups, your notes, inline CTA |
+| `/leaderboards` | Tracked Master+ ladder by region, searchable by Riot ID or PUUID |
+| `/players/[puuid]` | One tracked account: Riot ID, ladder snapshot, its crawled placements |
 | `/patch/[patch]` | Patch summary, change list, movers, meta read |
 | `/coaching` | Offers and prices, process, FAQ, booking CTAs |
 | `/about` | Author credibility block and full methodology |
@@ -145,6 +147,7 @@ Postgres, so a crashed run resumes where it stopped instead of starting over.
 | Command | Does |
 |---|---|
 | `npm run crawl -- seed` | Load the challenger/grandmaster ladders into `players` |
+| `npm run crawl -- names` | Resolve Riot IDs for tracked players (one account-v1 request each) |
 | `npm run crawl -- discover` | Turn tracked players into queued match ids |
 | `npm run crawl -- fetch` | Fetch queued matches, normalise, write all five tables |
 | `npm run crawl -- reprocess` | Rebuild rows from stored raw payloads after a normaliser fix |

@@ -35,11 +35,11 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   return {
     title: `${comp.name} — tier ${comp.tier}`,
     description: comp.summary,
-    alternates: { canonical: `/comps/${comp.slug}` },
+    alternates: { canonical: `/meta/${comp.slug}` },
     openGraph: {
       title: `${comp.name} — tier ${comp.tier}`,
       description: comp.summary,
-      url: `/comps/${comp.slug}`,
+      url: `/meta/${comp.slug}`,
     },
   };
 }
@@ -95,8 +95,8 @@ export default async function CompPage({ params }: { params: Params }) {
   return (
     <div className="mx-auto max-w-6xl px-4 sm:px-6">
       <nav className="pt-6 text-xs text-muted">
-        <Link href="/comps" className="hover:text-accent">
-          Tier list
+        <Link href="/meta" className="hover:text-accent">
+          Meta
         </Link>
         <span className="px-2">/</span>
         <span className="text-fg/70">{comp.name}</span>
@@ -418,7 +418,7 @@ export default async function CompPage({ params }: { params: Params }) {
               {related.map((entry) => (
                 <li key={entry.slug}>
                   <Link
-                    href={`/comps/${entry.slug}`}
+                    href={`/meta/${entry.slug}`}
                     className="flex items-center gap-2 text-sm hover:text-accent"
                   >
                     <TierBadge tier={entry.tier} size="sm" />

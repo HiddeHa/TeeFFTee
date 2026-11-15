@@ -56,7 +56,7 @@ export default function GuidesPage() {
 
       <p className="mt-8 text-xs leading-relaxed text-muted">
         Patch-specific comp advice lives on the{" "}
-        <Link href="/comps" className="text-accent hover:underline">
+        <Link href="/meta" className="text-accent hover:underline">
           tier list
         </Link>
         . Guides here are written to survive a patch: they describe how to decide, not

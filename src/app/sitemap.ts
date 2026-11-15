@@ -14,8 +14,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const staticRoutes = [
     "",
-    "/comps",
-    "/comps/stats",
+    "/meta",
+    "/meta/stats",
     "/teambuilder",
     "/guides",
     "/players",
@@ -35,7 +35,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const compRoutes = comps
     .filter((comp) => comp.published)
     .map((comp) => ({
-      url: `${base}/comps/${comp.slug}`,
+      url: `${base}/meta/${comp.slug}`,
       lastModified: new Date(comp.updatedAt),
       changeFrequency: "weekly" as const,
       priority: 0.8,

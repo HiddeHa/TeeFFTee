@@ -81,6 +81,11 @@ export const config = {
   discoveryOverlapMinutes: intEnv("CRAWL_DISCOVERY_OVERLAP_MINUTES", 10),
   matchIdsPerRequest: Math.min(100, intEnv("CRAWL_MATCH_IDS_PER_REQUEST", 100)),
   playersPerDiscoveryRun: intEnv("CRAWL_PLAYERS_PER_RUN", 150),
+  /**
+   * Players whose Riot ID is resolved per `crawl -- names` run. One request per
+   * player, so this is a quota decision: raise it on a production key.
+   */
+  namesPerRun: intEnv("CRAWL_NAMES_PER_RUN", 200),
   concurrency: Math.max(1, intEnv("CRAWL_CONCURRENCY", 4)),
   maxAttempts: Math.max(1, intEnv("CRAWL_MAX_ATTEMPTS", 5)),
   /** A claim older than this is assumed to belong to a dead worker. */

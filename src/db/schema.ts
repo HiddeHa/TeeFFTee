@@ -83,6 +83,13 @@ export const players = pgTable(
   "players",
   {
     puuid: text("puuid").primaryKey(),
+    /**
+     * Riot ID, resolved one request per player from account-v1 by `crawl -- names`.
+     * Null means "not resolved yet", never "unnamed": the pages fall back to a
+     * shortened PUUID rather than inventing a handle.
+     */
+    gameName: text("game_name"),
+    tagLine: text("tag_line"),
     region: text("region").notNull(),
     tier: text("tier").notNull(),
     lp: integer("lp").notNull().default(0),

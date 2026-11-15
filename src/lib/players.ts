@@ -1,4 +1,4 @@
-import { and, asc, desc, eq, inArray, sql } from "drizzle-orm";
+import { and, asc, desc, eq, ilike, inArray, or, sql } from "drizzle-orm";
 
 import { getDb } from "@/db/client";
 import { matches, participants, participantUnits, players } from "@/db/schema";
@@ -45,6 +45,9 @@ export type PlayerMatch = {
 
 export type PlayerProfile = {
   puuid: string;
+  /** Riot ID, resolved by `crawl -- names`. Null means the crawler has not asked yet. */
+  gameName: string | null;
+  tagLine: string | null;
   region: string;
   tier: string;
   lp: number;
@@ -73,12 +76,36 @@ export type PlayerList =
   | { kind: "unavailable" }
   | { kind: "ok"; players: TrackedPlayer[]; total: number; region: string | null };
 
+/** A PUUID shortened for display. Only shown when no Riot ID is known. */
+export function shortPuuid(puuid: string): string {
+  return puuid.length > 16 ? `${puuid.slice(0, 10)}…${puuid.slice(-4)}` : puuid;
+}
+
+/**
+ * What to call a tracked player: the Riot ID once it has been resolved, and a
+ * shortened PUUID until then. Never a guessed handle — an unresolved player is
+ * shown as unresolved.
+ */
+export function playerLabel(
+  player: Pick<PlayerProfile, "puuid" | "gameName" | "tagLine">,
+): string {
+  if (player.gameName && player.tagLine) return `${player.gameName}#${player.tagLine}`;
+  return player.gameName ?? shortPuuid(player.puuid);
+}
+
 export type LeaderboardQuery = {
   /** undefined = every region the crawler tracks. */
   region?: string;
+  /** Riot ID or PUUID fragment. Case-insensitive, matched against both name parts. */
+  query?: string;
   limit?: number;
   offset?: number;
 };
+
+/** ILIKE pattern with the wildcards escaped, so a typed `%` stays a literal. */
+function searchPattern(query: string): string {
+  return `%${query.replace(/[\\%_]/g, (match) => `\\${match}`)}%`;
+}
 
 let warnedAboutDatabase = false;
 
@@ -94,6 +121,7 @@ let warnedAboutDatabase = false;
  */
 export async function listTrackedPlayers({
   region,
+  query,
   limit = 100,
   offset = 0,
 }: LeaderboardQuery = {}): Promise<PlayerList> {
@@ -106,22 +134,37 @@ export async function listTrackedPlayers({
     return { kind: "unavailable" };
   }
 
+  // A search matches either half of the Riot ID or the PUUID itself, because a
+  // PUUID is what people paste out of a client. `and()` drops undefined parts.
+  const trimmed = query?.trim() ?? "";
+  const pattern = trimmed ? searchPattern(trimmed) : "";
+  const search = trimmed
+    ? or(
+        ilike(players.gameName, pattern),
+        ilike(players.tagLine, pattern),
+        eq(players.puuid, trimmed),
+      )
+    : undefined;
+  const where = and(region ? eq(players.region, region) : undefined, search);
+
   try {
     const [totalRow] = await db
       .select({ total: sql<number>`count(*)::int` })
       .from(players)
-      .where(region ? eq(players.region, region) : undefined);
+      .where(where);
 
     const rows = await db
       .select({
         puuid: players.puuid,
+        gameName: players.gameName,
+        tagLine: players.tagLine,
         region: players.region,
         tier: players.tier,
         lp: players.lp,
         lastSeenAt: players.lastSeenAt,
       })
       .from(players)
-      .where(region ? eq(players.region, region) : undefined)
+      .where(where)
       // LP alone leaves ties in whatever order the planner produced, which makes
       // the same page reshuffle between requests; the PUUID makes it stable — and
       // it is what makes an offset a stable page boundary.
@@ -174,6 +217,8 @@ export async function getPlayerPage(puuid: string, limit = 20): Promise<PlayerPa
     const [player] = await db
       .select({
         puuid: players.puuid,
+        gameName: players.gameName,
+        tagLine: players.tagLine,
         region: players.region,
         tier: players.tier,
         lp: players.lp,

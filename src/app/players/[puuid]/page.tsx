@@ -5,8 +5,8 @@ import { notFound } from "next/navigation";
 import { AssetImage } from "@/components/asset-image";
 import { DataNote } from "@/components/data-note";
 import { site } from "@/content/site";
-import { formatDate, formatPercent, formatPlace } from "@/lib/format";
-import { getPlayerPage, type PlayerMatch } from "@/lib/players";
+import { classNames, formatDate, formatPercent, formatPlace } from "@/lib/format";
+import { getPlayerPage, playerLabel, shortPuuid, type PlayerMatch } from "@/lib/players";
 
 // Rows are crawled, so a fresh match should appear without a redeploy.
 export const revalidate = 300;
@@ -20,20 +20,17 @@ type Params = Promise<{ puuid: string }>;
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { puuid } = await params;
   const page = await getPlayerPage(puuid, 1);
+  const name = page.kind === "ok" ? playerLabel(page.player) : shortPuuid(puuid);
   const label = page.kind === "ok" ? `${page.player.region} ${page.player.tier}` : "Player";
 
   return {
-    title: `${label} — ${shortPuuid(puuid)}`,
-    description: `Crawled ranked TFT matches and placements for one tracked player on ${site.name}.`,
+    title: `${name} — ${label}`,
+    description: `Crawled ranked TFT matches and placements for ${name}, one tracked ladder account on ${site.name}.`,
     alternates: { canonical: `/players/${puuid}` },
     // A PUUID is a Riot identifier, not something anyone searches for. Keep these
     // out of the index; the aggregate pages are what should rank.
     robots: { index: false, follow: true },
   };
-}
-
-function shortPuuid(puuid: string): string {
-  return puuid.length > 16 ? `${puuid.slice(0, 8)}…${puuid.slice(-4)}` : puuid;
 }
 
 function Stat({ label, value }: { label: string; value: string }) {
@@ -115,6 +112,9 @@ export default async function PlayerPage({ params }: { params: Params }) {
 
   if (page.kind === "missing") notFound();
 
+  const named = page.kind === "ok" ? playerLabel(page.player) : shortPuuid(puuid);
+  const hasRiotId = page.kind === "ok" && Boolean(page.player.gameName);
+
   return (
     <div className="mx-auto max-w-4xl px-4 sm:px-6">
       <nav className="pt-6 text-xs text-muted">
@@ -127,8 +127,13 @@ export default async function PlayerPage({ params }: { params: Params }) {
 
       <header className="mt-4">
         <p className="text-xs font-semibold uppercase tracking-wider text-accent">Player</p>
-        <h1 className="mt-2 break-all font-mono text-lg font-semibold sm:text-xl">
-          {shortPuuid(puuid)}
+        <h1
+          className={classNames(
+            "mt-2 break-all font-semibold",
+            hasRiotId ? "text-2xl sm:text-3xl" : "font-mono text-lg sm:text-xl",
+          )}
+        >
+          {named}
         </h1>
         <p className="mt-1 text-[11px] text-muted">
           <span className="text-fg/70">PUUID</span> {puuid}

@@ -10,8 +10,8 @@ export default function NotFound() {
         is actually playable.
       </p>
       <div className="mt-7 flex justify-center gap-3">
-        <Link href="/comps" className="btn btn-primary">
-          Current tier list
+        <Link href="/meta" className="btn btn-primary">
+          Current meta
         </Link>
         <Link href="/" className="btn btn-ghost">
           Home

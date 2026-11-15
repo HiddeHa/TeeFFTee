@@ -9,6 +9,13 @@ export type LadderEntryDto = {
   losses?: number;
 };
 
+/** account-v1 by PUUID. The Riot ID lives only here — the TFT payloads do not carry it. */
+export type RiotAccountDto = {
+  puuid?: string;
+  gameName?: string;
+  tagLine?: string;
+};
+
 export type LadderResponse = {
   tier?: string;
   queue?: string;

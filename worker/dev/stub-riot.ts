@@ -256,6 +256,24 @@ const server = createServer((request, response) => {
     return;
   }
 
+  // account-v1: the only source of a Riot ID. Derived from the stub PUUID so the
+  // name is stable across runs and obviously fake.
+  const accountMatch = /^\/riot\/account\/v1\/accounts\/by-puuid\/([^/]+)$/.exec(routePath);
+  if (accountMatch) {
+    const puuid = decodeURIComponent(accountMatch[1] ?? "");
+    const parts = puuid.split("-");
+    const tier = parts[2] ?? "master";
+    const index = parts[3] ?? "1";
+    send(
+      json(200, {
+        puuid,
+        gameName: `Stub ${tier} ${index}`,
+        tagLine: (REGIONAL_PLATFORM[host] ?? host).toUpperCase(),
+      }),
+    );
+    return;
+  }
+
   if (/^\/tft\/match\/v1\/matches\/by-puuid\/[^/]+\/ids$/.test(routePath)) {
     send(json(200, sharedMatchIds(REGIONAL_PLATFORM[host] ?? host)));
     return;

@@ -11,8 +11,8 @@ import { classNames } from "@/lib/format";
  * cannot know which page rendered it.
  */
 const VIEWS = [
-  { key: "board", label: "Board", href: "/comps" },
-  { key: "stats", label: "Stats", href: "/comps/stats" },
+  { key: "board", label: "Board", href: "/meta" },
+  { key: "stats", label: "Stats", href: "/meta/stats" },
 ] as const;
 
 export type CompView = (typeof VIEWS)[number]["key"];

@@ -9,13 +9,13 @@ import { expect, test } from "@playwright/test";
  * deliberately not asserted: they move whenever the crawler runs.
  */
 
-test("the home page leads into the tier list", async ({ page }) => {
+test("the home page leads into the meta", async ({ page }) => {
   await page.goto("/");
 
   await expect(page.getByRole("heading", { level: 1 })).toContainText("High-elo TFT stats");
-  await expect(page.getByRole("link", { name: "See the tier list" })).toHaveAttribute(
+  await expect(page.getByRole("link", { name: "See the meta" })).toHaveAttribute(
     "href",
-    "/comps",
+    "/meta",
   );
 });
 
@@ -32,16 +32,16 @@ test("the header moves between the main pages", async ({ page }) => {
   await expect(page.getByRole("heading", { level: 1, name: "Teambuilder" })).toBeVisible();
 });
 
-test("the tier list links every published comp", async ({ page }) => {
-  await page.goto("/comps");
+test("the meta page links every published comp", async ({ page }) => {
+  await page.goto("/meta");
 
-  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Tier list");
-  expect(await page.locator('a[href^="/comps/"]').count()).toBeGreaterThanOrEqual(10);
-  await expect(page.locator('a[href="/comps/riftbeast-brambleback"]').first()).toBeVisible();
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Meta");
+  expect(await page.locator('a[href^="/meta/"]').count()).toBeGreaterThanOrEqual(10);
+  await expect(page.locator('a[href="/meta/riftbeast-brambleback"]').first()).toBeVisible();
 });
 
 test("a comp page renders its board and opens in the teambuilder", async ({ page }) => {
-  await page.goto("/comps/riftbeast-brambleback");
+  await page.goto("/meta/riftbeast-brambleback");
 
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("Riftbeast Brambleback");
 
@@ -89,6 +89,6 @@ test("health answers with its documented shape", async ({ request }) => {
 });
 
 test("an unknown comp is a 404", async ({ page }) => {
-  const response = await page.goto("/comps/this-comp-does-not-exist");
+  const response = await page.goto("/meta/this-comp-does-not-exist");
   expect(response?.status()).toBe(404);
 });

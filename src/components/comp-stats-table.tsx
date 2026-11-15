@@ -181,7 +181,7 @@ export function CompStatsTable({
                         {comp.tier}
                       </span>
                       <a
-                        href={`/comps/${comp.slug}`}
+                        href={`/meta/${comp.slug}`}
                         className="whitespace-nowrap font-semibold hover:text-accent"
                       >
                         {comp.name}

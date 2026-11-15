@@ -1,6 +1,6 @@
 import { config, REGION_ROUTING, type Region, type SeedTier } from "./config";
 import type { RateLimiter } from "./limiter";
-import type { LadderResponse, TftMatchDto } from "./riot-types";
+import type { LadderResponse, RiotAccountDto, TftMatchDto } from "./riot-types";
 
 export class RiotApiError extends Error {
   constructor(
@@ -53,6 +53,22 @@ export class RiotClient {
       `/tft/league/v1/${tier}?queue=RANKED_TFT`,
       region,
       "platform",
+    );
+  }
+
+  /**
+   * The Riot ID (game name + tag) for one PUUID.
+   *
+   * Regional routing, like the match endpoints: account data is sharded by
+   * cluster, so a KR PUUID is asked for on `asia` and an EUW one on `europe`.
+   * This costs one request per player, which is why names are resolved by a
+   * separate command rather than inside `seed`.
+   */
+  accountByPuuid(region: Region, puuid: string): Promise<RiotAccountDto> {
+    return this.getJson<RiotAccountDto>(
+      `/riot/account/v1/accounts/by-puuid/${encodeURIComponent(puuid)}`,
+      region,
+      "regional",
     );
   }
 

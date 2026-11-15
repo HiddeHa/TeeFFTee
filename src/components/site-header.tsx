@@ -3,32 +3,7 @@ import Link from "next/link";
 import { site } from "@/content/site";
 
 import { CoachingCTA } from "./coaching-cta";
-
-const NAV = [
-  { href: "/comps", label: "Tier list" },
-  { href: "/tier-lists", label: "My tier lists" },
-  { href: "/teambuilder", label: "Teambuilder" },
-  { href: "/guides", label: "Guides" },
-  { href: `/patch/${site.currentPatch}`, label: "Patch notes" },
-  { href: "/coaching", label: "Coaching" },
-  { href: "/about", label: "About" },
-];
-
-function NavLinks({ className }: { className?: string }) {
-  return (
-    <nav className={className}>
-      {NAV.map((item) => (
-        <Link
-          key={item.href}
-          href={item.href}
-          className="whitespace-nowrap rounded px-2 py-1 text-sm text-muted transition-colors hover:text-fg"
-        >
-          {item.label}
-        </Link>
-      ))}
-    </nav>
-  );
-}
+import { SiteNav } from "./site-nav";
 
 export function SiteHeader() {
   return (
@@ -51,12 +26,12 @@ export function SiteHeader() {
           </Link>
 
           <div className="flex items-center gap-3">
-            <NavLinks className="hidden items-center gap-1 lg:flex" />
+            <SiteNav className="hidden lg:flex" />
             <CoachingCTA variant="header" placement="header" />
           </div>
         </div>
 
-        <NavLinks className="flex items-center gap-1 overflow-x-auto pb-2 lg:hidden" />
+        <SiteNav className="flex overflow-x-auto pb-2 lg:hidden" />
       </div>
     </header>
   );
