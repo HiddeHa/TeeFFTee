@@ -6,18 +6,30 @@ import {
   SET_19_AS_OF,
   set19,
   set19Confirmed,
+  set19CostCurve,
   set19DevDropStats,
   set19Mechanics,
   set19PrismaticTraits,
   set19Schedule,
   set19Sources,
+  set19Traits,
+  set19UniqueTraits,
   set19UnlockCategories,
+  set19UnlockQuests,
   set19Unknowns,
   set19Unlocks,
   type RevealStatus,
+  type TraitEntry,
 } from "@/content/set-19";
 import { site } from "@/content/site";
 import { classNames, formatDate } from "@/lib/format";
+
+/**
+ * Daily, because the launch chip is a fact about today rather than about the
+ * build: a page rendered on 15 November that still says "Live" on 3 December is
+ * worse than one that says nothing.
+ */
+export const revalidate = 86_400;
 
 export const metadata: Metadata = {
   title: `Set ${set19.number}: ${set19.name}`,
@@ -49,6 +61,27 @@ function StatusTag({ status }: { status: RevealStatus }) {
   );
 }
 
+/** One trait: breakpoints on the right, what it does, and who has it. */
+function TraitRow({ trait }: { trait: TraitEntry }) {
+  return (
+    <li className="card px-3 py-2.5">
+      <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+        <h3 className="flex flex-wrap items-center gap-2 text-sm font-semibold">
+          {trait.name}
+          {trait.prismatic ? (
+            <span className="rounded border border-accent/40 bg-accent/10 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-accent">
+              Prismatic
+            </span>
+          ) : null}
+        </h3>
+        <span className="stat-value shrink-0 text-[11px] text-muted">{trait.breakpoints}</span>
+      </div>
+      <p className="mt-1.5 text-[13px] leading-relaxed text-muted">{trait.gist}</p>
+      <p className="mt-1.5 text-[11px] leading-relaxed text-muted/80">{trait.champions}</p>
+    </li>
+  );
+}
+
 function Fact({ title, body, status }: { title: string; body: string; status: RevealStatus }) {
   return (
     <li className="card p-4">
@@ -62,6 +95,13 @@ function Fact({ title, body, status }: { title: string; body: string; status: Re
 }
 
 export default function Set19Page() {
+  // Riot's own date decides the label, so the page cannot call a set live a
+  // fortnight early. An unreadable date falls back to the launch wording — the
+  // conservative answer — instead of claiming a status nobody can check.
+  const launchedAt = new Date(set19.launchDate);
+  const isLive =
+    !Number.isNaN(launchedAt.getTime()) && Date.now() >= launchedAt.getTime();
+
   return (
     <div className="mx-auto max-w-3xl px-4 sm:px-6">
       <header className="py-12">
@@ -80,8 +120,8 @@ export default function Set19Page() {
         </p>
 
         <div className="mt-5 flex flex-wrap gap-1.5">
-          <span className="chip" data-active="true">
-            Live {set19.launchDate}
+          <span className="chip" data-active={isLive ? "true" : undefined}>
+            {isLive ? `Live since ${set19.launchDate}` : `Launches ${set19.launchDate}`}
           </span>
           <span className="chip">Patch {set19.patch}</span>
           <span className="chip">PBE ~{set19.pbeDate}</span>
@@ -92,11 +132,12 @@ export default function Set19Page() {
       </header>
 
       <DataNote>
-        Riot&apos;s Dev Drop aired on {set19.devDropDate}. Riot has not published a written
-        version of it, so everything tagged “Dev Drop” below is Riot&apos;s content read through
-        Blitz&apos;s reveal pages on {formatDate(SET_19_AS_OF)} — the numbers are Riot&apos;s, the
-        transcription is not. Where the reveal data carried placeholders instead of values
-        (“?%”), this page shows the tier and says the value is missing rather than inventing one.
+        Riot&apos;s Dev Drop aired on {set19.devDropDate} and published the whole roster, the trait
+        list with its breakpoints, and the unlock conditions. Riot has not posted a written version
+        of it, so everything tagged “Dev Drop” below is Riot&apos;s content read through third-party
+        reveal pages on {formatDate(SET_19_AS_OF)} — the details are Riot&apos;s, the transcription is
+        not. Where the reveal describes an effect in words instead of figures (“a portion of
+        previous damage”, “the required number”), this page says so rather than inventing a value.
       </DataNote>
 
       <section className="mt-10">
@@ -128,13 +169,72 @@ export default function Set19Page() {
         </ul>
       </section>
 
+      <section className="mt-10">
+        <h2 className="text-xl font-semibold">The roster, by cost</h2>
+        <p className="mt-1 max-w-3xl text-xs leading-relaxed text-muted">
+          All 94 champions, by what they cost in the shop. The 4-costs are the widest tier in the
+          set and the 7-costs are the narrowest, which is the shape you plan an economy around.
+        </p>
+
+        <ul className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3">
+          {set19CostCurve.map((bucket) => (
+            <li key={bucket.cost} className="card p-3">
+              <p className="stat-value text-2xl font-semibold">{bucket.count}</p>
+              <p className="mt-0.5 text-[11px] font-semibold uppercase tracking-wider text-accent">
+                {bucket.cost}
+              </p>
+              <p className="mt-1.5 text-[11px] leading-relaxed text-muted">{bucket.note}</p>
+            </li>
+          ))}
+        </ul>
+
+        <p className="mt-3 text-[11px] leading-relaxed text-muted">
+          Two details that change how the shop reads: Akali is in the set twice, as Akali (K|DA)
+          and Akali (True Damage) — separate five-cost champions with separate unlock quests — and
+          all four 7-costs are unlocks rather than shop units, so they arrive only through their
+          quests.
+        </p>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="text-xl font-semibold">The 27 traits, with their breakpoints</h2>
+        <p className="mt-1 max-w-3xl text-xs leading-relaxed text-muted">
+          Every regular trait with the tiers it needs and what each tier does, plus the champions
+          that carry it by cost. The five with a Prismatic tier are marked; the twenty unique
+          traits, which only one champion each has, are in the next section. Percentages are mostly
+          absent on purpose — the reveal describes the effects, and a made-up number would be
+          indistinguishable from a real one once it is on the page.
+        </p>
+
+        <ul className="mt-3 space-y-2">
+          {set19Traits.map((trait) => (
+            <TraitRow key={trait.name} trait={trait} />
+          ))}
+        </ul>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="text-xl font-semibold">The 20 unique traits</h2>
+        <p className="mt-1 max-w-3xl text-xs leading-relaxed text-muted">
+          Traits with one champion each. They are still traits for the purposes of Jazz, which counts
+          active non-unique traits only — so these do not feed it.
+        </p>
+
+        <ul className="mt-3 space-y-2">
+          {set19UniqueTraits.map((trait) => (
+            <TraitRow key={trait.name} trait={trait} />
+          ))}
+        </ul>
+      </section>
+
       <section className="mt-12">
         <h2 className="text-xl font-semibold">Five Prismatic traits, and no emblems</h2>
         <p className="mt-1 text-xs text-muted">
           The old route to a Prismatic trait was an emblem on a carousel. In Prismatic Tour you
-          pick one of five and complete a quest line to unlock its Prismatic tier — the tiers
-          below are integers from the client data; the percentages inside each tier were not
-          published.
+          pick one of five and complete a quest line to unlock its Prismatic tier. The tiers below
+          come from the Dev Drop; a few of the values did too — True Damage&apos;s Prismatic tier
+          states 99% bonus true damage — but most of the numbers inside the other tiers are still
+          described rather than quantified.
         </p>
 
         <ul className="mt-3 space-y-2">
@@ -151,11 +251,11 @@ export default function Set19Page() {
       </section>
 
       <section className="mt-12">
-        <h2 className="text-xl font-semibold">Unlocks: 30-plus champions, three categories</h2>
+        <h2 className="text-xl font-semibold">Unlocks: 36 champions, three categories</h2>
         <p className="mt-1 text-xs text-muted">
           Unlocks return from Lore and Legends. A locked champion is not in the shop; finish its
-          quest and it shows up in your next shop, buyable at its normal cost. Riot split them
-          into three kinds.
+          quest and it shows up in your next shop, buyable at its normal cost. Exactly 36 of the 94
+          are unlocks, and Riot split them into three kinds.
         </p>
 
         <ul className="mt-3 grid gap-2 sm:grid-cols-3">
@@ -208,6 +308,40 @@ export default function Set19Page() {
           eleven unique Pentakill star levels, which only pays a board already committed to the
           band.
         </p>
+
+        <h3 className="mt-6 text-sm font-semibold">The published quest conditions</h3>
+        <p className="mt-1 text-xs text-muted">
+          Every unlock condition the Dev Drop gave, in Riot&apos;s words. Read the counts as absent:
+          the reveal writes “the required number” rather than the number, so the shape of each quest
+          is known and its size is not.
+        </p>
+
+        <div className="mt-2 overflow-x-auto">
+          <table className="w-full min-w-[34rem] border-separate border-spacing-y-1.5 text-left">
+            <thead>
+              <tr className="text-[10px] uppercase tracking-wider text-muted">
+                <th className="px-3 font-semibold">Champion</th>
+                <th className="px-3 font-semibold">Cost</th>
+                <th className="px-3 font-semibold">Condition</th>
+              </tr>
+            </thead>
+            <tbody>
+              {set19UnlockQuests.map((quest) => (
+                <tr key={quest.champion} className="bg-surface">
+                  <td className="rounded-l-lg border-y border-l border-line px-3 py-2 text-[13px] font-semibold">
+                    {quest.champion}
+                  </td>
+                  <td className="border-y border-line px-3 py-2 text-[13px] text-muted">
+                    {quest.cost}
+                  </td>
+                  <td className="rounded-r-lg border-y border-r border-line px-3 py-2 text-[13px] text-muted">
+                    {quest.quest}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </section>
 
       <section className="mt-10">
