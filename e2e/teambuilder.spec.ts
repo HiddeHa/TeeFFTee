@@ -174,11 +174,14 @@ test("the board is the game's four rows of seven", async ({ page }) => {
 });
 
 test("a champion can be dragged from the pool onto a chosen hex", async ({ page }) => {
-  // Set 19 has no catalogue icons yet, so there is no artwork to intercept the
-  // drag; the tile itself must still be a drag source.
-  await expect(page.locator('button[title$=" cost"] img')).toHaveCount(0);
+  // Every tile now carries the champion's portrait. Artwork inside a draggable
+  // button wins the gesture, which is why `AssetImage` renders catalogue pictures
+  // as `draggable=false` — the tile itself has to stay the drag source.
+  const tile = championTile(page, "Elise");
+  await expect(tile.locator("img")).toHaveCount(1);
+  await expect(tile.locator("img")).toHaveAttribute("draggable", "false");
 
-  await championTile(page, "Elise").dragTo(hex(page, 9));
+  await tile.dragTo(hex(page, 9));
 
   await expect(hex(page, 9)).toHaveAttribute("aria-label", "Elise — 1 star — 0 of 3 items");
   await expect(hex(page, 0)).toHaveAttribute("aria-label", "Empty hex");

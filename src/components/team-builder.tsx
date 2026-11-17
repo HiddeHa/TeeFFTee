@@ -39,6 +39,13 @@ export type BuilderUnit = {
   imageUrl: string | null;
   /** Trait ids this unit counts toward. */
   traits: string[];
+  /**
+   * Set 19's unlock evidence, when Riot's reveal names this champion as one.
+   * `quest` is the published condition; `shown` is what the unlocks video said
+   * about a champion whose condition it did not publish. Null means unnamed —
+   * which is not "not an unlockable", because the reveal names only some of them.
+   */
+  unlock?: { quest: string | null; shown: string | null } | null;
 };
 
 export type BuilderItem = {
@@ -55,6 +62,11 @@ export type BuilderTrait = {
   /** Activation counts, ascending. */
   breakpoints: number[];
   imageUrl: string | null;
+  /**
+   * One of Set 19's five Prismatic traits: its Prismatic tier is unlocked by a
+   * quest line, and an emblem cannot force it.
+   */
+  prismatic?: boolean;
 };
 
 /** Pointy-sided hexagon, the shape the board is actually made of. */
@@ -69,6 +81,18 @@ const COST_TEXT: Record<number, string> = {
   5: "text-amber-300",
   7: "text-fuchsia-300",
 };
+
+/**
+ * Case- and punctuation-insensitive search key.
+ *
+ * The trait list spells the band "K|DA" and the game spells it "K/DA", and a
+ * player types "kda" besides. Stripping everything that is not a letter or digit
+ * makes all three the same query, and leaves "Dr. Mundo" reachable as
+ * "dr mundo".
+ */
+function searchKey(value: string): string {
+  return value.toLowerCase().replace(/[^a-z0-9]/g, "");
+}
 
 const ITEM_KINDS = [
   { value: "completed", label: "Completed" },
@@ -113,6 +137,7 @@ type TraitOnBoard = {
   active: boolean;
   /** Next threshold to reach; null when the trait is maxed or unbounded. */
   next: number | null;
+  prismatic: boolean;
 };
 
 type Props = {
@@ -178,6 +203,7 @@ export function TeamBuilder({ units, items, traits, initialBoard, setNumber, pat
   const traitsById = useMemo(() => new Map(traits.map((trait) => [trait.id, trait])), [traits]);
 
   const placedCount = board.filter((slot) => slot !== null).length;
+  const unlockableCount = useMemo(() => units.filter((unit) => unit.unlock).length, [units]);
 
   /**
    * Trait counts come from the set catalogue, one count per placed copy — the same
@@ -209,6 +235,7 @@ export function TeamBuilder({ units, items, traits, initialBoard, setNumber, pat
           reached,
           active: reached.length > 0,
           next: breakpoints.find((value) => value > count) ?? null,
+          prismatic: trait?.prismatic ?? false,
         };
       })
       .sort(
@@ -225,14 +252,24 @@ export function TeamBuilder({ units, items, traits, initialBoard, setNumber, pat
   const selectedUnit = selectedSlot ? (unitsById.get(selectedSlot.unitId) ?? null) : null;
   const brushItem = brush ? (itemsById.get(brush) ?? null) : null;
 
+  /**
+   * Trait names are searchable too, because that is how a player picks a pool:
+   * "Pentakill" or "K/DA" is the question, not the champion's name. The trait
+   * ids on a unit resolve through the same catalogue the trait list uses, and an
+   * id the catalogue has not loaded still matches as its raw id.
+   */
   const visibleUnits = useMemo(() => {
-    const query = unitQuery.trim().toLowerCase();
+    const query = searchKey(unitQuery);
     return units.filter(
       (unit) =>
         (costFilter === "all" || unit.cost === costFilter) &&
-        (query === "" || unit.name.toLowerCase().includes(query)),
+        (query === "" ||
+          searchKey(unit.name).includes(query) ||
+          unit.traits.some((id) =>
+            searchKey(traitsById.get(id)?.name ?? id).includes(query),
+          )),
     );
-  }, [units, costFilter, unitQuery]);
+  }, [units, costFilter, unitQuery, traitsById]);
 
   const visibleItems = useMemo(() => {
     const query = itemQuery.trim().toLowerCase();
@@ -674,6 +711,13 @@ export function TeamBuilder({ units, items, traits, initialBoard, setNumber, pat
             </p>
           </div>
 
+          {boardTraits.some((trait) => trait.prismatic) ? (
+            <p className="mt-2 rounded border border-amber-400/30 bg-amber-400/10 px-2 py-1.5 text-[11px] leading-relaxed text-muted">
+              A Prismatic tier comes from a quest line in Set {setNumber} — an emblem cannot
+              force one.
+            </p>
+          ) : null}
+
           {boardTraits.length === 0 ? (
             <p className="mt-2 text-xs text-muted">
               Breakpoints count up as you place champions. A trait only lights up at its
@@ -684,11 +728,16 @@ export function TeamBuilder({ units, items, traits, initialBoard, setNumber, pat
               {boardTraits.map((trait) => (
                 <li
                   key={trait.id}
-                  title={
+                  title={[
                     trait.breakpoints.length > 0
                       ? `${trait.name} · breakpoints ${trait.breakpoints.join(" / ")} · ${trait.count} on board`
-                      : `${trait.name} · ${trait.count} on board`
-                  }
+                      : `${trait.name} · ${trait.count} on board`,
+                    trait.prismatic
+                      ? "Prismatic tier: a quest line unlocks it, not an emblem"
+                      : null,
+                  ]
+                    .filter(Boolean)
+                    .join(" · ")}
                   className={classNames(
                     "flex items-center gap-2 rounded-md border px-2 py-1.5",
                     trait.active ? "border-accent/50 bg-accent/10" : "border-line bg-raised/40",
@@ -713,6 +762,12 @@ export function TeamBuilder({ units, items, traits, initialBoard, setNumber, pat
                   >
                     {trait.name}
                   </span>
+
+                  {trait.prismatic ? (
+                    <span className="shrink-0 rounded border border-amber-400/40 px-1 py-px text-[8px] font-semibold uppercase tracking-wider text-amber-300">
+                      Prismatic
+                    </span>
+                  ) : null}
 
                   <span className="stat-value shrink-0 text-xs">
                     <span
@@ -773,6 +828,18 @@ export function TeamBuilder({ units, items, traits, initialBoard, setNumber, pat
                 Remove champion
               </button>
             </div>
+
+            {selectedUnit.unlock ? (
+              <p className="mt-2 rounded border border-amber-400/30 bg-amber-400/10 px-2 py-1.5 text-[11px] leading-relaxed text-fg/85">
+                <span className="mr-1.5 font-semibold uppercase tracking-wider text-amber-300">
+                  Unlock
+                </span>
+                {selectedUnit.unlock.quest ??
+                  `Shown in Riot's unlocks video — ${
+                    selectedUnit.unlock.shown ?? "condition not published"
+                  }.`}
+              </p>
+            ) : null}
 
             <div className="mt-2 flex flex-wrap items-center gap-1.5">
               <span className="text-[10px] uppercase tracking-wider text-muted">
@@ -842,8 +909,16 @@ export function TeamBuilder({ units, items, traits, initialBoard, setNumber, pat
             Champions
           </h2>
           <p className="mt-1 text-xs text-muted">
-            All {units.length} units in the Set {setNumber} catalogue.
+            All {units.length} units in the Set {setNumber} catalogue. Search a champion or a
+            trait.
           </p>
+          {unlockableCount > 0 ? (
+            <p className="mt-1.5 text-[11px] leading-relaxed text-amber-300/90">
+              <span className="font-semibold">{unlockableCount} marked unlocks</span> — the
+              champions Riot has named as unlockables, with the quest where one is published. An
+              unmarked champion may still be locked; nothing here is guessed.
+            </p>
+          ) : null}
 
           <div className="mt-3 flex flex-wrap items-center gap-1.5">
             <button
@@ -869,9 +944,9 @@ export function TeamBuilder({ units, items, traits, initialBoard, setNumber, pat
               type="search"
               value={unitQuery}
               onChange={(event) => setUnitQuery(event.target.value)}
-              placeholder="Search champions"
-              aria-label="Search champions"
-              className="ml-auto w-full rounded-md border border-line bg-ink px-2 py-1 text-xs text-fg placeholder:text-muted/70 sm:w-36"
+              placeholder="Search champions or traits"
+              aria-label="Search champions or traits"
+              className="ml-auto w-full rounded-md border border-line bg-ink px-2 py-1 text-xs text-fg placeholder:text-muted/70 sm:w-48"
             />
           </div>
 
@@ -893,11 +968,20 @@ export function TeamBuilder({ units, items, traits, initialBoard, setNumber, pat
                     onDragStart={startUnitDrag(unit.id)}
                     onDragEnd={endDrag}
                     title={`${unit.name} · ${COST_LABEL[unit.cost] ?? `${unit.cost} cost`}`}
+                    data-unlock={unit.unlock ? "true" : undefined}
                     className={classNames(
-                      "group flex cursor-grab flex-col items-center gap-1 rounded-md border border-l-2 border-line bg-raised p-1.5 text-center transition-colors hover:border-accent/50 hover:bg-surface active:cursor-grabbing",
+                      "group relative flex cursor-grab flex-col items-center gap-1 rounded-md border border-l-2 border-line bg-raised p-1.5 text-center transition-colors hover:border-accent/50 hover:bg-surface active:cursor-grabbing",
                       COST_EDGE[unit.cost] ?? "border-l-line",
                     )}
                   >
+                    {unit.unlock ? (
+                      <span
+                        aria-hidden
+                        className="absolute right-0.5 top-0.5 rounded bg-ink/85 px-1 py-px text-[8px] font-semibold uppercase leading-tight tracking-wide text-amber-300"
+                      >
+                        Unlock
+                      </span>
+                    ) : null}
                     <AssetImage
                       src={unit.imageUrl}
                       className="h-12 w-full rounded object-cover"
@@ -917,7 +1001,7 @@ export function TeamBuilder({ units, items, traits, initialBoard, setNumber, pat
 
               {visibleUnits.length === 0 ? (
                 <p className="mt-6 text-center text-xs text-muted">
-                  No champion matches that filter.
+                  No champion matches that filter — try a champion or trait name.
                 </p>
               ) : null}
             </div>
@@ -1005,9 +1089,10 @@ export function TeamBuilder({ units, items, traits, initialBoard, setNumber, pat
 
       <p className="text-[11px] leading-relaxed text-muted/80 lg:col-span-2">
         Built from the Set {setNumber} catalogue for patch {patch}: champion names,
-        costs and traits, with the shared item list the comp pages resolve against. Icons
-        appear when the set catalogue is loaded. A board is a plan, not a match result —
-        it lives in this page's URL and nowhere else.
+        costs and traits, with the shared item list the comp pages resolve against. The
+        champion portraits are the set's own; trait icons appear when the set catalogue is
+        loaded. A board is a plan, not a match result — it lives in this page's URL and
+        nowhere else.
       </p>
     </div>
   );

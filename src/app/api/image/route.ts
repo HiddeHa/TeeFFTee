@@ -1,22 +1,26 @@
 import type { NextRequest } from "next/server";
 
 /**
- * Same-origin image proxy for the Community Dragon asset tree.
+ * Same-origin image proxy for the catalogue's asset sources.
  *
  * Why it exists: `raw.communitydragon.org` answers a share of requests with 522,
  * commonly a different share each time a page loads a hundred tiles. A retry from
  * the server usually gets the bytes, and once it does the image is cached, so the
  * next visitor never touches the CDN at all.
  *
- * The allowlist is deliberately narrow — this is not an open proxy. Only `https`
- * URLs on the Community Dragon host under `/latest/game/` are fetched, and the
+ * The allowlist is deliberately narrow — this is not an open proxy. Two sources
+ * are fetched: Community Dragon's `/latest/game/` tree, and the Set 19 unit
+ * portraits on tactics.tools while that set has no Community Dragon tree. The
  * response must actually be an image.
  */
 
 export const dynamic = "force-dynamic";
 
-const CDN_HOST = "raw.communitydragon.org";
-const CDN_PATH_PREFIX = "/latest/game/";
+const ALLOWED_SOURCES = [
+  { host: "raw.communitydragon.org", pathPrefix: "/latest/game/" },
+  // Set 19 units: no Community Dragon asset tree for the set exists yet.
+  { host: "ap.tft.tools", pathPrefix: "/img/s99/" },
+];
 
 /** Attempts per request: the first, then two retries with a short backoff. */
 const ATTEMPTS = 3;
@@ -103,11 +107,13 @@ export async function GET(request: NextRequest): Promise<Response> {
     return new Response("Bad src", { status: 400 });
   }
 
-  if (
-    source.protocol !== "https:" ||
-    source.hostname !== CDN_HOST ||
-    !source.pathname.startsWith(CDN_PATH_PREFIX)
-  ) {
+  const allowed =
+    source.protocol === "https:" &&
+    ALLOWED_SOURCES.some(
+      (entry) => source.hostname === entry.host && source.pathname.startsWith(entry.pathPrefix),
+    );
+
+  if (!allowed) {
     return new Response("Not an allowed image", { status: 400 });
   }
 

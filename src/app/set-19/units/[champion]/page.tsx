@@ -2,20 +2,16 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { AssetImage } from "@/components/asset-image";
 import { Set19StatusTag } from "@/components/set19-status-tag";
 import { Set19Tabs } from "@/components/set-19-tabs";
-import {
-  SET_19_AS_OF,
-  set19,
-  set19UnlockQuests,
-  set19Unlocks,
-  set19Units,
-  type RosterUnit,
-} from "@/content/set-19";
+import { SET_19_AS_OF, set19, set19Units } from "@/content/set-19";
+import { portraitFor } from "@/content/set-19-portraits";
 import { loadDataHealth, type DataHealth } from "@/lib/data-health";
 import { formatDate, formatPercent } from "@/lib/format";
 import { isSet19Live } from "@/lib/set-launch";
 import { traitHref, unitPageHref, unitSlug } from "@/lib/set19-anchors";
+import { unlockForUnit } from "@/lib/set19-unlocks";
 
 /**
  * One champion of Set 19, before the set has any games.
@@ -34,15 +30,6 @@ export const revalidate = 3_600;
 type Params = Promise<{ champion: string }>;
 
 const BY_SLUG = new Map(set19Units.map((unit) => [unitSlug(unit.name), unit]));
-const QUESTS_BY_CHAMPION = new Map(set19UnlockQuests.map((quest) => [quest.champion, quest]));
-const CARDS_BY_CHAMPION = new Map(set19Unlocks.map((card) => [card.champion, card]));
-
-/**
- * The unlocks video names the K/DA Akali without the variant suffix the roster
- * uses. That card belongs to the K/DA five-cost; the True Damage one has its own
- * quest entry, so it must not inherit this card.
- */
-const CARD_CHAMPION_BY_UNIT: Record<string, string> = { "Akali (K|DA)": "Akali" };
 
 export function generateStaticParams() {
   return set19Units.map((unit) => ({ champion: unitSlug(unit.name) }));
@@ -105,19 +92,13 @@ function ChampionDataState({
   );
 }
 
-function unlockFor(unit: RosterUnit) {
-  return {
-    quest: QUESTS_BY_CHAMPION.get(unit.name),
-    card: CARDS_BY_CHAMPION.get(CARD_CHAMPION_BY_UNIT[unit.name] ?? unit.name),
-  };
-}
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { champion } = await params;
   const unit = BY_SLUG.get(champion);
   if (!unit) return { title: "Champion not found" };
 
-  const { quest } = unlockFor(unit);
+  const { quest } = unlockForUnit(unit.name) ?? {};
   const title = `${unit.name} — Set ${set19.number} ${set19.name}`;
   const description =
     `${unit.name} in TFT Set ${set19.number}: a ${unit.cost}-cost champion with ` +
@@ -137,7 +118,7 @@ export default async function Set19UnitPage({ params }: { params: Params }) {
   const unit = BY_SLUG.get(champion);
   if (!unit) notFound();
 
-  const { quest, card } = unlockFor(unit);
+  const { quest, card } = unlockForUnit(unit.name) ?? {};
   const sameCost = set19Units.filter((entry) => entry.cost === unit.cost && entry.name !== unit.name);
   const isLive = isSet19Live();
   const health = isLive ? await loadDataHealth(set19.number, set19.patch) : null;
@@ -160,11 +141,28 @@ export default async function Set19UnitPage({ params }: { params: Params }) {
         <p className="text-xs font-semibold uppercase tracking-wider text-accent">
           Set {set19.number} · {set19.name}
         </p>
-        <h1 className="mt-2 text-2xl font-semibold sm:text-3xl">{unit.name}</h1>
-        <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted">
-          A {unit.cost}-cost champion with {unit.traits.length}{" "}
-          {unit.traits.length === 1 ? "trait" : "traits"}: {unit.traits.join(", ")}.
-        </p>
+        <div className="mt-2 flex items-start gap-3">
+          <AssetImage
+            src={portraitFor(unit.name)}
+            width={80}
+            height={80}
+            eager
+            className="h-20 w-20 shrink-0 rounded-lg border border-line object-cover"
+            fallback={
+              <span
+                aria-hidden
+                className="h-20 w-20 shrink-0 rounded-lg border border-dashed border-line bg-surface"
+              />
+            }
+          />
+          <div className="min-w-0">
+            <h1 className="text-2xl font-semibold sm:text-3xl">{unit.name}</h1>
+            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted">
+              A {unit.cost}-cost champion with {unit.traits.length}{" "}
+              {unit.traits.length === 1 ? "trait" : "traits"}: {unit.traits.join(", ")}.
+            </p>
+          </div>
+        </div>
         <div className="mt-3 flex flex-wrap gap-1.5">
           <span className="chip">{unit.cost}-cost</span>
           {unit.traits.map((trait) => (

@@ -9,12 +9,19 @@ import { classNames } from "@/lib/format";
  * `?section=` parameter would opt the page into dynamic rendering on every
  * request just to hide two thirds of it. The active state is passed in because a
  * link cannot know which page rendered it.
+ *
+ * Teambuilder is the one entry that leaves `/set-19`: the builder is the site's
+ * single board planner, shared with the top nav and reading whichever set is
+ * live, so its route is not a Set 19 sub-page. The entry still belongs here — it
+ * is the one thing you want from the roster page — and it simply never carries
+ * the active state, because it is not rendered on `/teambuilder`.
  */
 const SECTIONS = [
   { key: "overview", label: "Overview", href: "/set-19" },
   { key: "units", label: "Units", href: "/set-19/units" },
   { key: "traits", label: "Traits", href: "/set-19/traits" },
   { key: "unlockables", label: "Unlockables", href: "/set-19/unlockables" },
+  { key: "teambuilder", label: "Teambuilder", href: "/teambuilder" },
 ] as const;
 
 export type Set19Section = (typeof SECTIONS)[number]["key"];

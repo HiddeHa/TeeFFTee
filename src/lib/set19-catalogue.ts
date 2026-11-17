@@ -4,6 +4,7 @@ import {
   set19UniqueTraits,
   set19Units,
 } from "@/content/set-19";
+import { portraitFor } from "@/content/set-19-portraits";
 
 import type { AugmentIndex } from "./augments";
 import { loadAugmentCatalogue } from "./augments";
@@ -26,8 +27,9 @@ import { loadUnitCatalogue, type UnitIndex } from "./units";
  *    never a replacement for Riot's ids.
  *  - Trait names in the roster resolve through this file's id map, so a unit's
  *    trait chips light up correctly in the teambuilder.
- *  - Icons are absent rather than borrowed. The UI's initials/empty state is
- *    honest about a catalogue that has not shipped.
+ *  - Units carry Set 19's own portraits (`src/content/set-19-portraits.ts`),
+ *    not artwork borrowed from another set. Trait icons are still absent: no
+ *    Set 19 trait art has been published, so they keep the empty tile.
  *  - Items fall back to the shared item list, because components and completed
  *    items carry across sets; Set 19-only items and augments wait for 19.1.
  */
@@ -53,7 +55,7 @@ const contentUnits: UnitIndex = new Map(
     {
       name: unit.name,
       cost: unit.cost,
-      imageUrl: null,
+      imageUrl: portraitFor(unit.name),
       traits: unit.traits.map((name) => traitNames.get(name) ?? set19Id(name)),
     },
   ]),

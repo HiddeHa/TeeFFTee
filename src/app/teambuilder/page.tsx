@@ -14,6 +14,7 @@ import {
   loadSet19TraitCatalogue,
   loadSet19UnitCatalogue,
 } from "@/lib/set19-catalogue";
+import { isPrismaticTrait, unlockForUnit } from "@/lib/set19-unlocks";
 
 export const metadata: Metadata = {
   title: "Teambuilder",
@@ -59,13 +60,21 @@ export default async function TeamBuilderPage({ searchParams }: { searchParams: 
     .sort((a, b) => a.kind.localeCompare(b.kind) || a.name.localeCompare(b.name));
 
   const units: BuilderUnit[] = Array.from(unitIndex ?? [])
-    .map(([id, unit]) => ({
-      id,
-      name: unit.name,
-      cost: unit.cost,
-      imageUrl: unit.imageUrl,
-      traits: unit.traits,
-    }))
+    .map(([id, unit]) => {
+      // Unlock data comes from the reveal, not the catalogue, so it is keyed by
+      // name: a real 19.1 catalogue row carries Riot's id but the same name.
+      const unlock = unlockForUnit(unit.name);
+      return {
+        id,
+        name: unit.name,
+        cost: unit.cost,
+        imageUrl: unit.imageUrl,
+        traits: unit.traits,
+        unlock: unlock
+          ? { quest: unlock.quest?.quest ?? null, shown: unlock.card?.shown ?? null }
+          : null,
+      };
+    })
     .filter((unit) => unit.cost >= 1 && unit.cost <= 7)
     .sort((a, b) => a.cost - b.cost || a.name.localeCompare(b.name));
 
@@ -75,6 +84,7 @@ export default async function TeamBuilderPage({ searchParams }: { searchParams: 
       name: trait.name,
       breakpoints: trait.breakpoints,
       imageUrl: trait.imageUrl,
+      prismatic: isPrismaticTrait(trait.name),
     }))
     .sort((a, b) => a.name.localeCompare(b.name));
 
@@ -92,10 +102,11 @@ export default async function TeamBuilderPage({ searchParams }: { searchParams: 
         {itemCatalogue.provisional ? (
           <div className="mt-4 max-w-2xl">
             <DataNote>
-              Champions, costs and traits are the Set 19 reveal roster. The item palette is
-              the shared completed/component list from 18.6 until Riot ships the 19.1
-              catalogue; Set 19-only items and emblems appear once that load exists. Nothing
-              is invented to fill the gap.
+              Champions, costs and traits are the Set 19 reveal roster, and the portraits are
+              the set's own unit art from the 19.0 files. The item palette is the shared
+              completed/component list from 18.6 until Riot ships the 19.1 catalogue; Set
+              19-only items and emblems appear once that load exists. Nothing is invented to
+              fill the gap.
             </DataNote>
           </div>
         ) : null}

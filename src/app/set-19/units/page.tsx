@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { AssetImage } from "@/components/asset-image";
 import { Set19Tabs } from "@/components/set-19-tabs";
 import { set19, set19CostCurve, set19Units } from "@/content/set-19";
+import { portraitFor } from "@/content/set-19-portraits";
 import { traitHref, unitAnchor, unitPageHref } from "@/lib/set19-anchors";
 
 export const metadata: Metadata = {
@@ -64,9 +66,23 @@ export default function Set19UnitsPage() {
               {bucket.units.map((unit) => (
                 <tr key={unit.name} id={unitAnchor(unit.name)} className="bg-surface scroll-mt-24">
                   <td className="w-px whitespace-nowrap rounded-l-lg border-y border-l border-line px-3 py-2 text-sm font-semibold">
-                    <Link href={unitPageHref(unit.name)} className="hover:text-accent">
-                      {unit.name}
-                    </Link>
+                    <span className="flex items-center gap-2">
+                      <AssetImage
+                        src={portraitFor(unit.name)}
+                        width={32}
+                        height={32}
+                        className="h-8 w-8 shrink-0 rounded border border-line object-cover"
+                        fallback={
+                          <span
+                            aria-hidden
+                            className="h-8 w-8 shrink-0 rounded border border-dashed border-line bg-surface"
+                          />
+                        }
+                      />
+                      <Link href={unitPageHref(unit.name)} className="hover:text-accent">
+                        {unit.name}
+                      </Link>
+                    </span>
                   </td>
                   <td className="rounded-r-lg border-y border-r border-line px-3 py-2">
                     <span className="flex flex-wrap gap-1">

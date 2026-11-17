@@ -68,10 +68,10 @@ without it.
 | `/lab` | Comp discovery: recurring unit sets on the current patch with board counts, placement against the baseline, common items and traits, plus the share of boards the published comps could not classify |
 | `/leaderboards` | Tracked Master+ ladder by region, searchable by Riot ID or PUUID |
 | `/players/[puuid]` | One tracked account: Riot ID, ladder snapshot, its crawled placements |
-| `/teambuilder` | Hex-board planner over the set's champions and items; the board lives in the URL |
+| `/teambuilder` | Hex-board planner over the set's champions and items; the board lives in the URL. The unlockables Riot has named carry their quest, and the five Prismatic traits are marked quest-only rather than emblem-forcible |
 | `/tier-lists` | Personal tier lists for units, items and augments, saved in the browser only |
 | `/guides`, `/guides/[slug]` | Long-form guides, each labelled measured versus judgement |
-| `/set-19` | The next set, overview: Riot-confirmed facts, coverage, dates and what is still unpublished; Units, Traits and Unlockables are sub-pages behind its tab bar |
+| `/set-19` | The next set, overview: Riot-confirmed facts, coverage, dates and what is still unpublished; Units, Traits and Unlockables are sub-pages behind its tab bar, which also links to the teambuilder |
 | `/set-19/units` | Set 19 roster: all 94 champions by shop cost, the two Akalis and the four 7-cost unlocks |
 | `/set-19/units/[champion]` | One Set 19 champion: cost, traits, any published unlock condition, and where each fact came from |
 | `/set-19/traits` | Set 19 traits: the 27 regular, 20 unique and 5 Prismatic traits with breakpoints and champions |
@@ -155,6 +155,13 @@ every item is an item the set actually ships, and each board activates at least
 three trait breakpoints (counted by hand against `traits.breakpoints`). They are
 still examples — the names say so, and the notes and numbers are illustration —
 but the champions, costs and icons on them come from the catalogue.
+
+Set 19 is the exception, because Community Dragon has no asset tree for it until
+launch. The teambuilder reads each champion's portrait from a committed
+name → asset map, [src/content/set-19-portraits.ts](src/content/set-19-portraits.ts),
+served from tactics.tools' copy of the 19.0 files through the same `/api/image`
+proxy. The map is a fallback, not a second catalogue: real `units` rows win the
+moment `load-assets --set 19` fills them.
 
 ## Crawler (`worker/`)
 
