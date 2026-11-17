@@ -453,3 +453,12 @@ Not yet done: there is no Riot **production** key yet (development keys expire e
 24 h), so the crawl only advances while one is supplied; Set 19 has no crawled
 boards until it launches, and every stats page stays on Set 18 until then. Sign in
 with Freebuff is wired but nothing is gated behind an account yet.
+
+## License
+
+The original source code and written content in this repository are licensed under
+the [MIT License](LICENSE).
+
+Riot Games game data, trademarks, champion artwork, and assets derived from Riot
+or Community Dragon are not covered by that license and remain subject to their
+owners' terms.
