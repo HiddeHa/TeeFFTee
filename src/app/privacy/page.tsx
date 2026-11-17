@@ -69,10 +69,17 @@ export default function PrivacyPage() {
 
       <LegalSection n={4} title="Cookies and analytics">
         <p>
-          The site itself does not set marketing cookies. If privacy-friendly analytics are
-          enabled (for example Plausible or a self-hosted PostHog), they may set a single
-          first-party cookie or none at all, and are used only to count page views. Any
-          change to that will be reflected here before it takes effect.
+          The site sets no cookies and no advertising or retargeting trackers. It counts
+          page views with Umami, a cookieless analytics service: a page view records the
+          path, the referring site, and coarse device, browser and country information —
+          nothing that identifies you. No cookie is written, no identifier is stored on
+          your device, and no full IP address is retained, which is why there is no
+          consent banner.
+        </p>
+        <p className="mt-3">
+          Coaching links are counted the same way, as an aggregate click with the placement
+          it appeared in. If analytics is ever changed to something that stores an
+          identifier, this section changes before it takes effect.
         </p>
       </LegalSection>
 

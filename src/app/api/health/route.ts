@@ -1,5 +1,5 @@
 import { count, desc, eq, sql } from "drizzle-orm";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 import type { RankBucket } from "@/content/types";
 import { getDb, useHttpDriver } from "@/db/client";
@@ -31,7 +31,7 @@ import { comparePatch } from "@/lib/stats-source";
 export const dynamic = "force-dynamic";
 
 type HealthPayload = {
-  status: "ok" | "empty" | "down";
+  status: "ok" | "empty" | "stale" | "down";
   checkedAt: string;
   database: {
     configured: boolean;
@@ -63,6 +63,11 @@ type HealthPayload = {
     statsComputedAt: string | null;
     statsAgeMinutes: number | null;
   } | null;
+  /**
+   * Present only when the caller passed `?maxAgeMinutes=`. Null is the classic
+   * contract: reachable and holding a sample, whatever its age.
+   */
+  strictness: { maxAgeMinutes: number; exceeded: ("crawl" | "stats")[] } | null;
 };
 
 const NO_STORE = { "cache-control": "no-store" } as const;
@@ -149,6 +154,36 @@ function tierListScope(rows: ScopeRow[]): (ScopeRow & { rankBucket: RankBucket }
   return { ...fallback, rankBucket: fallback.rankBucket as RankBucket };
 }
 
+/**
+ * `?maxAgeMinutes=` — the freshness a monitor demands, in minutes. Anything that
+ * is not a non-negative integer is ignored rather than guessed at: a typo must
+ * not silently weaken the alert into "always fresh".
+ */
+function parseMaxAge(raw: string | null): number | null {
+  if (!raw) return null;
+  const parsed = Number.parseInt(raw, 10);
+  return Number.isFinite(parsed) && parsed >= 0 ? parsed : null;
+}
+
+/**
+ * Which half of the corpus is too old. Both are reported, because "the crawler
+ * stopped" and "the crawler is fine but the aggregate timer is not" are different
+ * failures with the same visible symptom: a meta read describing last week.
+ */
+function staleEvidence(
+  corpus: NonNullable<HealthPayload["corpus"]>,
+  maxAgeMinutes: number,
+): ("crawl" | "stats")[] {
+  const exceeded: ("crawl" | "stats")[] = [];
+  if (corpus.crawlAgeMinutes === null || corpus.crawlAgeMinutes > maxAgeMinutes) {
+    exceeded.push("crawl");
+  }
+  if (corpus.statsAgeMinutes === null || corpus.statsAgeMinutes > maxAgeMinutes) {
+    exceeded.push("stats");
+  }
+  return exceeded;
+}
+
 /** `max(computed_at)` arrives as Date or string depending on the driver. */
 function toIso(value: unknown): string | null {
   if (value instanceof Date) return value.toISOString();
@@ -159,8 +194,9 @@ function toIso(value: unknown): string | null {
   return null;
 }
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   const checkedAt = new Date().toISOString();
+  const maxAgeMinutes = parseMaxAge(request.nextUrl.searchParams.get("maxAgeMinutes"));
   const configured = Boolean(process.env.DATABASE_URL);
   const driver: "http" | "tcp" = useHttpDriver() ? "http" : "tcp";
 
@@ -176,6 +212,7 @@ export async function GET() {
         error: { message: "DATABASE_URL is not set" },
       },
       corpus: null,
+      strictness: null,
     };
     return NextResponse.json(payload, { status: 503, headers: NO_STORE });
   }
@@ -260,12 +297,23 @@ export async function GET() {
 
     // Reachable but no sample is its own failure mode: every comp would render
     // "collecting data", so it must not report 200.
-    const status = corpus.classifiedGames > 0 ? "ok" : "empty";
+    //
+    // A freshness gate is opt-in because the two callers want different answers.
+    // A deployment smoke test asks "is this Worker wired to a live database?",
+    // which stays true while the crawler is stopped. A monitor asks "would a
+    // reader see today's numbers?", and a 27-hour-old corpus fails that while
+    // returning 200. `?maxAgeMinutes=` is how the monitor gets the second one
+    // without changing what the smoke test means.
+    const exceeded = maxAgeMinutes === null ? [] : staleEvidence(corpus, maxAgeMinutes);
+    const status: HealthPayload["status"] =
+      corpus.classifiedGames === 0 ? "empty" : exceeded.length > 0 ? "stale" : "ok";
     const payload: HealthPayload = {
       status,
       checkedAt,
       database: { configured: true, reachable: true, driver, latencyMs, error: null },
       corpus,
+      strictness:
+        maxAgeMinutes === null ? null : { maxAgeMinutes, exceeded },
     };
 
     return NextResponse.json(payload, { status: status === "ok" ? 200 : 503, headers: NO_STORE });
@@ -281,6 +329,7 @@ export async function GET() {
         error: describeError(error),
       },
       corpus: null,
+      strictness: null,
     };
     return NextResponse.json(payload, { status: 503, headers: NO_STORE });
   }

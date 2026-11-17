@@ -393,6 +393,25 @@ docker compose -f compose.crawl.yml stop     # SIGTERM, exits 0 in about a secon
 | Expired key | a 401 fails that cycle but not the loop; it retries next cycle and logs the reason. Dev keys expire every 24 h — regenerate and `docker compose restart crawler` |
 | Set rollover | the set comes from `tft_set_number` in each match, so no code or config change is needed on the 19th |
 
+### Running it against the hosted database
+
+The loop above owns its own Postgres, which is the rehearsal shape. The deployed
+site reads Neon, so the crawler that keeps it fresh uses
+[compose.crawl.neon.yml](compose.crawl.neon.yml): the same image, no local
+database, and `DATABASE_URL` / `RIOT_API_KEY` interpolated from the gitignored
+`.env`.
+
+```bash
+docker compose -f compose.crawl.neon.yml up -d --build
+docker compose -f compose.crawl.neon.yml logs -f crawler
+docker compose -f compose.crawl.neon.yml restart crawler   # after rotating the key
+```
+
+`restart: unless-stopped` is the permanence: the loop comes back with the Docker
+daemon, and the daemon starting at login is the only host-side requirement. An
+expired development key does not stop it — the cycle logs the 401 and retries, so
+`restart` after pasting a new key is the whole recovery.
+
 Nothing can be classified for a new set until it has comps. Aggregation says so
 explicitly rather than reporting 0% pick rate:
 
@@ -444,6 +463,50 @@ green deploy.
 A public HTTPS URL is a precondition for a Riot production key: the application
 is reviewed against a live site with working terms and privacy pages, which the
 Freebuff URLs above provide.
+
+## Monitoring
+
+`/api/health` is the external signal. It answers three questions in one call — can
+the Worker reach Postgres, does the database hold a sample, and how old is that
+evidence — and returns **503** for any failure a reader would notice.
+
+| Call | 200 means | 503 means |
+|---|---|---|
+| `/api/health` | reachable, and classified games exist | database unreachable, `DATABASE_URL` unset, or an empty corpus |
+| `/api/health?maxAgeMinutes=120` | all of the above **and** the corpus is fresh | the crawler or the aggregate timer has fallen behind |
+
+Point an uptime monitor at the second form. Set `maxAgeMinutes` to a few aggregate
+intervals so one slow cycle is not an incident: aggregation runs every
+`CRAWL_AGGREGATE_MINUTES` (30), so 120 minutes tolerates three misses before it
+pages. The body carries `corpus.crawlAgeMinutes`, `corpus.statsAgeMinutes` and, when
+the gate is used, `strictness.exceeded` — `["crawl"]`, `["stats"]` or both, which is
+the difference between "restart the crawler" and "the aggregate pass is failing".
+
+```bash
+curl -s -o /dev/null -w '%{http_code}\n' \
+  'https://<origin>/api/health?maxAgeMinutes=120'
+```
+
+Any monitor that polls HTTPS and asserts a 2xx will do; the free tiers that fit are
+[Better Stack](https://betterstack.com) (10 monitors, 3-minute checks, email +
+Slack) and [UptimeRobot](https://uptimerobot.com) (50 monitors, 5-minute checks,
+optional keyword check). The endpoint is public and carries no credentials, so the
+monitor needs no secret from this project.
+
+## Analytics
+
+Page views are counted by [Umami](https://umami.is) — cookieless, no personal data,
+no consent banner. The script comes from the root layout, which is a server
+component, so the id is read from the runtime environment; with the variable unset
+**no script tag is emitted at all**.
+
+| Variable | Where | What |
+|---|---|---|
+| `UMAMI_WEBSITE_ID` | Sites → Secrets (production), `.env` locally | the website id from the Umami dashboard |
+| `UMAMI_SCRIPT_URL` | optional | only for self-hosted Umami; defaults to `https://cloud.umami.is/script.js` |
+
+Coaching CTAs report `cta_book_coaching` with a `placement` property, so the funnel
+is measurable per slot ([tracked-link.tsx](src/components/tracked-link.tsx)).
 
 ## Status
 

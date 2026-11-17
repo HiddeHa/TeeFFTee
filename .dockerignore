@@ -1,0 +1,26 @@
+# The crawler image needs package files, drizzle, worker and src only
+# (see Dockerfile.worker). Everything else just makes the build context huge.
+node_modules
+.next
+.open-next
+.wrangler
+freebuff-sites-build
+.git
+.github
+docs
+e2e
+tests
+scripts
+test-results
+playwright-report
+*.log
+*.png
+tsconfig.tsbuildinfo
+
+# Never bake secrets or machine-local database URLs into an image.
+.env
+.env.*
+.neon-url.txt
+.neon
+.pilot
+.cloud-attachments

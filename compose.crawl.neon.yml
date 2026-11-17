@@ -1,0 +1,50 @@
+# Continuous crawler against a hosted Postgres (production Neon).
+#
+#   docker compose -f compose.crawl.neon.yml up -d --build
+#   docker compose -f compose.crawl.neon.yml logs -f crawler
+#   docker compose -f compose.crawl.neon.yml restart crawler   # after rotating the key
+#
+# Same image as compose.crawl.yml, with no local Postgres: the corpus lives in
+# Neon and the deployed Worker reads exactly the rows this loop writes.
+#
+# DATABASE_URL and RIOT_API_KEY are interpolated from the project `.env`
+# (gitignored), so this file carries no credentials and deploys unchanged to any
+# always-on Docker host. `.env` already wins over the environment here — unlike
+# the website build, the crawler is a Node process that reads `.env` itself
+# (worker/load-env.ts); the environment below is passed explicitly so a missing
+# file fails at `up` rather than at the first query.
+#
+# `restart: unless-stopped` is what makes it permanent: the daemon brings the
+# loop back after a crash, and the container starts again with the daemon.
+
+services:
+  crawler:
+    build:
+      context: .
+      dockerfile: Dockerfile.worker
+    image: teefftee-crawler:latest
+    restart: unless-stopped
+    stop_grace_period: 45s
+    environment:
+      DATABASE_URL: ${DATABASE_URL:?set DATABASE_URL (production Neon) in .env}
+      # Development keys expire every 24 hours; a production key is what this is for.
+      RIOT_API_KEY: ${RIOT_API_KEY:?set RIOT_API_KEY in .env}
+      RIOT_KEY_TYPE: ${RIOT_KEY_TYPE:-production}
+      RIOT_REGIONS: ${RIOT_REGIONS:-EUW,KR}
+      CRAWL_BUDGET_PERCENT: ${CRAWL_BUDGET_PERCENT:-65}
+      CRAWL_SEED_TIERS: ${CRAWL_SEED_TIERS:-challenger,grandmaster}
+      CRAWL_SEED_MAX_PLAYERS: ${CRAWL_SEED_MAX_PLAYERS:-2000}
+      CRAWL_CONCURRENCY: ${CRAWL_CONCURRENCY:-4}
+      CRAWL_LOOP_INTERVAL_SECONDS: ${CRAWL_LOOP_INTERVAL_SECONDS:-300}
+      # Pages revalidate every 5 minutes, so this is the freshness of the numbers.
+      CRAWL_AGGREGATE_MINUTES: ${CRAWL_AGGREGATE_MINUTES:-30}
+      # Dates are compared against local midnight upstream (check:content), so the
+      # worker runs in the same zone the CI gate does.
+      TZ: UTC
+    logging:
+      # Container logs are the only record of a cycle, and an unattended loop can
+      # run for months: cap them instead of filling the host disk.
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
