@@ -67,6 +67,7 @@ const COST_TEXT: Record<number, string> = {
   3: "text-sky-400",
   4: "text-violet-400",
   5: "text-amber-300",
+  7: "text-fuchsia-300",
 };
 
 const ITEM_KINDS = [
@@ -853,7 +854,7 @@ export function TeamBuilder({ units, items, traits, initialBoard, setNumber, pat
             >
               All
             </button>
-            {[1, 2, 3, 4, 5].map((cost) => (
+            {[1, 2, 3, 4, 5, 7].map((cost) => (
               <button
                 key={cost}
                 type="button"
@@ -1004,9 +1005,9 @@ export function TeamBuilder({ units, items, traits, initialBoard, setNumber, pat
 
       <p className="text-[11px] leading-relaxed text-muted/80 lg:col-span-2">
         Built from the Set {setNumber} catalogue for patch {patch}: champion names,
-        costs, icons and traits, and the same item list the comp pages resolve against.
-        A board is a plan, not a match result — it lives in this page's URL and nowhere
-        else.
+        costs and traits, with the shared item list the comp pages resolve against. Icons
+        appear when the set catalogue is loaded. A board is a plan, not a match result —
+        it lives in this page's URL and nowhere else.
       </p>
     </div>
   );

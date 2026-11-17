@@ -6,6 +6,7 @@ export const COST_BORDER: Record<number, string> = {
   3: "border-sky-400",
   4: "border-violet-400",
   5: "border-amber-400",
+  7: "border-fuchsia-400",
 };
 
 /** Left border encodes champion cost, the way the in-game shop does. */
@@ -16,6 +17,7 @@ export const COST_EDGE: Record<number, string> = {
   3: "border-l-sky-500",
   4: "border-l-violet-500",
   5: "border-l-amber-400",
+  7: "border-l-fuchsia-400",
 };
 
 export const COST_LABEL: Record<number, string> = {
@@ -25,4 +27,5 @@ export const COST_LABEL: Record<number, string> = {
   3: "3 cost",
   4: "4 cost",
   5: "5 cost",
+  7: "7 cost · unlock",
 };

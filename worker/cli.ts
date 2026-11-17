@@ -12,6 +12,7 @@ import { discoverMatches } from "./discover";
 import { fetchMatches } from "./fetch";
 import { createLogger, sleepUnless } from "./log";
 import { RateLimiter } from "./limiter";
+import { formatPatternReport, refreshPatterns } from "./patterns";
 import { queueStats } from "./queue";
 import { reprocessMatches } from "./reprocess";
 import { resolveRiotIds } from "./names";
@@ -35,6 +36,7 @@ Commands
   load-assets Load a set's units, traits, items and augments from Community Dragon
   sync-comps  Push curated comps from src/content into Postgres
   aggregate   Assign boards to comps and materialise comp_stats
+  patterns    Materialise the AInalyses study (units, duos, cores, items, traits)
   bootstrap   Seed comp_stats for any patch/region with games but no rows yet
   candidates  Rank frequent unit sets in the crawled data (evidence for comps)
   once        seed -> discover -> fetch in one pass (rehearsal)
@@ -112,6 +114,9 @@ async function printStats(): Promise<void> {
       raw_payloads: number;
       comps: number;
       comp_stats: number;
+      comp_augment_stats: number;
+      board_patterns: number;
+      board_studies: number;
     }[]
   >`
     SELECT
@@ -123,7 +128,10 @@ async function printStats(): Promise<void> {
       (SELECT count(*)::int FROM participant_augments) AS augments,
       (SELECT count(*)::int FROM matches WHERE raw IS NOT NULL) AS raw_payloads,
       (SELECT count(*)::int FROM comps WHERE published) AS comps,
-      (SELECT count(*)::int FROM comp_stats) AS comp_stats
+      (SELECT count(*)::int FROM comp_stats) AS comp_stats,
+      (SELECT count(*)::int FROM comp_augment_stats) AS comp_augment_stats,
+      (SELECT count(*)::int FROM board_patterns) AS board_patterns,
+      (SELECT count(*)::int FROM board_studies) AS board_studies
   `;
 
   const byPatch = await sql<{ patch: string; matches: number }[]>`
@@ -158,6 +166,10 @@ async function printStats(): Promise<void> {
     console.log("aggregates");
     console.log(`  published comps ${row.comps}`);
     console.log(`  comp_stats rows ${row.comp_stats}`);
+    console.log(`  augment rows    ${row.comp_augment_stats}`);
+    console.log(
+      `  AInalyses sets ${row.board_studies}  (patterns: ${row.board_patterns} rows)`,
+    );
   }
 
   const sets = await getSetSummary();
@@ -284,6 +296,7 @@ async function main(): Promise<void> {
       log.info("aggregation complete", {
         scopes: result.scopes.length,
         rowsWritten: result.rowsWritten,
+        augmentRows: result.augmentRowsWritten,
         compsLoaded: result.compsLoaded,
         threshold: config.assignThreshold,
       });
@@ -294,9 +307,17 @@ async function main(): Promise<void> {
         console.log(
           `  ${scope.patch} ${scope.region.padEnd(4)} boards=${String(scope.boards).padEnd(6)} ` +
             `classified=${String(scope.classified).padEnd(6)} unclassified=${scope.unclassified} (${share}%) ` +
-            `rows=${scope.rows}`,
+            `rows=${scope.rows} augmentRows=${scope.augmentRows}`,
         );
       }
+      break;
+    }
+
+    case "patterns": {
+      const summary = await refreshPatterns({
+        set: values.set ? intOption(values.set, 0) || undefined : undefined,
+      });
+      console.log(formatPatternReport(summary));
       break;
     }
 
@@ -306,6 +327,7 @@ async function main(): Promise<void> {
         seeded: result.bootstrapped.length,
         waitingForComps: result.waitingForComps.length,
         rowsWritten: result.rowsWritten,
+        augmentRows: result.augmentRowsWritten,
       });
 
       for (const scope of result.scopes) {
@@ -314,7 +336,7 @@ async function main(): Promise<void> {
         console.log(
           `  ${scope.patch} ${scope.region.padEnd(4)} boards=${String(scope.boards).padEnd(6)} ` +
             `classified=${String(scope.classified).padEnd(6)} unclassified=${scope.unclassified} (${share}%) ` +
-            `rows=${scope.rows}`,
+            `rows=${scope.rows} augmentRows=${scope.augmentRows}`,
         );
       }
       break;
@@ -454,6 +476,16 @@ async function main(): Promise<void> {
             log.info("aggregation refreshed", {
               scopes: refreshed.scopes.length,
               rows: refreshed.rowsWritten,
+            });
+
+            // AInalyses reads this snapshot, so it has to move on the same timer
+            // as comp_stats — a page mined once at launch would describe a meta
+            // that stopped existing weeks ago.
+            phase = "patterns";
+            const mined = await refreshPatterns();
+            log.info("patterns refreshed", {
+              sets: mined.sets.length,
+              rows: mined.rowsWritten,
             });
           }
         } catch (error) {

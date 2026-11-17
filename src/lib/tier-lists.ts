@@ -43,7 +43,7 @@ export type CustomTierList = {
   updatedAt: string;
 };
 
-export const STORAGE_KEY = "teeftee.custom-tier-lists.v1";
+export const STORAGE_KEY = "teeftee.custom-tier-lists.v2";
 
 export function emptyRows(): Record<TierRow, string[]> {
   return { S: [], A: [], B: [], C: [], D: [] };

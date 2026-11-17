@@ -1,0 +1,52 @@
+name: Post-deploy smoke
+
+# The deploy path is Vercel's, not this workflow's: production is promoted as soon
+# as a push lands, whether or not CI ran next to it. This listens for the deploy
+# Vercel reports as successful and checks the live origin, so "CI was green" is
+# never the last word on a release.
+on:
+  deployment_status:
+  workflow_dispatch:
+    inputs:
+      url:
+        description: "Base URL to check (blank: the deployment URL or PRODUCTION_URL)"
+        required: false
+        type: string
+
+concurrency:
+  group: post-deploy-smoke
+  cancel-in-progress: true
+
+jobs:
+  smoke:
+    # Vercel marks production deployments with the "Production" environment.
+    # Previews are skipped: their database is separate and often empty, so an
+    # "empty corpus" failure there would be noise rather than a broken deploy.
+    if: >
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.deployment_status.state == 'success' &&
+       github.event.deployment.environment == 'Production')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      SMOKE_URL: ${{ github.event.inputs.url || github.event.deployment_status.environment_url || vars.PRODUCTION_URL }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Resolve the origin
+        run: |
+          if [ -z "$SMOKE_URL" ]; then
+            echo "::error::No URL to check: the deployment reported none and PRODUCTION_URL is unset."
+            echo "Set the repository variable PRODUCTION_URL to the live origin (Settings → Secrets and variables → Actions → Variables)."
+            exit 1
+          fi
+          echo "Checking $SMOKE_URL"
+
+      - run: npm run smoke

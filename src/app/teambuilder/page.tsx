@@ -6,11 +6,14 @@ import {
   type BuilderTrait,
   type BuilderUnit,
 } from "@/components/team-builder";
+import { DataNote } from "@/components/data-note";
 import { site } from "@/content/site";
 import { BOARD_HEXES, decodeBoard } from "@/lib/board-codec";
-import { loadItemCatalogue } from "@/lib/items";
-import { loadTraitCatalogue } from "@/lib/traits";
-import { loadUnitCatalogue } from "@/lib/units";
+import {
+  loadSet19ItemCatalogue,
+  loadSet19TraitCatalogue,
+  loadSet19UnitCatalogue,
+} from "@/lib/set19-catalogue";
 
 export const metadata: Metadata = {
   title: "Teambuilder",
@@ -33,11 +36,12 @@ export default async function TeamBuilderPage({ searchParams }: { searchParams: 
   const { b } = await searchParams;
   const initialBoard = decodeBoard(b, BOARD_HEXES);
 
-  const [unitIndex, itemIndex, traitIndex] = await Promise.all([
-    loadUnitCatalogue(site.setNumber),
-    loadItemCatalogue(site.setNumber),
-    loadTraitCatalogue(site.setNumber),
+  const [unitIndex, itemCatalogue, traitIndex] = await Promise.all([
+    loadSet19UnitCatalogue(),
+    loadSet19ItemCatalogue(),
+    loadSet19TraitCatalogue(),
   ]);
+  const itemIndex = itemCatalogue.index;
 
   // One entry per catalogue row, keyed by Riot id. The catalogue lists the same
   // item name under several ids (base plus mode variants); the palette shows a
@@ -62,7 +66,7 @@ export default async function TeamBuilderPage({ searchParams }: { searchParams: 
       imageUrl: unit.imageUrl,
       traits: unit.traits,
     }))
-    .filter((unit) => unit.cost >= 1 && unit.cost <= 5)
+    .filter((unit) => unit.cost >= 1 && unit.cost <= 7)
     .sort((a, b) => a.cost - b.cost || a.name.localeCompare(b.name));
 
   const traits: BuilderTrait[] = Array.from(traitIndex ?? [])
@@ -85,6 +89,16 @@ export default async function TeamBuilderPage({ searchParams }: { searchParams: 
           Every champion in the set, the set's item list, and the full 4×7 half-board to
           lay them out on. Three items per champion — the same rules the game enforces.
         </p>
+        {itemCatalogue.provisional ? (
+          <div className="mt-4 max-w-2xl">
+            <DataNote>
+              Champions, costs and traits are the Set 19 reveal roster. The item palette is
+              the shared completed/component list from 18.6 until Riot ships the 19.1
+              catalogue; Set 19-only items and emblems appear once that load exists. Nothing
+              is invented to fill the gap.
+            </DataNote>
+          </div>
+        ) : null}
       </header>
 
       <TeamBuilder

@@ -3,7 +3,7 @@
 A TFT meta/stats site with a coaching funnel: high-elo comp stats, a curated meta
 layer, and the analysis seam that will hold the crawler.
 
-- **Source:** [github.com/HiddeHa/TeeFFTee](https://github.com/HiddeHa/TeeFFTee) (private)
+- **Source:** [github.com/HiddeHa/TeeFFTee](https://github.com/HiddeHa/TeeFFTee) (public)
 - **Live:** [production](https://site-1900fe11ad604367a670f605b0e64000.freebuff.page) · [preview](https://site-0d9595db583b49bc89a7346f70ea7437.freebuff.page)
 
 ## Planning documents
@@ -61,27 +61,43 @@ without it.
 | Route | State |
 |---|---|
 | `/` | Home: current patch, top comps, meta read teaser, coaching band |
-| `/meta` | Meta tier list, URL-driven patch / region / rank filters (`/comps` redirects here) |
+| `/meta` | Meta tier list by consensus letter, every source's letter printed beside it (`/comps` redirects here) |
+| `/meta/stats` | Every measured column per comp in one table: consensus, board cost, crawl sample, Wilson floor |
 | `/meta/[slug]` | Comp detail: board, stats, leveling, augments, matchups, your notes, inline CTA |
-| `/ainalyses` | Pattern mining over the crawled boards: units, the unit pairs played together, items, popular and best-finishing item × unit pairings, traits |
+| `/ainalyses` | Pattern mining over the crawled boards: units, the unit pairs and three-unit cores played together, items, popular and best-finishing item × unit pairings, traits — read from a snapshot `crawl -- patterns` materialises |
+| `/lab` | Comp discovery: recurring unit sets on the current patch with board counts, placement against the baseline, common items and traits, plus the share of boards the published comps could not classify |
 | `/leaderboards` | Tracked Master+ ladder by region, searchable by Riot ID or PUUID |
 | `/players/[puuid]` | One tracked account: Riot ID, ladder snapshot, its crawled placements |
+| `/teambuilder` | Hex-board planner over the set's champions and items; the board lives in the URL |
+| `/tier-lists` | Personal tier lists for units, items and augments, saved in the browser only |
+| `/guides`, `/guides/[slug]` | Long-form guides, each labelled measured versus judgement |
+| `/set-19` | The next set, overview: Riot-confirmed facts, coverage, dates and what is still unpublished; Units, Traits and Unlockables are sub-pages behind its tab bar |
+| `/set-19/units` | Set 19 roster: all 94 champions by shop cost, the two Akalis and the four 7-cost unlocks |
+| `/set-19/units/[champion]` | One Set 19 champion: cost, traits, any published unlock condition, and where each fact came from |
+| `/set-19/traits` | Set 19 traits: the 27 regular, 20 unique and 5 Prismatic traits with breakpoints and champions |
+| `/set-19/unlockables` | Set 19 unlocks: the three categories, the five cards Riot showed, and every published quest condition |
+| `/login` | Sign in with Freebuff: who you are, or the option to sign in; `/auth/freebuff/*` serves the flow |
 | `/patch/[patch]` | Patch summary, change list, movers, meta read |
 | `/coaching` | Offers and prices, process, FAQ, booking CTAs |
 | `/about` | Author credibility block and full methodology |
 | `/terms`, `/privacy` | Starter legal pages (Riot's production key review checks for these) |
 | `/sitemap.xml`, `/robots.txt` | Generated from content |
 
-## Replacing the placeholder content
+## Content and the placeholder flag
 
-The site currently ships **labelled placeholder content** — a banner on every page
-says so until you flip the flag. In order:
+The shipped content is real: ten Set 18 comps with their guides, the 18.6 patch
+entry, prices, the author block and the contact address (docs/decisions.md D3–D6).
+So [src/content/flags.ts](src/content/flags.ts) has `PLACEHOLDER_CONTENT = false` and
+no banner renders.
+
+The flag exists for the other direction. If any of the below becomes invented
+again, turn it back on rather than leaving copy that reads as finished:
 
 1. [src/content/site.ts](src/content/site.ts) — name, domain, author rank/proof, prices, booking link, socials, contact email.
-2. [src/content/comps.ts](src/content/comps.ts) — replace the three example comps with 8–12 real ones. Keep `coreUnits` and `definingTrait` accurate: together they are the assignment signature, and a board only counts toward a comp when that trait is active on it.
-3. [src/content/patches.ts](src/content/patches.ts) — write the 18.5 entry from Riot's notes, in your own words.
-4. [src/app/terms/page.tsx](src/app/terms/page.tsx) and [src/app/privacy/page.tsx](src/app/privacy/page.tsx) — fill the bracketed placeholders, then get them reviewed.
-5. [src/content/flags.ts](src/content/flags.ts) — set `PLACEHOLDER_CONTENT = false` once the above is true.
+2. [src/content/comps.ts](src/content/comps.ts) — keep `coreUnits` and `definingTrait` accurate: together they are the assignment signature, and a board only counts toward a comp when that trait is active on it.
+3. [src/content/patches.ts](src/content/patches.ts) — write each entry from Riot's notes in your own words.
+4. [src/app/terms/page.tsx](src/app/terms/page.tsx) and [src/app/privacy/page.tsx](src/app/privacy/page.tsx) — re-check if the business or the data handling changes.
+5. [src/content/flags.ts](src/content/flags.ts) — `PLACEHOLDER_CONTENT = true` the moment any of the above stops being true.
 
 ## Database
 
@@ -155,6 +171,7 @@ Postgres, so a crashed run resumes where it stopped instead of starting over.
 | `npm run crawl -- load-assets` | Load a set's units, traits, items and augments from Community Dragon |
 | `npm run crawl -- sync-comps` | Push curated comps from `src/content` into the `comps` table |
 | `npm run crawl -- aggregate` | Assign boards to comps and materialise `comp_stats` |
+| `npm run crawl -- patterns` | Materialise the AInalyses study for every crawled set (also runs on the aggregate timer) |
 | `npm run crawl -- bootstrap` | Seed `comp_stats` for any patch/region with games but no rows yet (also runs each loop cycle) |
 | `npm run crawl -- candidates` | Rank recurring unit sets in the crawled data (evidence for new comps) |
 | `npm run crawl -- once` | seed → discover → fetch, one pass |
@@ -184,6 +201,14 @@ Wilson 95% lower bound of their top-4 rate, so a 40-game comp cannot outrank a
 5,000-game one. Rank buckets describe provenance, not each player's rank: Riot
 does not expose rank-at-time-of-match, so a match counts toward `master+` when
 at least one participant is a tracked Master+ player.
+
+The same pass writes `comp_augment_stats`: one row per comp and augment taken by a
+board that comp classified, in the same scope and the same transaction as
+`comp_stats`. Counts only — the comp page derives the average finish, the share of
+the comp's boards and the delta against the comp's own average on read, and does
+not quote anything under 10 boards. Augments are offered on a stage roll rather
+than chosen from the pool, so the page labels the list as correlation: it says what
+boards that took the augment finished, not that taking it would improve a place.
 
 ```bash
 npm run crawl -- sync-comps   # after editing src/content/comps.ts
@@ -221,6 +246,31 @@ traits active on at least half of those boards — which is most of what the
 It is read-only: it never writes a comp, and it says nothing about whether a
 shape is *good* to recommend. That remains the editorial call. On 160,000 boards
 (about 20,000 matches) mining takes roughly 40 seconds and 160 MB.
+
+### Materialising the AInalyses study
+
+`/ainalyses` mines six patterns out of the stored boards: units, unit pairs, three-unit
+cores, items, item × unit (popular and best-finishing) and traits. The mining is a
+self-join over `participant_units` — twice for a pair, three times for a trio — so it runs
+here, once per aggregation cycle, instead of on every page request:
+
+```bash
+npm run crawl -- patterns              # every set with crawled boards
+npm run crawl -- patterns --set 18     # one set
+```
+
+It writes two derived tables:
+
+| Table | Holds |
+|---|---|
+| `board_studies` | one row per set: boards, matches, the placement baseline, the thresholds, `computed_at` |
+| `board_patterns` | one row per pattern: ids and counts (`sample`, `place_sum`, `top4_count`, `win_count`) plus the denominator an overlap needs |
+
+Counts and ids only. Averages, rates, the overlaps and every name and icon are derived on
+read ([src/lib/analysis.ts](src/lib/analysis.ts)) against the set catalogue, so a renamed
+unit converges instead of keeping a stale name in a derived table. A set's rows are
+replaced in one transaction; the page reads one study row and its patterns, and says
+“never mined” rather than showing zeroes when the job has not run yet.
 
 ### Loading a set's units, traits, items and augments
 
@@ -390,15 +440,16 @@ Freebuff URLs above provide.
 
 ## Status
 
-Built and verified: all v1 pages, the schema and legal pages, the crawl pipeline
-(seed → discover → fetch → normalise), comp assignment with Wilson bounds, the
-tier list and comp pages reading `comp_stats` with a content fallback, and the
-continuous containerised loop above.
+Built and verified: every route in the table above, the schema and legal pages, the
+crawl pipeline (seed → discover → fetch → normalise), comp assignment with Wilson
+bounds, the tier list and comp pages reading `comp_stats` with a content fallback,
+the materialised AInalyses study (`crawl -- patterns`), the tracked leaderboard and
+player profiles, and the continuous containerised loop.
 
 Deployed: production and preview both serve the current build from Freebuff Sites
 (above).
 
-Not yet done: the content is still placeholder (`PLACEHOLDER_CONTENT` in
-[src/content/flags.ts](src/content/flags.ts)) and there is no Riot **production**
-key yet (dev keys expire every 24 h). See
-[Phase 1](docs/roadmap.md#phase-1--crawler--aggregation) onward.
+Not yet done: there is no Riot **production** key yet (development keys expire every
+24 h), so the crawl only advances while one is supplied; Set 19 has no crawled
+boards until it launches, and every stats page stays on Set 18 until then. Sign in
+with Freebuff is wired but nothing is gated behind an account yet.

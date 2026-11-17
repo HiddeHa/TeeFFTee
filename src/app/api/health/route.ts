@@ -15,6 +15,8 @@ import { comparePatch } from "@/lib/stats-source";
  *      fall back to the curated snapshot.)
  *   2. Does the database hold a sample? A reachable but empty corpus renders
  *      "collecting data" everywhere, which is a failure before a set launches.
+ *   3. How old is the evidence? A stopped crawler and a stable meta look identical
+ *      from every page, so the crawl and aggregate ages travel with the payload.
  *
  * Why 503 for "empty" as well as "down": an uptime monitor only understands
  * status codes. Serving 200 while every comp says "collecting data" is exactly
@@ -52,6 +54,12 @@ type HealthPayload = {
     /** The single scope `classifiedGames` was counted in. Null when no rows. */
     classifiedScope: { patch: string; rankBucket: string } | null;
     latestPatch: string | null;
+    /** When the crawler last stored a match. Null before the first fetch. */
+    lastCrawlAt: string | null;
+    crawlAgeMinutes: number | null;
+    /** Matches whose game time falls inside the crawl window — the sample, not the archive. */
+    matchesInWindow: number;
+    windowHours: number;
     statsComputedAt: string | null;
     statsAgeMinutes: number | null;
   } | null;
@@ -101,6 +109,13 @@ function describeError(error: unknown): { message: string; code?: string } {
  * order, mirroring `DEFAULT_RANK` in src/lib/data.ts.
  */
 const RANK_PREFERENCE: RankBucket[] = ["master+", "diamond+", "all"];
+
+/**
+ * The crawl window, mirroring `CRAWL_DISCOVERY_WINDOW_HOURS` (worker/config.ts).
+ * `matchesInWindow` is the sample a fresh crawl would be looking at: a corpus can
+ * be large and entirely stale, so the archive size alone hides a stopped crawler.
+ */
+const CRAWL_WINDOW_HOURS = 72;
 
 type ScopeRow = { patch: string; rankBucket: string; games: number };
 
@@ -171,8 +186,24 @@ export async function GET() {
     const db = getDb();
 
     // One round trip: counts are cheap but each separate query costs a request.
-    const [matchRows, boardRows, compRows, statsRows, scopeRows, patchRows] = await Promise.all([
+    const [
+      matchRows,
+      crawlRows,
+      windowRows,
+      boardRows,
+      compRows,
+      statsRows,
+      scopeRows,
+      patchRows,
+    ] = await Promise.all([
       db.select({ n: count() }).from(matches),
+      db.select({ crawledAt: sql<unknown>`max(${matches.fetchedAt})` }).from(matches),
+      db
+        .select({ n: count() })
+        .from(matches)
+        .where(
+          sql`${matches.gameDatetime} >= now() - make_interval(hours => ${CRAWL_WINDOW_HOURS})`,
+        ),
       db.select({ n: count() }).from(participants),
       db.select({ n: count() }).from(comps).where(eq(comps.published, true)),
       db
@@ -201,6 +232,7 @@ export async function GET() {
 
     const latencyMs = Math.round(performance.now() - startedAt);
     const computedAt = toIso(statsRows[0]?.computedAt ?? null);
+    const lastCrawlAt = toIso(crawlRows[0]?.crawledAt ?? null);
     const scope = tierListScope(scopeRows);
 
     const corpus: NonNullable<HealthPayload["corpus"]> = {
@@ -214,6 +246,12 @@ export async function GET() {
       // catalogue row is only a fallback: `patches` is filled by the asset
       // loader, which may lag or be empty.
       latestPatch: scope?.patch ?? patchRows[0]?.patch ?? null,
+      lastCrawlAt,
+      crawlAgeMinutes: lastCrawlAt
+        ? Math.max(0, Math.round((Date.now() - new Date(lastCrawlAt).getTime()) / 60_000))
+        : null,
+      matchesInWindow: windowRows[0]?.n ?? 0,
+      windowHours: CRAWL_WINDOW_HOURS,
       statsComputedAt: computedAt,
       statsAgeMinutes: computedAt
         ? Math.max(0, Math.round((Date.now() - new Date(computedAt).getTime()) / 60_000))

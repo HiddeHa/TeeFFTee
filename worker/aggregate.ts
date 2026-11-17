@@ -31,6 +31,7 @@ type BoardRow = {
   set_number: number;
   units: string[];
   traits: string[];
+  augments: string[];
 };
 
 type Accumulator = { games: number; placeSum: number; top4: number; wins: number };
@@ -42,6 +43,8 @@ export type ScopeSummary = {
   classified: number;
   unclassified: number;
   rows: number;
+  /** Rows written to `comp_augment_stats` for this scope. */
+  augmentRows: number;
 };
 
 export type SetSummary = {
@@ -55,6 +58,7 @@ export type SetSummary = {
 export type AggregateSummary = {
   scopes: ScopeSummary[];
   rowsWritten: number;
+  augmentRowsWritten: number;
   compsLoaded: number;
   sets: SetSummary[];
 };
@@ -139,6 +143,7 @@ export async function aggregate(
   const summary: AggregateSummary = {
     scopes: [],
     rowsWritten: 0,
+    augmentRowsWritten: 0,
     compsLoaded: compRows.length,
     sets,
   };
@@ -174,13 +179,22 @@ export async function aggregate(
           SELECT array_agg(t.trait_id)
           FROM participant_traits t
           WHERE t.match_id = p.match_id AND t.puuid = p.puuid AND t.tier_current > 0
-        ), '{}') AS traits
+        ), '{}') AS traits,
+        -- Augments are read in the same pass rather than by a second scan: the
+        -- per-comp aggregate needs them only for boards it already classifies.
+        COALESCE((
+          SELECT array_agg(a.augment_id)
+          FROM participant_augments a
+          WHERE a.match_id = p.match_id AND a.puuid = p.puuid
+        ), '{}') AS augments
       FROM participants p
       JOIN scoped s ON s.match_id = p.match_id
     `;
 
     const bucketTotals = new Map<string, number>();
     const perBucketComp = new Map<string, Map<string, Accumulator>>();
+    /** bucket → comp → augment → counts. Augments are a subset of the comp's boards. */
+    const perBucketAugment = new Map<string, Map<string, Map<string, Accumulator>>>();
     const unclassifiedReasons = new Map<string, number>();
     let classifiedBoards = 0;
 
@@ -224,10 +238,42 @@ export async function aggregate(
         if (board.placement <= 4) accumulator.top4 += 1;
         if (board.placement === 1) accumulator.wins += 1;
         byComp.set(assignment.compId, accumulator);
+
+        // One row per augment this board took. A Set dedupes ids from a payload
+        // that listed the same augment twice; a board counts once per augment, so
+        // the augment sample can never exceed the comp's game count.
+        if (board.augments.length > 0) {
+          let byCompAugment = perBucketAugment.get(bucket);
+          if (!byCompAugment) {
+            byCompAugment = new Map<string, Map<string, Accumulator>>();
+            perBucketAugment.set(bucket, byCompAugment);
+          }
+
+          let byAugment = byCompAugment.get(assignment.compId);
+          if (!byAugment) {
+            byAugment = new Map<string, Accumulator>();
+            byCompAugment.set(assignment.compId, byAugment);
+          }
+
+          for (const augmentId of new Set(board.augments)) {
+            const augmentAcc = byAugment.get(augmentId) ?? {
+              games: 0,
+              placeSum: 0,
+              top4: 0,
+              wins: 0,
+            };
+            augmentAcc.games += 1;
+            augmentAcc.placeSum += board.placement;
+            if (board.placement <= 4) augmentAcc.top4 += 1;
+            if (board.placement === 1) augmentAcc.wins += 1;
+            byAugment.set(augmentId, augmentAcc);
+          }
+        }
       }
     }
 
     let rowsForScope = 0;
+    let augmentRowsForScope = 0;
 
     for (const [bucket, total] of bucketTotals) {
       const byComp = perBucketComp.get(bucket) ?? new Map<string, Accumulator>();
@@ -248,6 +294,24 @@ export async function aggregate(
         // did the lobby play this", not "how often when we could name it".
         boards: total,
       }));
+
+      // Every augment/comp pair that occurred. The read side decides what sample
+      // is worth quoting, so a threshold change does not need a re-mining pass.
+      const augmentRows = [
+        ...(perBucketAugment.get(bucket) ?? new Map<string, Map<string, Accumulator>>()),
+      ].flatMap(([compId, byAugment]) =>
+        [...byAugment].map(([augmentId, acc]) => ({
+          comp_id: compId,
+          patch: scope.patch,
+          region: scope.region,
+          rank_bucket: bucket,
+          augment_id: augmentId,
+          games: acc.games,
+          place_sum: acc.placeSum,
+          top4_count: acc.top4,
+          win_count: acc.wins,
+        })),
+      );
 
       await sql.begin(async (tx) => {
         await tx`
@@ -270,9 +334,33 @@ export async function aggregate(
             )}
           `;
         }
+
+        // Same transaction as comp_stats, so an augment row can never claim a
+        // scope whose comp row was not replaced with it.
+        await tx`
+          DELETE FROM comp_augment_stats
+          WHERE patch = ${scope.patch} AND region = ${scope.region} AND rank_bucket = ${bucket}
+        `;
+        if (augmentRows.length > 0) {
+          await tx`
+            INSERT INTO comp_augment_stats ${tx(
+              augmentRows,
+              "comp_id",
+              "patch",
+              "region",
+              "rank_bucket",
+              "augment_id",
+              "games",
+              "place_sum",
+              "top4_count",
+              "win_count",
+            )}
+          `;
+        }
       });
 
       rowsForScope += rows.length;
+      augmentRowsForScope += augmentRows.length;
     }
 
     const boardsInScope = bucketTotals.get("all") ?? 0;
@@ -285,8 +373,10 @@ export async function aggregate(
       classified: classifiedBoards,
       unclassified,
       rows: rowsForScope,
+      augmentRows: augmentRowsForScope,
     });
     summary.rowsWritten += rowsForScope;
+    summary.augmentRowsWritten += augmentRowsForScope;
 
     log.info("scope aggregated", {
       patch: scope.patch,
@@ -297,6 +387,7 @@ export async function aggregate(
       unclassifiedPct:
         boardsInScope === 0 ? 0 : Math.round((unclassified / boardsInScope) * 1000) / 10,
       rows: rowsForScope,
+      augmentRows: augmentRowsForScope,
       reasons: Object.fromEntries(unclassifiedReasons),
     });
   }
@@ -403,6 +494,7 @@ export async function bootstrapNewPatches(): Promise<BootstrapSummary> {
   const summary: BootstrapSummary = {
     scopes: [],
     rowsWritten: 0,
+    augmentRowsWritten: 0,
     compsLoaded: 0,
     sets: [],
     bootstrapped: plan.ready.map(({ patch, region }) => ({ patch, region })),
@@ -432,6 +524,7 @@ export async function bootstrapNewPatches(): Promise<BootstrapSummary> {
     const result = await aggregate({ patch: scope.patch, region: scope.region });
     summary.scopes.push(...result.scopes);
     summary.rowsWritten += result.rowsWritten;
+    summary.augmentRowsWritten += result.augmentRowsWritten;
     summary.compsLoaded = result.compsLoaded;
     summary.sets = result.sets;
   }

@@ -3,7 +3,9 @@ import Link from "next/link";
 
 import { AssetImage } from "@/components/asset-image";
 import { CompViewTabs } from "@/components/comp-view-tabs";
+import { DataAsOf } from "@/components/data-as-of";
 import { DataNote } from "@/components/data-note";
+import { Set19LaunchBand } from "@/components/set-19-launch-band";
 import { METHODOLOGY, site } from "@/content/site";
 import type { BoardUnit, Tier } from "@/content/types";
 import { COST_BORDER } from "@/lib/costs";
@@ -156,14 +158,13 @@ function BoardView({ comps }: { comps: CompListItem[] }) {
         <p className="text-muted">
           Sources averaged: TFT Academy, TFTactics, EmblemComp, MetaTFT, SeeMeta, Blitz,
           tft.ninja, MID.GG, Mobalytics and TFT Flow. Where two sites publish the same
-          board under different names — Sprykin Zyra, Flora Fatalis Azir and Executioner
-          Azir are one composition — the letters are pooled under the board, and the
+          board under different names, the letters are pooled under the board, and the
           published name travels with the letter.
         </p>
         <p className="text-muted">
-          Mobalytics entries whose boards could not be mapped to a unit list with
-          confidence (Wrath of the Woods, AD Exodia, B4L Power, Deadwood Execution) were
-          left out rather than guessed at. Every comp here has at least four sources.
+          Entries whose boards cannot be mapped to a unit list with confidence are left
+          out rather than guessed at. With no comps published for this set yet, these are
+          the rules that will apply when the first boards arrive.
         </p>
       </div>
 
@@ -198,8 +199,13 @@ function BoardView({ comps }: { comps: CompListItem[] }) {
       {comps.length === 0 ? (
         <div className="mt-6">
           <DataNote>
-            No published comps yet. Add them in{" "}
-            <code className="font-mono text-[11px]">src/content/comps.ts</code>.
+            No Set {site.setNumber} comps are published yet. The meta stays open: comps
+            appear here once the crawler has Set 19 boards to classify, and the Set 19
+            roster is on the{" "}
+            <Link href="/set-19" className="text-accent hover:underline">
+              reference pages
+            </Link>
+            . Nothing is copied over from Set 18.
           </DataNote>
         </div>
       ) : null}
@@ -222,15 +228,20 @@ export default async function CompsPage() {
 
   return (
     <div className="mx-auto max-w-6xl px-4 sm:px-6">
+      <Set19LaunchBand />
+
       <header className="py-10">
-        <p className="text-xs font-semibold uppercase tracking-wider text-accent">
-          Set {site.setNumber} · patch {site.currentPatch}
-        </p>
+        <div className="flex flex-wrap items-center gap-2">
+          <p className="text-xs font-semibold uppercase tracking-wider text-accent">
+            Set {site.setNumber} · patch {site.currentPatch}
+          </p>
+          <DataAsOf stats={comps.map((comp) => comp.visibleStats)} />
+        </div>
         <h1 className="mt-3 text-3xl font-semibold sm:text-4xl">Meta</h1>
         <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted">
-          {comps.length} comps, each lettered by the average of the published tier
-          lists that cover it. Every site&apos;s verdict is printed next to the score,
-          because an average you cannot audit is just an opinion with decimals.
+          {comps.length === 0
+            ? `No Set ${site.setNumber} comps are published yet. The tier list is open and will fill once the crawler has boards to classify — it is not being seeded with Set 18 boards.`
+            : `${comps.length} comps, each lettered by the average of the published tier lists that cover it. Every site's verdict is printed next to the score, because an average you cannot audit is just an opinion with decimals.`}
         </p>
       </header>
 
@@ -238,14 +249,19 @@ export default async function CompsPage() {
 
       <BoardView comps={comps} />
 
-      <p className="mt-6 text-sm text-muted">
-        Every comp here has a full guide — preconditions, the leave signal, and where the
-        guide is wrong.{" "}
-        <Link href={`/meta/${comps[0]?.slug ?? ""}`} className="font-semibold text-accent hover:underline">
-          Start with the top one
-        </Link>
-        .
-      </p>
+      {comps.length > 0 ? (
+        <p className="mt-6 text-sm text-muted">
+          Every comp here has a full guide — preconditions, the leave signal, and where the
+          guide is wrong.{" "}
+          <Link
+            href={`/meta/${comps[0]?.slug ?? ""}`}
+            className="font-semibold text-accent hover:underline"
+          >
+            Start with the top one
+          </Link>
+          .
+        </p>
+      ) : null}
     </div>
   );
 }

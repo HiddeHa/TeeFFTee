@@ -22,6 +22,20 @@
       "when": 1794742379836,
       "tag": "0002_spooky_giant_man",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1794750469270,
+      "tag": "0003_dusty_silk_fever",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1794819721653,
+      "tag": "0004_workable_maggott",
+      "breakpoints": true
     }
   ]
 }

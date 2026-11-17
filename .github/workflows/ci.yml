@@ -1,9 +1,10 @@
 name: CI
 
-# Every push, on every branch: the three gates this project actually relies on.
+# Every push, on every branch: the gates this project actually relies on.
 # `npx playwright test` builds and serves the app on :3100 itself, with
-# DATABASE_URL blanked, so the job needs no database, no secrets and no prior
-# build of its own.
+# DATABASE_URL blanked, so no job needs a database, secrets or a prior build.
+# The database specs run in the Playwright job and start their own Postgres
+# containers, so that runner needs Docker — ubuntu-latest has it.
 on:
   push:
 
@@ -13,6 +14,9 @@ concurrency:
 
 env:
   NEXT_TELEMETRY_DISABLED: "1"
+  # Dates are compared against local midnight (the Set 19 guard, the "data as of"
+  # chip), so a runner in another timezone must not change a result.
+  TZ: UTC
 
 jobs:
   typecheck-and-build:
@@ -30,6 +34,13 @@ jobs:
       - run: npm ci
 
       - run: npm run typecheck
+
+      # The unit suite and the content gate run before the build, so a push cannot
+      # be green while the statistical core is broken or the set switch was missed
+      # (the Set 19 guard lives in check:content).
+      - run: npm run test:unit
+
+      - run: npm run check:content
 
       # No DATABASE_URL in CI: the build reads the committed catalogue snapshot,
       # which is exactly how the deployed Worker renders too.
@@ -54,6 +65,10 @@ jobs:
 
       # The config switches the reporter to github + html and turns on retries
       # when CI is set, which Actions does for every step.
+      # A skipped spec fails the run from inside it (e2e/skip-guard.ts): the
+      # database specs skip themselves rather than fail when the throwaway
+      # Postgres cannot start, which used to leave a green run missing half the
+      # integration coverage.
       - run: npx playwright test
 
       - name: Upload the report

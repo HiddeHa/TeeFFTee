@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import type { Tier } from "@/content/types";
 import type { CompListItem } from "@/lib/data";
 import { classNames, formatDate, formatGames, formatPercent, formatPlace } from "@/lib/format";
@@ -83,8 +85,7 @@ export function CompStatsTable({
   if (comps.length === 0) {
     return (
       <p className="mt-4 rounded-lg border border-dashed border-line bg-surface/60 px-3 py-2 text-xs leading-relaxed text-muted">
-        No comps to tabulate yet. Add them in{" "}
-        <code className="font-mono text-[11px]">src/content/comps.ts</code>.
+        No comps to tabulate for this set yet. The table fills once comps are published.
       </p>
     );
   }
@@ -180,12 +181,15 @@ export function CompStatsTable({
                       >
                         {comp.tier}
                       </span>
-                      <a
+                      {/* Next's Link, not a plain anchor: this table is the
+                          densest navigation on the site, and a full reload per
+                          row throws away the client router for no reason. */}
+                      <Link
                         href={`/meta/${comp.slug}`}
                         className="whitespace-nowrap font-semibold hover:text-accent"
                       >
                         {comp.name}
-                      </a>
+                      </Link>
                     </span>
                   </th>
 

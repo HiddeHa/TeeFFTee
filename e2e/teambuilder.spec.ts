@@ -18,20 +18,20 @@ test.beforeEach(async ({ page }) => {
 });
 
 test("a champion dropped from the pool fills a hex you can see", async ({ page }) => {
-  await championTile(page, "Akali").click();
+  await championTile(page, "Elise").click();
 
   await expect(progress(page)).toContainText("1 of 28 hexes filled");
-  await expect(hex(page, 0)).toHaveAttribute("aria-label", "Akali — 1 star — 0 of 3 items");
+  await expect(hex(page, 0)).toHaveAttribute("aria-label", "Elise — 1 star — 0 of 3 items");
   // The regression: the unit used to land on a board that had scrolled away.
   await expect(hex(page, 0)).toBeInViewport();
 });
 
 test("champions fill the front line in order", async ({ page }) => {
-  await championTile(page, "Akali").click();
+  await championTile(page, "Elise").click();
   await championTile(page, "Leona").click();
 
   await expect(progress(page)).toContainText("2 of 28 hexes filled");
-  await expect(hex(page, 0)).toHaveAttribute("aria-label", /^Akali — 1 star/);
+  await expect(hex(page, 0)).toHaveAttribute("aria-label", /^Elise — 1 star/);
   await expect(hex(page, 1)).toHaveAttribute("aria-label", /^Leona — 1 star/);
   await expect(hex(page, 2)).toHaveAttribute("aria-label", "Empty hex");
 });
@@ -47,22 +47,22 @@ test("a selected hex is where the next champion lands", async ({ page }) => {
 });
 
 test("the board survives a reload through the URL", async ({ page }) => {
-  await championTile(page, "Akali").click();
+  await championTile(page, "Elise").click();
   await championTile(page, "Leona").click();
-  await expect(page).toHaveURL(/\/teambuilder\?b=0:DA_18_Akali_AD:1:;1:DA_18_Leona:1:/);
+  await expect(page).toHaveURL(/\/teambuilder\?b=0:SET19_elise:1:;1:SET19_leona:1:/);
 
   await page.reload();
 
   await expect(progress(page)).toContainText("2 of 28 hexes filled");
-  await expect(hex(page, 0)).toHaveAttribute("aria-label", /^Akali — 1 star/);
+  await expect(hex(page, 0)).toHaveAttribute("aria-label", /^Elise — 1 star/);
   await expect(hex(page, 1)).toHaveAttribute("aria-label", /^Leona — 1 star/);
 });
 
 test("the 1-cost filter offers champions, not summons", async ({ page }) => {
   await page.getByRole("button", { name: "1c", exact: true }).click();
 
-  // Set 18 ships fourteen champions at 1 cost.
-  await expect(page.locator('button[title$="· 1 cost"]')).toHaveCount(14);
+  // Set 19 ships fifteen champions at 1 cost.
+  await expect(page.locator('button[title$="· 1 cost"]')).toHaveCount(15);
 
   // Summons, PvE monsters and the loot anvils arrive from Community Dragon with
   // cost 1 and no traits; none of them is for sale in the shop.
@@ -81,11 +81,11 @@ test("the 1-cost filter offers champions, not summons", async ({ page }) => {
     await expect(page.locator(`button[title="${notAChampion} · 1 cost"]`)).toHaveCount(0);
   }
 
-  await expect(page.locator('button[title="Akali · 1 cost"]')).toBeVisible();
+  await expect(page.locator('button[title="Elise · 1 cost"]')).toBeVisible();
 });
 
 test("items: three per champion, and never the same one twice", async ({ page }) => {
-  await championTile(page, "Akali").click();
+  await championTile(page, "Elise").click();
   const akali = hex(page, 0);
 
   // An equipped item is also a button — on the champion, to take it off again —
@@ -103,24 +103,24 @@ test("items: three per champion, and never the same one twice", async ({ page })
   };
 
   await equip("Infinity Edge");
-  await expect(akali).toHaveAttribute("aria-label", "Akali — 1 star — 1 of 3 items");
+  await expect(akali).toHaveAttribute("aria-label", "Elise — 1 star — 1 of 3 items");
 
   // The same item cannot be stacked on one champion.
   await equip("Infinity Edge");
-  await expect(akali).toHaveAttribute("aria-label", "Akali — 1 star — 1 of 3 items");
+  await expect(akali).toHaveAttribute("aria-label", "Elise — 1 star — 1 of 3 items");
 
   await equip("Blue Buff");
   await equip("Rabadon's Deathcap");
-  await expect(akali).toHaveAttribute("aria-label", "Akali — 1 star — 3 of 3 items");
+  await expect(akali).toHaveAttribute("aria-label", "Elise — 1 star — 3 of 3 items");
 
   // A fourth item is refused.
   await palette.getByRole("button", { name: "Bloodthirster", exact: true }).click();
   await akali.click();
-  await expect(akali).toHaveAttribute("aria-label", "Akali — 1 star — 3 of 3 items");
+  await expect(akali).toHaveAttribute("aria-label", "Elise — 1 star — 3 of 3 items");
 });
 
 test("a champion can be taken off, and the board cleared", async ({ page }) => {
-  await championTile(page, "Akali").click();
+  await championTile(page, "Elise").click();
   await championTile(page, "Leona").click();
   await expect(progress(page)).toContainText("2 of 28 hexes filled");
 
@@ -139,17 +139,17 @@ test("star levels travel with the champion", async ({ page }) => {
   await page.getByRole("button", { name: "Set 3 star" }).click();
 
   await expect(hex(page, 0)).toHaveAttribute("aria-label", "Leona — 3 star — 0 of 3 items");
-  await expect(page).toHaveURL(/b=0:DA_18_Leona:3:/);
+  await expect(page).toHaveURL(/b=0:SET19_leona:3:/);
 });
 
 test("a broken share link renders what it can parse", async ({ page }) => {
   // Out-of-range hex, an id with spaces: both are dropped, not repaired.
-  await page.goto("/teambuilder?b=99:DA_18_Akali_AD:1:;2:not%20a%20unit!:1:");
+  await page.goto("/teambuilder?b=99:SET19_elise:1:;2:not%20a%20unit!:1:");
   await expect(progress(page)).toContainText("0 of 28 hexes filled");
 
   // Duplicate items collapse and the list is capped at three.
   await page.goto(
-    "/teambuilder?b=3:DA_18_Kobuko:2:TFT_Item_BlueBuff,TFT_Item_BlueBuff,TFT_Item_InfinityEdge,TFT_Item_RabadonsDeathcap",
+    "/teambuilder?b=3:SET19_kobuko:2:TFT_Item_BlueBuff,TFT_Item_BlueBuff,TFT_Item_InfinityEdge,TFT_Item_RabadonsDeathcap",
   );
   await expect(progress(page)).toContainText("1 of 28 hexes filled");
   await expect(hex(page, 3)).toHaveAttribute("aria-label", "Kobuko — 2 star — 3 of 3 items");
@@ -174,44 +174,42 @@ test("the board is the game's four rows of seven", async ({ page }) => {
 });
 
 test("a champion can be dragged from the pool onto a chosen hex", async ({ page }) => {
-  // The tile's artwork must not win the drag gesture, or the button never gets it.
-  await expect(page.locator('button[title$=" cost"] img').first()).toHaveAttribute(
-    "draggable",
-    "false",
-  );
+  // Set 19 has no catalogue icons yet, so there is no artwork to intercept the
+  // drag; the tile itself must still be a drag source.
+  await expect(page.locator('button[title$=" cost"] img')).toHaveCount(0);
 
-  await championTile(page, "Akali").dragTo(hex(page, 9));
+  await championTile(page, "Elise").dragTo(hex(page, 9));
 
-  await expect(hex(page, 9)).toHaveAttribute("aria-label", "Akali — 1 star — 0 of 3 items");
+  await expect(hex(page, 9)).toHaveAttribute("aria-label", "Elise — 1 star — 0 of 3 items");
   await expect(hex(page, 0)).toHaveAttribute("aria-label", "Empty hex");
   await expect(progress(page)).toContainText("1 of 28 hexes filled");
 });
 
 test("a placed champion drags to another hex, star level and all", async ({ page }) => {
-  await championTile(page, "Akali").click();
+  await championTile(page, "Elise").click();
   await hex(page, 0).click();
   await page.getByRole("button", { name: "Set 2 star" }).click();
 
   await hex(page, 0).dragTo(hex(page, 12));
 
-  await expect(hex(page, 12)).toHaveAttribute("aria-label", "Akali — 2 star — 0 of 3 items");
+  await expect(hex(page, 12)).toHaveAttribute("aria-label", "Elise — 2 star — 0 of 3 items");
   await expect(hex(page, 0)).toHaveAttribute("aria-label", "Empty hex");
   await expect(progress(page)).toContainText("1 of 28 hexes filled");
 });
 
 test("dragging one champion onto another swaps them", async ({ page }) => {
-  await championTile(page, "Akali").click();
+  await championTile(page, "Elise").click();
   await championTile(page, "Leona").click();
 
   await hex(page, 0).dragTo(hex(page, 1));
 
   await expect(hex(page, 0)).toHaveAttribute("aria-label", /^Leona — 1 star/);
-  await expect(hex(page, 1)).toHaveAttribute("aria-label", /^Akali — 1 star/);
+  await expect(hex(page, 1)).toHaveAttribute("aria-label", /^Elise — 1 star/);
   await expect(progress(page)).toContainText("2 of 28 hexes filled");
 });
 
 test("an item can be dragged from the palette onto a champion", async ({ page }) => {
-  await championTile(page, "Akali").click();
+  await championTile(page, "Elise").click();
   const akali = hex(page, 0);
 
   const palette = page
@@ -220,19 +218,19 @@ test("an item can be dragged from the palette onto a champion", async ({ page })
 
   await palette.getByRole("button", { name: "Infinity Edge", exact: true }).dragTo(akali);
 
-  await expect(akali).toHaveAttribute("aria-label", "Akali — 1 star — 1 of 3 items");
+  await expect(akali).toHaveAttribute("aria-label", "Elise — 1 star — 1 of 3 items");
 
   // The same item cannot be stacked by drag either, and an empty hex takes none.
   await palette.getByRole("button", { name: "Infinity Edge", exact: true }).dragTo(akali);
-  await expect(akali).toHaveAttribute("aria-label", "Akali — 1 star — 1 of 3 items");
+  await expect(akali).toHaveAttribute("aria-label", "Elise — 1 star — 1 of 3 items");
 
   await palette.getByRole("button", { name: "Blue Buff", exact: true }).dragTo(hex(page, 5));
   await expect(hex(page, 5)).toHaveAttribute("aria-label", "Empty hex");
-  await expect(akali).toHaveAttribute("aria-label", "Akali — 1 star — 1 of 3 items");
+  await expect(akali).toHaveAttribute("aria-label", "Elise — 1 star — 1 of 3 items");
 });
 
 test("a fourth item is refused by drag", async ({ page }) => {
-  await championTile(page, "Akali").click();
+  await championTile(page, "Elise").click();
   const akali = hex(page, 0);
 
   const palette = page
@@ -243,16 +241,16 @@ test("a fourth item is refused by drag", async ({ page }) => {
     await palette.getByRole("button", { name: item, exact: true }).dragTo(akali);
   }
 
-  await expect(akali).toHaveAttribute("aria-label", "Akali — 1 star — 3 of 3 items");
+  await expect(akali).toHaveAttribute("aria-label", "Elise — 1 star — 3 of 3 items");
 });
 
 test("a pool champion dropped on an occupied hex leaves it alone", async ({ page }) => {
-  await championTile(page, "Akali").click();
+  await championTile(page, "Elise").click();
 
   await championTile(page, "Leona").dragTo(hex(page, 0));
 
   // Replacing a champion would throw away its star level and items without a word.
-  await expect(hex(page, 0)).toHaveAttribute("aria-label", /^Akali — 1 star/);
+  await expect(hex(page, 0)).toHaveAttribute("aria-label", /^Elise — 1 star/);
   await expect(progress(page)).toContainText("1 of 28 hexes filled");
 });
 

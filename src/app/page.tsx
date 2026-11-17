@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { CoachingCTA } from "@/components/coaching-cta";
 import { DataNote } from "@/components/data-note";
+import { Set19LaunchBand } from "@/components/set-19-launch-band";
 import { TierBadge } from "@/components/tier-badge";
 import { site } from "@/content/site";
 import { getCurrentPatch, getRankedComps, listComps, totalGames } from "@/lib/data";
@@ -22,6 +23,8 @@ export default async function HomePage() {
 
   return (
     <div className="mx-auto max-w-6xl px-4 sm:px-6">
+      <Set19LaunchBand />
+
       {/* Hero */}
       <section className="py-12 sm:py-16">
         <p className="text-xs font-semibold uppercase tracking-wider text-accent">
@@ -79,8 +82,9 @@ export default async function HomePage() {
         <div className="mt-5 space-y-2">
           {ranked.length === 0 ? (
             <DataNote>
-              No comp has a sample yet for patch {site.currentPatch}. The crawler fills
-              this in within a few hours of a patch going live.
+              {compCount === 0
+                ? `No Set ${site.setNumber} comps are published yet. The meta is open and will fill once the crawler has boards to classify — Set 18 comps are not carried over as if they described this set.`
+                : `No comp has a sample yet for patch ${site.currentPatch}. The crawler fills this in within a few hours of a patch going live.`}
             </DataNote>
           ) : (
             ranked.map((comp) => {

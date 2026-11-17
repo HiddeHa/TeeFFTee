@@ -293,7 +293,7 @@ export async function loadBoards(scope: Scope): Promise<Board[]> {
   `;
 }
 
-type UnitRow = {
+export type UnitDetailRow = {
   unitId: string;
   star: number;
   item0: string | null;
@@ -302,52 +302,20 @@ type UnitRow = {
 };
 
 /**
- * Star levels and items for the units of one core, measured only on boards that
- * contained the whole core — an item's share is meaningless if it is averaged
- * over boards playing a different comp.
+ * Item-unit miner: one row per core unit per board → per-unit appearances, star
+ * average and the items it held most often.
+ *
+ * The share denominator is appearances, not item slots: a unit played with no
+ * items still counts, so shares stay comparable across units that itemise
+ * differently. Only the top two items are kept — that is what the page shows —
+ * and a tie keeps the payload's slot order (`item0`, `item1`, `item2`).
+ *
+ * Pure and exported so the rule can be tested without a database.
  */
-export async function loadUnitDetail(scope: Scope, coreUnits: string[]): Promise<UnitDetail[]> {
-  const sql = db();
-  const setNumber = scope.setNumber ?? null;
-  const patch = scope.patch ?? null;
-  const region = scope.region ?? null;
-  const masterOnly = scope.bucket === "master+" ? "master+" : null;
-
-  const rows = await sql<UnitRow[]>`
-    WITH scoped AS (
-      SELECT
-        m.match_id,
-        EXISTS (
-          SELECT 1
-          FROM participants p2
-          JOIN players pl ON pl.puuid = p2.puuid
-          WHERE p2.match_id = m.match_id
-            AND pl.tier IN ('MASTER', 'GRANDMASTER', 'CHALLENGER')
-        ) AS master_plus
-      FROM matches m
-      WHERE (${setNumber}::int IS NULL OR m.set_number = ${setNumber})
-        AND (${patch}::text IS NULL OR m.patch = ${patch})
-        AND (${region}::text IS NULL OR m.region = ${region})
-    ),
-    core_boards AS (
-      SELECT u.match_id, u.puuid
-      FROM participant_units u
-      JOIN scoped s ON s.match_id = u.match_id
-      WHERE (${masterOnly}::text IS NULL OR s.master_plus)
-        AND u.unit_id = ANY(${coreUnits}::text[])
-      GROUP BY u.match_id, u.puuid
-      HAVING count(DISTINCT u.unit_id) = ${coreUnits.length}
-    )
-    SELECT
-      u.unit_id AS "unitId",
-      u.star_level AS star,
-      u.item_0 AS item0,
-      u.item_1 AS item1,
-      u.item_2 AS item2
-    FROM participant_units u
-    JOIN core_boards c ON c.match_id = u.match_id AND c.puuid = u.puuid
-  `;
-
+export function summariseUnitItems(
+  rows: UnitDetailRow[],
+  coreUnits: string[],
+): UnitDetail[] {
   const byUnit = new Map<
     string,
     { appearances: number; starSum: number; items: Map<string, number> }
@@ -387,6 +355,56 @@ export async function loadUnitDetail(scope: Scope, coreUnits: string[]): Promise
         })),
     };
   });
+}
+
+/**
+ * Star levels and items for the units of one core, measured only on boards that
+ * contained the whole core — an item's share is meaningless if it is averaged
+ * over boards playing a different comp.
+ */
+export async function loadUnitDetail(scope: Scope, coreUnits: string[]): Promise<UnitDetail[]> {
+  const sql = db();
+  const setNumber = scope.setNumber ?? null;
+  const patch = scope.patch ?? null;
+  const region = scope.region ?? null;
+  const masterOnly = scope.bucket === "master+" ? "master+" : null;
+
+  const rows = await sql<UnitDetailRow[]>`
+    WITH scoped AS (
+      SELECT
+        m.match_id,
+        EXISTS (
+          SELECT 1
+          FROM participants p2
+          JOIN players pl ON pl.puuid = p2.puuid
+          WHERE p2.match_id = m.match_id
+            AND pl.tier IN ('MASTER', 'GRANDMASTER', 'CHALLENGER')
+        ) AS master_plus
+      FROM matches m
+      WHERE (${setNumber}::int IS NULL OR m.set_number = ${setNumber})
+        AND (${patch}::text IS NULL OR m.patch = ${patch})
+        AND (${region}::text IS NULL OR m.region = ${region})
+    ),
+    core_boards AS (
+      SELECT u.match_id, u.puuid
+      FROM participant_units u
+      JOIN scoped s ON s.match_id = u.match_id
+      WHERE (${masterOnly}::text IS NULL OR s.master_plus)
+        AND u.unit_id = ANY(${coreUnits}::text[])
+      GROUP BY u.match_id, u.puuid
+      HAVING count(DISTINCT u.unit_id) = ${coreUnits.length}
+    )
+    SELECT
+      u.unit_id AS "unitId",
+      u.star_level AS star,
+      u.item_0 AS item0,
+      u.item_1 AS item1,
+      u.item_2 AS item2
+    FROM participant_units u
+    JOIN core_boards c ON c.match_id = u.match_id AND c.puuid = u.puuid
+  `;
+
+  return summariseUnitItems(rows, coreUnits);
 }
 
 function traitShares(

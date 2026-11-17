@@ -25,11 +25,11 @@ export const site = {
     process.env.NEXT_PUBLIC_BOOKING_URL ??
     "mailto:hidde.hanning.bee@gmail.com?subject=TeeFFTee%20coaching",
 
-  /** Current live set. Set 19 lands the week of 2026-12-01. */
-  setNumber: 18,
-  setCodename: "Enchanted Wilds",
-  currentPatch: "18.6",
-  currentPatchDate: "2026-11-04",
+  /** Current set. The site now reads Set 19 from the reveal roster. */
+  setNumber: 19,
+  setCodename: "Prismatic Tour",
+  currentPatch: "19.1",
+  currentPatchDate: "2026-12-01",
 
   /** Regions the crawler seeds. Shown as filters, so keep in sync with the data. */
   regions: ["EUW", "KR"] as Region[],

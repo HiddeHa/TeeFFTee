@@ -140,6 +140,38 @@ function searchPattern(query: string): string {
   return `%${query.replace(/[\\%_]/g, (match) => `\\${match}`)}%`;
 }
 
+/**
+ * What a typed query matches.
+ *
+ * A Riot ID is `Name#TAG`, and that is exactly how the leaderboard prints a
+ * player — so a pasted one has to work. Matching the whole string against either
+ * half finds nothing (neither field contains the `#`), so the hash splits it and
+ * both halves must match. A bare fragment still searches names, tags and the
+ * PUUID, and a trailing `#` narrows by the name typed before it.
+ */
+function searchCondition(query: string) {
+  const hash = query.indexOf("#");
+  if (hash >= 0) {
+    const name = query.slice(0, hash).trim();
+    const tag = query.slice(hash + 1).trim();
+
+    if (name && tag) {
+      return and(
+        ilike(players.gameName, searchPattern(name)),
+        ilike(players.tagLine, searchPattern(tag)),
+      );
+    }
+    if (name) return ilike(players.gameName, searchPattern(name));
+  }
+
+  const pattern = searchPattern(query);
+  return or(
+    ilike(players.gameName, pattern),
+    ilike(players.tagLine, pattern),
+    eq(players.puuid, query),
+  );
+}
+
 let warnedAboutDatabase = false;
 
 /**
@@ -167,17 +199,10 @@ export async function listTrackedPlayers({
     return { kind: "unavailable" };
   }
 
-  // A search matches either half of the Riot ID or the PUUID itself, because a
-  // PUUID is what people paste out of a client. `and()` drops undefined parts.
+  // A search matches a Riot ID, one of its halves, or the PUUID itself — a PUUID
+  // is what people paste out of the client. `and()` drops undefined parts.
   const trimmed = query?.trim() ?? "";
-  const pattern = trimmed ? searchPattern(trimmed) : "";
-  const search = trimmed
-    ? or(
-        ilike(players.gameName, pattern),
-        ilike(players.tagLine, pattern),
-        eq(players.puuid, trimmed),
-      )
-    : undefined;
+  const search = trimmed ? searchCondition(trimmed) : undefined;
   const where = and(region ? eq(players.region, region) : undefined, search);
 
   try {

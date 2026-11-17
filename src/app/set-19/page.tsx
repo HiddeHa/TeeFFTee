@@ -2,34 +2,30 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { DataNote } from "@/components/data-note";
+import { Set19StatusTag } from "@/components/set19-status-tag";
+import { Set19Tabs } from "@/components/set-19-tabs";
 import {
   SET_19_AS_OF,
   set19,
   set19Confirmed,
-  set19CostCurve,
   set19DevDropStats,
   set19Mechanics,
-  set19PrismaticTraits,
   set19Schedule,
   set19Sources,
-  set19Traits,
-  set19UniqueTraits,
-  set19UnlockCategories,
-  set19UnlockQuests,
   set19Unknowns,
-  set19Unlocks,
   type RevealStatus,
-  type TraitEntry,
 } from "@/content/set-19";
 import { site } from "@/content/site";
-import { classNames, formatDate } from "@/lib/format";
+import { loadDataHealth, type DataHealth } from "@/lib/data-health";
+import { classNames, formatDate, formatPercent } from "@/lib/format";
+import { isSet19Live } from "@/lib/set-launch";
 
 /**
- * Daily, because the launch chip is a fact about today rather than about the
- * build: a page rendered on 15 November that still says "Live" on 3 December is
- * worse than one that says nothing.
+ * Hourly, because the launch chip and the collecting-data state are facts about
+ * today rather than about the build: a page rendered on 15 November that still
+ * says "Launches" on 3 December is worse than one that says nothing.
  */
-export const revalidate = 86_400;
+export const revalidate = 3_600;
 
 export const metadata: Metadata = {
   title: `Set ${set19.number}: ${set19.name}`,
@@ -38,70 +34,62 @@ export const metadata: Metadata = {
   alternates: { canonical: "/set-19" },
 };
 
-const STATUS_LABEL: Record<RevealStatus, string> = {
-  riot: "From Riot",
-  devdrop: "Dev Drop",
-  coverage: "Coverage, not Riot",
-  unknown: "Not announced",
-};
-
-function StatusTag({ status }: { status: RevealStatus }) {
-  return (
-    <span
-      className={classNames(
-        "rounded border px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider",
-        status === "riot" && "border-accent/40 bg-accent/10 text-accent",
-        status === "devdrop" && "border-good/40 bg-good/10 text-good",
-        status === "coverage" && "border-line bg-raised text-muted",
-        status === "unknown" && "border-dashed border-line bg-transparent text-muted/80",
-      )}
-    >
-      {STATUS_LABEL[status]}
-    </span>
-  );
-}
-
-/** One trait: breakpoints on the right, what it does, and who has it. */
-function TraitRow({ trait }: { trait: TraitEntry }) {
-  return (
-    <li className="card px-3 py-2.5">
-      <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
-        <h3 className="flex flex-wrap items-center gap-2 text-sm font-semibold">
-          {trait.name}
-          {trait.prismatic ? (
-            <span className="rounded border border-accent/40 bg-accent/10 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-accent">
-              Prismatic
-            </span>
-          ) : null}
-        </h3>
-        <span className="stat-value shrink-0 text-[11px] text-muted">{trait.breakpoints}</span>
-      </div>
-      <p className="mt-1.5 text-[13px] leading-relaxed text-muted">{trait.gist}</p>
-      <p className="mt-1.5 text-[11px] leading-relaxed text-muted/80">{trait.champions}</p>
-    </li>
-  );
-}
-
 function Fact({ title, body, status }: { title: string; body: string; status: RevealStatus }) {
   return (
     <li className="card p-4">
       <div className="flex flex-wrap items-start justify-between gap-2">
         <h3 className="text-sm font-semibold">{title}</h3>
-        <StatusTag status={status} />
+        <Set19StatusTag status={status} />
       </div>
       <p className="mt-2 text-[13px] leading-relaxed text-muted">{body}</p>
     </li>
   );
 }
 
-export default function Set19Page() {
-  // Riot's own date decides the label, so the page cannot call a set live a
-  // fortnight early. An unreadable date falls back to the launch wording — the
-  // conservative answer — instead of claiming a status nobody can check.
-  const launchedAt = new Date(set19.launchDate);
-  const isLive =
-    !Number.isNaN(launchedAt.getTime()) && Date.now() >= launchedAt.getTime();
+function LiveDataState({ health }: { health: DataHealth | null }) {
+  if (health === null) {
+    return (
+      <DataNote>
+        Set {set19.number} is live, but no crawler database is attached here, so there are
+        no Set {set19.number} numbers to show. Comps and tier lists on this site come from
+        crawled boards; nothing is estimated in the meantime.
+      </DataNote>
+    );
+  }
 
+  if (health.aggregation === null) {
+    return (
+      <DataNote>
+        Set {set19.number} is live. {health.matches.toLocaleString("en-GB")} matches on patch{" "}
+        {health.patch} have been crawled, but none have been aggregated yet — the
+        collecting-data figures appear after the next aggregation pass. Runs every 30
+        minutes while the crawler is up.
+      </DataNote>
+    );
+  }
+
+  return (
+    <DataNote>
+      Collecting Set {set19.number} data: {
+        (health.aggregation.boards - health.aggregation.classified).toLocaleString("en-GB")
+      }{" "}
+      of {health.aggregation.boards.toLocaleString("en-GB")} Master+ boards on patch{" "}
+      {health.patch} ({formatPercent(health.aggregation.share, 1)}) are not yet claimed by a
+      published comp. {health.matches.toLocaleString("en-GB")} matches crawled. Boards that
+      match nothing are counted rather than hidden — see{" "}
+      <Link href="/meta/stats" className="text-accent hover:underline">
+        data health
+      </Link>
+      .
+    </DataNote>
+  );
+}
+
+export default async function Set19Page() {
+  // The same clock as the stale-set guard and the launch band, so this page cannot
+  // disagree with either about whether launch day has arrived.
+  const isLive = isSet19Live();
+  const health = isLive ? await loadDataHealth(set19.number, set19.patch) : null;
   return (
     <div className="mx-auto max-w-3xl px-4 sm:px-6">
       <header className="py-12">
@@ -112,11 +100,12 @@ export default function Set19Page() {
           94 champions, five Prismatic traits, and a soundtrack that reads your board.
         </h1>
         <p className="mt-4 text-sm leading-relaxed text-muted">
-          Prismatic Tour opens with patch {set19.patch}, and this page sorts what is known by
-          where it came from: Riot&apos;s own posts, Riot&apos;s Dev Drop as read through a
-          third-party reveal, and coverage nobody has confirmed. There are no comps, tier list or
-          stats for it here yet — {site.name} builds those from crawled boards, and Set{" "}
-          {set19.number} has none until it goes live.
+          Prismatic Tour {isLive ? "is live" : "opens"} with patch {set19.patch}, and these pages
+          sort what is known by where it came from: Riot&apos;s own posts, Riot&apos;s Dev Drop as
+          read through a third-party reveal, and coverage nobody has confirmed.{" "}
+          {isLive
+            ? `Comps and tier lists come from crawled Set ${set19.number} boards; the roster and unlock pages remain the reference layer.`
+            : `The roster, teambuilder and tier-list maker already read Set ${set19.number}; comps and stats stay empty until the set is live.`}
         </p>
 
         <div className="mt-5 flex flex-wrap gap-1.5">
@@ -131,14 +120,25 @@ export default function Set19Page() {
         </div>
       </header>
 
-      <DataNote>
-        Riot&apos;s Dev Drop aired on {set19.devDropDate} and published the whole roster, the trait
-        list with its breakpoints, and the unlock conditions. Riot has not posted a written version
-        of it, so everything tagged “Dev Drop” below is Riot&apos;s content read through third-party
-        reveal pages on {formatDate(SET_19_AS_OF)} — the details are Riot&apos;s, the transcription is
-        not. Where the reveal describes an effect in words instead of figures (“a portion of
-        previous damage”, “the required number”), this page says so rather than inventing a value.
-      </DataNote>
+      <Set19Tabs active="overview" />
+
+      {isLive ? (
+        <div className="mt-6">
+          <LiveDataState health={health} />
+        </div>
+      ) : null}
+
+      <div className="mt-6">
+        <DataNote>
+          Riot&apos;s Dev Drop aired on {set19.devDropDate} and published the whole roster, the
+          trait list with its breakpoints, and the unlock conditions. Riot has not posted a written
+          version of it, so everything tagged “Dev Drop” below is Riot&apos;s content read through
+          third-party reveal pages on {formatDate(SET_19_AS_OF)} — the details are Riot&apos;s, the
+          transcription is not. Where the reveal describes an effect in words instead of figures
+          (“a portion of previous damage”, “the required number”), these pages say so rather than
+          inventing a value.
+        </DataNote>
+      </div>
 
       <section className="mt-10">
         <h2 className="text-xl font-semibold">The Dev Drop, in numbers</h2>
@@ -170,181 +170,6 @@ export default function Set19Page() {
       </section>
 
       <section className="mt-10">
-        <h2 className="text-xl font-semibold">The roster, by cost</h2>
-        <p className="mt-1 max-w-3xl text-xs leading-relaxed text-muted">
-          All 94 champions, by what they cost in the shop. The 4-costs are the widest tier in the
-          set and the 7-costs are the narrowest, which is the shape you plan an economy around.
-        </p>
-
-        <ul className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3">
-          {set19CostCurve.map((bucket) => (
-            <li key={bucket.cost} className="card p-3">
-              <p className="stat-value text-2xl font-semibold">{bucket.count}</p>
-              <p className="mt-0.5 text-[11px] font-semibold uppercase tracking-wider text-accent">
-                {bucket.cost}
-              </p>
-              <p className="mt-1.5 text-[11px] leading-relaxed text-muted">{bucket.note}</p>
-            </li>
-          ))}
-        </ul>
-
-        <p className="mt-3 text-[11px] leading-relaxed text-muted">
-          Two details that change how the shop reads: Akali is in the set twice, as Akali (K|DA)
-          and Akali (True Damage) — separate five-cost champions with separate unlock quests — and
-          all four 7-costs are unlocks rather than shop units, so they arrive only through their
-          quests.
-        </p>
-      </section>
-
-      <section className="mt-12">
-        <h2 className="text-xl font-semibold">The 27 traits, with their breakpoints</h2>
-        <p className="mt-1 max-w-3xl text-xs leading-relaxed text-muted">
-          Every regular trait with the tiers it needs and what each tier does, plus the champions
-          that carry it by cost. The five with a Prismatic tier are marked; the twenty unique
-          traits, which only one champion each has, are in the next section. Percentages are mostly
-          absent on purpose — the reveal describes the effects, and a made-up number would be
-          indistinguishable from a real one once it is on the page.
-        </p>
-
-        <ul className="mt-3 space-y-2">
-          {set19Traits.map((trait) => (
-            <TraitRow key={trait.name} trait={trait} />
-          ))}
-        </ul>
-      </section>
-
-      <section className="mt-12">
-        <h2 className="text-xl font-semibold">The 20 unique traits</h2>
-        <p className="mt-1 max-w-3xl text-xs leading-relaxed text-muted">
-          Traits with one champion each. They are still traits for the purposes of Jazz, which counts
-          active non-unique traits only — so these do not feed it.
-        </p>
-
-        <ul className="mt-3 space-y-2">
-          {set19UniqueTraits.map((trait) => (
-            <TraitRow key={trait.name} trait={trait} />
-          ))}
-        </ul>
-      </section>
-
-      <section className="mt-12">
-        <h2 className="text-xl font-semibold">Five Prismatic traits, and no emblems</h2>
-        <p className="mt-1 text-xs text-muted">
-          The old route to a Prismatic trait was an emblem on a carousel. In Prismatic Tour you
-          pick one of five and complete a quest line to unlock its Prismatic tier. The tiers below
-          come from the Dev Drop; a few of the values did too — True Damage&apos;s Prismatic tier
-          states 99% bonus true damage — but most of the numbers inside the other tiers are still
-          described rather than quantified.
-        </p>
-
-        <ul className="mt-3 space-y-2">
-          {set19PrismaticTraits.map((trait) => (
-            <li key={trait.name} className="card p-4">
-              <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
-                <h3 className="text-sm font-semibold">{trait.name}</h3>
-                <span className="stat-value text-[11px] text-muted">{trait.tiers}</span>
-              </div>
-              <p className="mt-2 text-[13px] leading-relaxed text-muted">{trait.gist}</p>
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      <section className="mt-12">
-        <h2 className="text-xl font-semibold">Unlocks: 36 champions, three categories</h2>
-        <p className="mt-1 text-xs text-muted">
-          Unlocks return from Lore and Legends. A locked champion is not in the shop; finish its
-          quest and it shows up in your next shop, buyable at its normal cost. Exactly 36 of the 94
-          are unlocks, and Riot split them into three kinds.
-        </p>
-
-        <ul className="mt-3 grid gap-2 sm:grid-cols-3">
-          {set19UnlockCategories.map((category) => (
-            <li key={category.name} className="rounded-lg border border-line bg-surface p-3">
-              <p className="text-[11px] font-semibold uppercase tracking-wider text-accent">
-                {category.name}
-              </p>
-              <p className="mt-1.5 text-[12px] leading-relaxed text-muted">{category.body}</p>
-            </li>
-          ))}
-        </ul>
-
-        <h3 className="mt-6 text-sm font-semibold">The five cards Riot has shown</h3>
-        <div className="mt-2 overflow-x-auto">
-          <table className="w-full min-w-[30rem] border-separate border-spacing-y-1.5 text-left">
-            <thead>
-              <tr className="text-[10px] uppercase tracking-wider text-muted">
-                <th className="px-3 font-semibold">Champion</th>
-                <th className="px-3 font-semibold">Quest</th>
-                <th className="px-3 font-semibold">What the reveal showed</th>
-              </tr>
-            </thead>
-            <tbody>
-              {set19Unlocks.map((card) => (
-                <tr key={card.champion} className="bg-surface">
-                  <td className="rounded-l-lg border-y border-l border-line px-3 py-2 text-[13px] font-semibold">
-                    {card.champion}
-                  </td>
-                  <td
-                    className={classNames(
-                      "border-y border-line px-3 py-2 text-[13px]",
-                      card.quest.startsWith("Not shown") ? "text-muted/70" : "text-fg/85",
-                    )}
-                  >
-                    {card.quest}
-                  </td>
-                  <td className="rounded-r-lg border-y border-r border-line px-3 py-2 text-[13px] text-muted">
-                    {card.shown}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        <p className="mt-3 text-[11px] leading-relaxed text-muted">
-          The two quests Riot did give show the intended spread: Aphelios asks for a Recurve Bow
-          on a Heartsteel champion — something you might do anyway — while Mordekaiser wants
-          eleven unique Pentakill star levels, which only pays a board already committed to the
-          band.
-        </p>
-
-        <h3 className="mt-6 text-sm font-semibold">The published quest conditions</h3>
-        <p className="mt-1 text-xs text-muted">
-          Every unlock condition the Dev Drop gave, in Riot&apos;s words. Read the counts as absent:
-          the reveal writes “the required number” rather than the number, so the shape of each quest
-          is known and its size is not.
-        </p>
-
-        <div className="mt-2 overflow-x-auto">
-          <table className="w-full min-w-[34rem] border-separate border-spacing-y-1.5 text-left">
-            <thead>
-              <tr className="text-[10px] uppercase tracking-wider text-muted">
-                <th className="px-3 font-semibold">Champion</th>
-                <th className="px-3 font-semibold">Cost</th>
-                <th className="px-3 font-semibold">Condition</th>
-              </tr>
-            </thead>
-            <tbody>
-              {set19UnlockQuests.map((quest) => (
-                <tr key={quest.champion} className="bg-surface">
-                  <td className="rounded-l-lg border-y border-l border-line px-3 py-2 text-[13px] font-semibold">
-                    {quest.champion}
-                  </td>
-                  <td className="border-y border-line px-3 py-2 text-[13px] text-muted">
-                    {quest.cost}
-                  </td>
-                  <td className="rounded-r-lg border-y border-r border-line px-3 py-2 text-[13px] text-muted">
-                    {quest.quest}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      <section className="mt-10">
         <h2 className="text-xl font-semibold">The dates, as Riot has published them</h2>
         <p className="mt-1 text-xs text-muted">
           Riot&apos;s patch schedule and Riot&apos;s own Set 19 video disagree by one day about the
@@ -363,14 +188,15 @@ export default function Set19Page() {
               <span className="min-w-0 flex-1 text-[13px] leading-relaxed text-muted">
                 {row.note}
               </span>
-              <StatusTag status={row.status} />
+              <Set19StatusTag status={row.status} />
             </li>
           ))}
         </ul>
 
         <p className="mt-3 text-[11px] leading-relaxed text-muted">
-          Concretely: plan on {set19.launchDate}, the date in Riot&apos;s video, and treat{" "}
-          {set19.scheduleDate} as the patch the client updates on.
+          {isLive
+            ? `Set ${set19.number} went live on ${set19.launchDate}, the date in Riot's video; the client updated with patch ${set19.patch} on ${set19.scheduleDate}.`
+            : `Concretely: plan on ${set19.launchDate}, the date in Riot's video, and treat ${set19.scheduleDate} as the patch the client updates on.`}
         </p>
       </section>
 
@@ -407,33 +233,63 @@ export default function Set19Page() {
       </section>
 
       <section className="mt-12">
-        <h2 className="text-xl font-semibold">How this site will handle the switch</h2>
+        <h2 className="text-xl font-semibold">
+          {isLive ? "How this site handles the live set" : "How this site will handle the switch"}
+        </h2>
         <div className="prose-block mt-2 text-sm">
-          <p>
-            The{" "}
-            <Link href="/meta" className="text-accent hover:underline">
-              tier list
-            </Link>{" "}
-            and every comp page stay on Set {set19.liveSet}, {set19.liveSetName} until patch{" "}
-            {set19.patch} actually ships. Pretending otherwise would mean either inventing numbers
-            or publishing a list with no games behind it.
-          </p>
-          <p>
-            When Set {set19.number} goes live, the order is fixed: the crawler seeds the new
-            ladder, a day or two of boards accumulate, and comps appear with their sample size
-            attached. Early-set pages will say they are early, and the confidence ranking will
-            keep small samples from outranking large ones — that machinery does not change just
-            because the set is new.
-          </p>
-          <p>
-            PBE notes, if there are any, will be labelled as PBE. A PBE game is not a ranked game,
-            and mixing the two is how a launch-week tier list ends up describing a build nobody
-            plays.
-          </p>
+          {isLive ? (
+            <>
+              <p>
+                The{" "}
+                <Link href="/meta" className="text-accent hover:underline">
+                  tier list
+                </Link>{" "}
+                and comp pages moved to Set {set19.number} when patch {set19.patch} shipped. Early-set
+                pages say they are early: comps appear with their sample size attached, and the
+                confidence ranking keeps small samples from outranking large ones.
+              </p>
+              <p>
+                PBE notes are labelled as PBE. A PBE game is not a ranked game, and mixing the two
+                is how a launch-week tier list ends up describing a build nobody plays.
+              </p>
+            </>
+          ) : (
+            <>
+              <p>
+                The reference pages, the{" "}
+                <Link href="/teambuilder" className="text-accent hover:underline">
+                  teambuilder
+                </Link>{" "}
+                and the{" "}
+                <Link href="/tier-lists" className="text-accent hover:underline">
+                  tier-list maker
+                </Link>{" "}
+                now read Set {set19.number} from the reveal roster. The{" "}
+                <Link href="/meta" className="text-accent hover:underline">
+                  tier list
+                </Link>{" "}
+                stays open but empty: comps and measured stats need Set {set19.number} boards,
+                and there are none before the set goes live. Set 18 comps are not carried over
+                as if they described this set.
+              </p>
+              <p>
+                When Set {set19.number} goes live, the order is fixed: the crawler seeds the new
+                ladder, a day or two of boards accumulate, and comps appear with their sample size
+                attached. Early-set pages will say they are early, and the confidence ranking will
+                keep small samples from outranking large ones — that machinery does not change
+                just because the set is new.
+              </p>
+              <p>
+                PBE notes, if there are any, will be labelled as PBE. A PBE game is not a ranked
+                game, and mixing the two is how a launch-week tier list ends up describing a build
+                nobody plays.
+              </p>
+            </>
+          )}
         </div>
       </section>
 
-      <section className="mt-12">
+      <section id="sources" className="mt-12 scroll-mt-24">
         <h2 className="text-xl font-semibold">Sources</h2>
         <p className="mt-1 text-xs text-muted">
           Checked {formatDate(SET_19_AS_OF)}. Riot&apos;s pages first, then the coverage the

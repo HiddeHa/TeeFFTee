@@ -21,6 +21,17 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 
 import { comps } from "../src/content/comps";
+import {
+  set19CostCurve,
+  set19PrismaticTraits,
+  set19Traits,
+  set19UniqueTraits,
+  set19Units,
+  set19UnlockQuests,
+  set19Unlocks,
+} from "../src/content/set-19";
+import { staleSetWarning } from "../src/lib/set-launch";
+import { set19FactProblems } from "../src/lib/set19-invariants";
 
 type CatalogueUnit = { id: string; name: string };
 type CatalogueItem = { id: string; name: string };
@@ -41,7 +52,27 @@ async function main(): Promise<void> {
   const problems: string[] = [];
   const published = comps.filter((comp) => comp.published);
 
-  if (published.length === 0) {
+  // A set switch is a content edit, not a deploy step; catch a forgotten one here,
+  // before it ships. `tests/set-launch.test.ts` pins the rule with a faked clock.
+  const setSwitchWarning = staleSetWarning();
+  if (setSwitchWarning) problems.push(setSwitchWarning);
+
+  // Set 19 is transcribed from Riot's Dev Drop as read through a third-party
+  // reveal, and every slip there renders as sourced fact. Check the arithmetic
+  // and the cross-references rather than trusting the transcription.
+  problems.push(
+    ...set19FactProblems({
+      units: set19Units,
+      costCurve: set19CostCurve,
+      traits: set19Traits,
+      uniqueTraits: set19UniqueTraits,
+      prismaticTraits: set19PrismaticTraits,
+      quests: set19UnlockQuests,
+      cards: set19Unlocks,
+    }),
+  );
+
+  if (published.length === 0 && problems.length === 0) {
     console.log("[content] no published comps — nothing to check");
     return;
   }
@@ -120,7 +151,9 @@ async function main(): Promise<void> {
   }
 
   console.log(
-    `[content] ok — ${published.length} comps: ids, item chains, positioning and stages all resolve`,
+    `[content] ok — ${published.length} comps: ids, item chains, positioning and stages all ` +
+      `resolve; Set 19 facts consistent (${set19Units.length} units, ` +
+      `${set19Traits.length + set19UniqueTraits.length} traits)`,
   );
 }
 

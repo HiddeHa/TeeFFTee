@@ -13,13 +13,13 @@ test("a champion placed from the pool is scrolled into view", async ({ page }) =
   await page.goto("/teambuilder");
   await waitForBuilder(page);
 
-  const tile = championTile(page, "Akali");
+  const tile = championTile(page, "Elise");
   await tile.scrollIntoViewIfNeeded();
   await tile.click();
 
   await expect(progress(page)).toContainText("1 of 28 hexes filled");
   const placed = hex(page, 0);
-  await expect(placed).toHaveAttribute("aria-label", /^Akali — 1 star/);
+  await expect(placed).toHaveAttribute("aria-label", /^Elise — 1 star/);
   await expect(placed).toBeInViewport();
 });
 

@@ -5,6 +5,7 @@ build/
 *.tsbuildinfo
 .env
 .env.local
+.rehearsal/
 .env*.local
 .vercel
 .DS_Store

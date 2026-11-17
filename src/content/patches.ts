@@ -23,6 +23,31 @@ const momentum186 = momentum186Json as unknown as PatchMomentum;
  */
 export const patches: Patch[] = [
   {
+    patch: "19.1",
+    setNumber: 19,
+    title: "Prismatic Tour opens",
+    releasedAt: "2026-12-01",
+    summary:
+      "The set-opening patch. Riot has confirmed the date and the shape of Set 19 — 94 champions, 47 traits, and Prismatic traits unlocked by quests — but has not published the 19.1 balance notes yet, so this page does not invent them.",
+    changes: [
+      {
+        kind: "new",
+        subject: "Set 19: Prismatic Tour",
+        detail:
+          "The new set ships with 94 champions across six cost tiers, 47 traits including five Prismatic ones, and unlock quests for 36 of the champions. Those counts are Riot's; this page will not list per-unit balance changes until the notes exist.",
+      },
+    ],
+    metaRead: {
+      headline: "A set-opening patch is a new game, not a balance read",
+      paragraphs: [
+        "There are no Set 19 ranked boards yet, so any claim about which comps are strong would be invented. The tier list stays open but empty until the crawler has boards to classify, and the patch page will grow its real change list when Riot publishes it.",
+        "What is already known is structural: the five Prismatic traits are unlocked through quests rather than emblems, 7-cost champions occupy the top of the curve, and the roster is built around genres and solo artists. Those facts change how a board is planned; they do not tell you which board to force.",
+      ],
+    },
+    momentum: null,
+    sourceUrl: "https://teamfighttactics.leagueoflegends.com/en-us/news/game-updates/",
+  },
+  {
     patch: "18.6",
     setNumber: 18,
     title: "A patch that moves the floor, not the ceiling",

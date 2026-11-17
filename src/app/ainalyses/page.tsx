@@ -12,7 +12,7 @@ import {
   type ResolvedItem,
   type ResolvedUnit,
 } from "@/lib/analysis";
-import { classNames, formatPercent, formatPlace } from "@/lib/format";
+import { classNames, formatDate, formatPercent, formatPlace } from "@/lib/format";
 
 /**
  * AInalyses — what the crawled boards say, mined rather than guessed.
@@ -183,9 +183,10 @@ export default async function AInalysesPage() {
         <h1 className="mt-2 text-3xl font-semibold sm:text-4xl">AInalyses</h1>
         <p className="mt-3 max-w-3xl text-sm leading-relaxed text-muted">
           Every final board the crawler stored for this set, grouped by what repeats: units,
-          the pairs of units that share a board, items, the item a specific unit actually held,
-          and the traits boards reached. No model and no prediction — each row is a count with
-          the finish that came with it, so the evidence is visible instead of asserted.
+          the pairs and trios of units that share a board, items, the item a specific unit
+          actually held, and the traits boards reached. No model and no prediction — each row is
+          a count with the finish that came with it, so the evidence is visible instead of
+          asserted.
         </p>
         {analysis.kind === "ok" ? (
           <div className="mt-3 flex flex-wrap gap-1.5">
@@ -199,6 +200,9 @@ export default async function AInalysesPage() {
             <span className="chip">
               {analysis.summary.boards.toLocaleString("en-GB")} boards
             </span>
+            <span className="chip" title="When the crawler last mined this snapshot">
+              snapshot {formatDate(analysis.summary.computedAt)}
+            </span>
           </div>
         ) : null}
       </header>
@@ -211,6 +215,16 @@ export default async function AInalysesPage() {
             Run the crawler against a database, or open this page where{" "}
             <code className="text-fg/70">DATABASE_URL</code> is set, and the patterns fill in.
             Nothing is estimated in the meantime.
+          </DataNote>
+        </div>
+      ) : analysis.kind === "not-materialised" ? (
+        <div className="mt-6">
+          <DataNote>
+            The database is connected but has never mined Set {site.setNumber}. AInalyses
+            reads a snapshot the crawler materialises, not the raw boards — run{" "}
+            <code className="text-fg/70">npm run crawl -- patterns</code>, or let the crawl
+            loop reach its aggregation timer, and the patterns fill in. Nothing is estimated
+            in the meantime.
           </DataNote>
         </div>
       ) : analysis.summary.boards === 0 ? (
@@ -339,6 +353,78 @@ export default async function AInalysesPage() {
                       </>
                     }
                     pattern={pair}
+                    sampleLabel="boards"
+                  />
+                ))}
+              </ul>
+            )}
+          </Section>
+
+          <Section
+            title="Three-unit cores"
+            dek={`Every three of the ${analysis.units.length} most-played units that shared at least ${analysis.summary.minSample} boards, ranked by how much of the boards playing any of the three the trio covers. This is the shell question: 80% means four in five boards that played at least one of them played all three, which is a core rather than three popular champions that happen to overlap. A trio can never cover more boards than its least-played member sits on, so the ceiling is set by that unit. “Vs solo” is the trio's average finish against the three units' own averages.`}
+          >
+            {analysis.unitTrios.length === 0 ? (
+              <DataNote>
+                No three of the most-played units share {analysis.summary.minSample} boards in
+                this sample yet. Trios fill in last: a crawl needs several boards per match-up
+                before three champions can be said to recur together.
+              </DataNote>
+            ) : (
+              <ul className="space-y-1.5">
+                {analysis.unitTrios.map((trio, index) => (
+                  <PatternRow
+                    key={trio.units.map((unit) => unit.id).join("-")}
+                    rank={index + 1}
+                    leading={
+                      <>
+                        {trio.units.map((unit, position) => (
+                          <span key={unit.id} className="flex items-center gap-1.5">
+                            {position > 0 ? (
+                              <span aria-hidden className="text-[10px] text-muted">
+                                +
+                              </span>
+                            ) : null}
+                            <Tile unit={unit} />
+                          </span>
+                        ))}
+                      </>
+                    }
+                    title={
+                      <>
+                        {trio.units.map((unit, position) => (
+                          <span key={unit.id}>
+                            {position > 0 ? (
+                              <span className="text-muted">, </span>
+                            ) : null}
+                            <Name value={unit.name} id={unit.id} />
+                          </span>
+                        ))}
+                      </>
+                    }
+                    subtitle={
+                      <>
+                        <span className="stat-value text-fg/80">
+                          {formatPercent(trio.overlap, 0)}
+                        </span>
+                        <span>of boards with any of the three</span>
+                        <span aria-hidden>·</span>
+                        <span>vs solo</span>
+                        <span
+                          className={classNames(
+                            "stat-value",
+                            trio.togetherGain > 0
+                              ? "text-good"
+                              : trio.togetherGain < 0
+                                ? "text-bad"
+                                : "text-fg/80",
+                          )}
+                        >
+                          {formatGain(trio.togetherGain)}
+                        </span>
+                      </>
+                    }
+                    pattern={trio}
                     sampleLabel="boards"
                   />
                 ))}
@@ -538,12 +624,13 @@ export default async function AInalysesPage() {
           </Section>
 
           <p className="mt-10 text-[11px] leading-relaxed text-muted">
-            What this is measured on: the boards the crawler stored for Set{" "}
+            What this is measured on: a snapshot the crawler mines from the boards it stored
+            for Set{" "}
             {analysis.summary.setNumber}, one row per player per match — final boards only. There
             is no bench, no gold curve, no augment order and no positioning in the payload, so none
-            of those are claimed here. A pairing is two units on the same board, or one item on
-            one unit — never two boards summed. Placement is the finish of the board that held
-            the unit or
+            of those are claimed here. A pair or a trio is units on the same board, and a pairing
+            is one item on one unit — never two boards summed. Placement is the finish of the
+            board that held the unit or
             item, and &ldquo;vs avg&rdquo; is that finish minus the sample&apos;s average finish
             (positive is better). A pattern below {analysis.summary.minSample} boards —{" "}
             {analysis.summary.minPairSample} slots for a pairing — is not reported at all. Rank

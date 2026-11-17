@@ -13,6 +13,8 @@ import { TierBadge } from "@/components/tier-badge";
 import { comps } from "@/content/comps";
 import { guides } from "@/content/guides";
 import { METHODOLOGY, site } from "@/content/site";
+import { loadCompAugments } from "@/lib/augment-stats";
+import { loadAugmentCatalogue } from "@/lib/augments";
 import { encodeCompBoard } from "@/lib/board-codec";
 import { getComp, getRelatedComps } from "@/lib/data";
 import { formatDate, formatGames, formatPercent, formatPlace } from "@/lib/format";
@@ -24,7 +26,9 @@ export const revalidate = 300;
 type Params = Promise<{ slug: string }>;
 
 export function generateStaticParams() {
-  return comps.filter((comp) => comp.published).map((comp) => ({ slug: comp.slug }));
+  return comps
+    .filter((comp) => comp.published && comp.setNumber === site.setNumber)
+    .map((comp) => ({ slug: comp.slug }));
 }
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
@@ -88,6 +92,17 @@ export default async function CompPage({ params }: { params: Params }) {
     .filter((guide) => guide.compSlugs.includes(comp.slug))
     .slice(0, 3);
   const stats = comp.visibleStats;
+  // Augment advice has two halves: the editorial category order, which always
+  // renders, and the measured list, which only appears when this comp has a
+  // sample to quote. The baseline is the stats strip's own numbers, so the delta
+  // is against exactly what the page shows above it.
+  const augmentReport = await loadCompAugments(comp.slug, stats, {
+    patch: stats?.patch ?? comp.patch,
+    rank: stats?.rankBucket ?? "master+",
+    region: stats && stats.region !== "all" ? stats.region : undefined,
+  });
+  const augmentCatalogue =
+    augmentReport.kind === "ok" ? await loadAugmentCatalogue(comp.setNumber) : null;
   const builderHref = `/teambuilder?b=${encodeCompBoard(comp.board, comp.positioning)}`;
   const core = comp.visibleBoard.filter((unit) => comp.coreUnits.includes(unit.id));
   const flex = comp.visibleBoard.filter((unit) => !comp.coreUnits.includes(unit.id));
@@ -341,10 +356,58 @@ export default async function CompPage({ params }: { params: Params }) {
               ))}
             </div>
             <p className="mt-2 text-[11px] leading-relaxed text-muted/80">
-              Ordered by category, not scored per augment: the corpus has no augment rows
-              for this set yet, so a per-augment ranking would be invented.
+              {augmentReport.kind === "ok"
+                ? "Category order is editorial. The measured list below is what boards that took each augment actually finished."
+                : augmentReport.kind === "none"
+                  ? `Editorial only: no augment has ${augmentReport.minBoards} boards of this comp on the current filter, so a per-augment ranking would be noise.`
+                  : "Editorial only: no crawl database is attached here, so there is no per-augment sample to rank."}
             </p>
           </div>
+
+          {augmentReport.kind === "ok" ? (
+            <div className="card p-5">
+              <h2 className="text-xs font-semibold uppercase tracking-wider text-muted">
+                Measured augments
+              </h2>
+              <p className="mt-2 text-[11px] leading-relaxed text-muted/80">
+                Boards of this comp that took the augment, out of{" "}
+                {formatGames(augmentReport.compGames)} games. Δ is against this comp&apos;s{" "}
+                {formatPlace(augmentReport.compAvgPlace)} average. An augment is offered on a
+                stage roll, not chosen from the pool, so read this as correlation — better
+                boards may simply be the ones that got it.
+              </p>
+              <ul className="mt-3 space-y-2">
+                {augmentReport.augments.slice(0, 6).map((augment) => {
+                  const resolved = augmentCatalogue?.get(augment.id) ?? null;
+                  const better = augment.deltaPlace <= 0;
+                  return (
+                    <li
+                      key={augment.id}
+                      className="flex items-baseline justify-between gap-2 text-sm"
+                    >
+                      <span className="min-w-0 truncate text-fg/85" title={augment.id}>
+                        {resolved?.name ?? augment.id}
+                      </span>
+                      <span className="shrink-0 text-[11px] tabular-nums text-muted">
+                        {resolved?.tier ? `${resolved.tier} · ` : ""}
+                        {formatPlace(augment.avgPlace)}{" "}
+                        <span className={better ? "text-good" : "text-bad"}>
+                          {better ? "−" : "+"}
+                          {Math.abs(augment.deltaPlace).toFixed(2)}
+                        </span>{" "}
+                        · {augment.games} boards
+                      </span>
+                    </li>
+                  );
+                })}
+              </ul>
+              <p className="mt-2 text-[11px] leading-relaxed text-muted/60">
+                Only augments taken on at least {augmentReport.minBoards} boards of this comp
+                are listed; below that, one lucky lobby moves the average more than the
+                augment does.
+              </p>
+            </div>
+          ) : null}
 
           <div className="card p-5">
             <h2 className="text-xs font-semibold uppercase tracking-wider text-muted">

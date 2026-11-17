@@ -14,8 +14,8 @@ export const guides: Guide[] = [
     title: "How to read a tier list",
     dek: "The letter at the top of every comp page is an average of other sites' letters, printed beside a sample you have to check. Here is how to read ours, and what to ignore.",
     answers: "Is this comp actually good, or does it just look it?",
-    setNumber: 18,
-    patch: "18.6",
+    setNumber: 19,
+    patch: "19.1",
     readingMinutes: 6,
     updatedAt: "2026-11-15",
     measured:
@@ -99,7 +99,7 @@ export const guides: Guide[] = [
           },
           {
             kind: "paragraph",
-            text: "Names matter for the same reason. The same board travels as Flora Fatalis Azir, Sprykin Zyra and Executioner Azir depending on who published it. A name match would have counted one comp three times and tripled its apparent support. Where we pooled a board, the published name is printed beside each letter so you can see which site meant what.",
+            text: "Names matter for the same reason. The same board can travel under different names depending on who published it. A name match would count one comp several times and multiply its apparent support. Where we pooled a board, the published name is printed beside each letter so you can see which site meant what.",
           },
         ],
       },
@@ -124,8 +124,8 @@ export const guides: Guide[] = [
     title: "When to roll and when to level",
     dek: "One decision decides more games than the comp you pick, and almost nobody writes down the number they make it with. Here is the order to think about it, and the gold floors we use.",
     answers: "Do I spend gold on a level, or on rolling?",
-    setNumber: 18,
-    patch: "18.6",
+    setNumber: 19,
+    patch: "19.1",
     readingMinutes: 5,
     updatedAt: "2026-11-15",
     measured: "Nothing on this page is measured. That is the point of the label above it.",
@@ -232,12 +232,12 @@ export const guides: Guide[] = [
     title: "What a round of gold actually buys",
     dek: "Interest, streaks and XP are three ways of turning the same gold into a different board. Here is what each one pays, and the two numbers to check at 4-2.",
     answers: "Where is my gold going, and what is it buying?",
-    setNumber: 18,
-    patch: "18.6",
+    setNumber: 19,
+    patch: "19.1",
     readingMinutes: 7,
     updatedAt: "2026-11-15",
     measured:
-      "The mechanics — interest of 1 gold per 10 held capped at 50, streak tiers of 1/2/3, 2 gold a roll, 4 gold for 4 XP — are Riot's rules, checked against 18.6. Nothing on this page is a measurement of a board.",
+      "The mechanics — interest of 1 gold per 10 held capped at 50, streak tiers of 1/2/3, 2 gold a roll, 4 gold for 4 XP — are Riot's rules, checked against the last published client rules; there is no Set 19 balance data to check them against yet. Nothing on this page is a measurement of a board.",
     judgement:
       "Every recommendation: when to hold, when to spend, and how to weigh health against gold.",
     counterCase:
@@ -329,8 +329,8 @@ export const guides: Guide[] = [
     title: "Positioning: three jobs and one scout",
     dek: "Rows are the easy part. The hard part is deciding what each fight is asking your board to do, and then moving one hex because of the answer.",
     answers: "Where does each unit stand, and why?",
-    setNumber: 18,
-    patch: "18.6",
+    setNumber: 19,
+    patch: "19.1",
     readingMinutes: 6,
     updatedAt: "2026-11-15",
     measured:
@@ -443,8 +443,8 @@ export const guides: Guide[] = [
     title: "Items: slam, hold, or regret",
     dek: "An item built on 2-2 fights for the rest of the game. One built in stage 5 fights for four rounds. The whole art is knowing which of those you are doing.",
     answers: "Do I build the item now, or hold the components?",
-    setNumber: 18,
-    patch: "18.6",
+    setNumber: 19,
+    patch: "19.1",
     readingMinutes: 6,
     updatedAt: "2026-11-15",
     measured:

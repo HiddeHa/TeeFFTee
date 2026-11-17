@@ -1,0 +1,134 @@
+{
+  "metadata": {
+    "match_id": "EUW1_7123456789",
+    "data_version": "3",
+    "participants": [
+      "puuid-1",
+      "puuid-2",
+      "puuid-3",
+      "puuid-4",
+      "puuid-5",
+      "puuid-6",
+      "puuid-7",
+      "puuid-8"
+    ]
+  },
+  "info": {
+    "game_datetime": 1763300000000,
+    "game_length": 2134.5,
+    "game_version": "TFT Unreal Version ?.?.?.?",
+    "map_id": 22,
+    "queue_id": 1100,
+    "tft_game_type": "standard",
+    "tft_set_number": 18,
+    "participants": [
+      {
+        "puuid": "puuid-1",
+        "placement": 1,
+        "level": 9,
+        "last_round": 38,
+        "gold_left": 12,
+        "augments": ["TFT18_Augment_A", "TFT18_Augment_B", "TFT18_Augment_C"],
+        "traits": [
+          { "name": "TFT18_Arcanist", "num_units": 4, "tier_current": 2 },
+          { "name": "TFT18_Elderwood", "num_units": 3, "tier_current": 1 }
+        ],
+        "units": [
+          {
+            "character_id": "TFT18_Ahri",
+            "tier": 2,
+            "rarity": 4,
+            "itemNames": ["TFT_Item_BlueBuff", "TFT_Item_JeweledGauntlet", "TFT_Item_RabadonsDeathcap"]
+          },
+          { "character_id": "TFT18_Lux", "tier": 3, "rarity": 4, "itemNames": [] },
+          { "character_id": "TFT18_Malphite", "tier": 2, "rarity": 3, "itemNames": ["TFT_Item_WarmogsArmor"] }
+        ]
+      },
+      {
+        "puuid": "puuid-2",
+        "placement": 2,
+        "level": 9,
+        "last_round": 38,
+        "gold_left": 4,
+        "augments": ["TFT18_Augment_B", "TFT18_Augment_D", "TFT18_Augment_A"],
+        "traits": [{ "name": "TFT18_Sentinel", "num_units": 4, "tier_current": 2 }],
+        "units": [
+          { "character_id": "TFT18_Nidalee", "tier": 2, "rarity": 4, "itemNames": ["TFT_Item_InfinityEdge"] },
+          { "character_id": "TFT18_Shen", "tier": 1, "rarity": 2, "itemNames": [] }
+        ]
+      },
+      {
+        "puuid": "puuid-3",
+        "placement": 3,
+        "level": 8,
+        "last_round": 36,
+        "gold_left": 0,
+        "augments": ["TFT18_Augment_C", "TFT18_Augment_A", "TFT18_Augment_B"],
+        "traits": [{ "name": "TFT18_Sprykin", "num_units": 2, "tier_current": 1 }],
+        "units": [
+          { "character_id": "TFT18_Zyra", "tier": 3, "rarity": 5, "itemNames": ["TFT_Item_GuinsoosRageblade"] }
+        ]
+      },
+      {
+        "puuid": "puuid-4",
+        "placement": 4,
+        "level": 8,
+        "last_round": 35,
+        "gold_left": 1,
+        "augments": ["TFT18_Augment_A", "TFT18_Augment_C", "TFT18_Augment_D"],
+        "traits": [{ "name": "TFT18_Blossom", "num_units": 3, "tier_current": 1 }],
+        "units": [
+          { "character_id": "TFT18_KhaZix", "tier": 2, "rarity": 3, "itemNames": ["TFT_Item_Bloodthirster"] }
+        ]
+      },
+      {
+        "puuid": "puuid-5",
+        "placement": 5,
+        "level": 8,
+        "last_round": 34,
+        "gold_left": 3,
+        "augments": ["TFT18_Augment_D", "TFT18_Augment_B", "TFT18_Augment_C"],
+        "traits": [{ "name": "TFT18_Elderwood", "num_units": 2, "tier_current": 1 }],
+        "units": [
+          { "character_id": "TFT18_Brambleback", "tier": 1, "rarity": 2, "itemNames": [] }
+        ]
+      },
+      {
+        "puuid": "puuid-6",
+        "placement": 6,
+        "level": 8,
+        "last_round": 33,
+        "gold_left": 7,
+        "augments": ["TFT18_Augment_B", "TFT18_Augment_D", "TFT18_Augment_A"],
+        "traits": [{ "name": "TFT18_Sentinel", "num_units": 2, "tier_current": 1 }],
+        "units": [
+          { "character_id": "TFT18_Yi", "tier": 2, "rarity": 3, "itemNames": ["TFT_Item_GiantSlayer"] }
+        ]
+      },
+      {
+        "puuid": "puuid-7",
+        "placement": 7,
+        "level": 7,
+        "last_round": 31,
+        "gold_left": 9,
+        "augments": ["TFT18_Augment_C", "TFT18_Augment_D", "TFT18_Augment_B"],
+        "traits": [{ "name": "TFT18_Arcanist", "num_units": 2, "tier_current": 1 }],
+        "units": [
+          { "character_id": "TFT18_Ahri", "tier": 1, "rarity": 4, "itemNames": [] }
+        ]
+      },
+      {
+        "puuid": "puuid-8",
+        "placement": 8,
+        "level": 7,
+        "last_round": 29,
+        "gold_left": 15,
+        "augments": ["TFT18_Augment_A", "TFT18_Augment_D", "TFT18_Augment_C"],
+        "traits": [],
+        "units": [
+          { "character_id": "TFT18_Lux", "tier": 1, "rarity": 4, "itemNames": [] }
+        ]
+      }
+    ]
+  }
+}

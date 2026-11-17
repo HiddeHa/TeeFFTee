@@ -210,6 +210,14 @@ Phase R1 to start immediately.
 | **D14** | **`playstyle` is a closed enum**: `Fast 8`, `Fast 9`, `Slow roll`, `Reroll`, `Standard`, `Emblem`, `Augment`, `Flex`. | The seven existing comps already used four of these; none needed rewriting. The tier list can now offer them as filters. |
 | **D15** | **Positioning is authored per comp, never derived.** | `positioning` is a hand-placed 4×7 layout. `participant_units.slot` is array order, not a hex coordinate, so a data-derived heatmap is not possible from this payload. |
 
+**D16 (Set 19 URLs, 2026-11-16).** Keep `/set-19` and its sub-paths; do not introduce
+`/sets/19` with redirects. The route already names the set, 94 champion pages and the sitemap
+point at it, and pasted anchors (`/set-19/traits#trait-k-da`) would need a redirect table that
+earns nothing for the reader. The page becomes the live set's reference page on 2 December:
+launch copy reads the same `isSet19Live()` clock as the stale-set guard, and once live it shows
+a collecting-data state with the unclassified board count instead of "no stats yet". The next
+set gets `/set-20`; only a rename (not a new set) would justify a redirect map.
+
 Two facts established while applying D11, worth keeping:
 
 - **Riot's set-18 item ids are the `DA_*` ones**, not `TFT_Item_*`. Both exist in the `items`

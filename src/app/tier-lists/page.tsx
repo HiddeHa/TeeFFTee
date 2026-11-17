@@ -1,12 +1,18 @@
 import type { Metadata } from "next";
 
+import { DataNote } from "@/components/data-note";
 import { TierListMaker } from "@/components/tier-list-maker";
 import { site } from "@/content/site";
-import { loadAugmentCatalogue, type AugmentIndex } from "@/lib/augments";
+import type { AugmentIndex } from "@/lib/augments";
 import { COST_BORDER } from "@/lib/costs";
-import { loadItemCatalogue, type ItemIndex } from "@/lib/items";
+import type { ItemIndex } from "@/lib/items";
+import {
+  loadSet19AugmentCatalogue,
+  loadSet19ItemCatalogue,
+  loadSet19UnitCatalogue,
+} from "@/lib/set19-catalogue";
 import type { CatalogueOption, TierListKind } from "@/lib/tier-lists";
-import { loadUnitCatalogue, type UnitIndex } from "@/lib/units";
+import type { UnitIndex } from "@/lib/units";
 
 export const metadata: Metadata = {
   title: "Tier list maker",
@@ -41,7 +47,7 @@ const ITEM_TONE: Record<string, string> = {
 };
 
 /** Filter chips, in the order the game itself uses. */
-const UNIT_FACETS = ["1c", "2c", "3c", "4c", "5c"];
+const UNIT_FACETS = ["1c", "2c", "3c", "4c", "5c", "7c"];
 const AUGMENT_FACETS = ["Prismatic", "Gold", "Silver"];
 const ITEM_FACETS = ["Completed", "Emblem", "Component", "Craftable"];
 
@@ -61,7 +67,7 @@ function buildUnits(index: UnitIndex | null): CatalogueOption[] {
     { id: string; name: string; cost: number; imageUrl: string | null }
   >();
   for (const [id, entry] of index) {
-    if (entry.cost < 1 || entry.cost > 5) continue;
+    if (entry.cost < 1 || entry.cost > 7) continue;
     const key = entry.name.toLowerCase();
     const existing = best.get(key);
     if (!existing || entry.cost > existing.cost) {
@@ -141,16 +147,16 @@ function buildAugments(index: AugmentIndex | null): CatalogueOption[] {
 
 export default async function TierListsPage() {
   const setNumber = site.setNumber;
-  const [units, items, augments] = await Promise.all([
-    loadUnitCatalogue(setNumber),
-    loadItemCatalogue(setNumber),
-    loadAugmentCatalogue(setNumber),
+  const [units, itemCatalogue, augmentCatalogue] = await Promise.all([
+    loadSet19UnitCatalogue(),
+    loadSet19ItemCatalogue(),
+    loadSet19AugmentCatalogue(),
   ]);
 
   const pools: Record<TierListKind, CatalogueOption[]> = {
-    augments: buildAugments(augments),
+    augments: buildAugments(augmentCatalogue.index),
     units: buildUnits(units),
-    items: buildItems(items),
+    items: buildItems(itemCatalogue.index),
   };
 
   const present = (kind: TierListKind, values: string[]) =>
@@ -174,13 +180,24 @@ export default async function TierListsPage() {
           the three types, drag cards from the pool into S through D, and keep as many
           lists as you want — they stay saved in this browser.
         </p>
+        {itemCatalogue.provisional || augmentCatalogue.provisional ? (
+          <div className="mt-4 max-w-2xl">
+            <DataNote>
+              The unit pool is the Set 19 reveal roster. Item cards are the shared
+              completed/component list from 18.6, and augments are empty until the 19.1
+              catalogue exists — Set 19-only items, emblems and augments are not invented
+              here.
+            </DataNote>
+          </div>
+        ) : null}
       </header>
 
       <TierListMaker setNumber={setNumber} pools={pools} facets={facets} />
 
       <p className="mb-12 mt-10 max-w-3xl text-xs leading-relaxed text-muted">
-        Cards come from the Set {setNumber} catalogue, so names, costs, rarities and
-        icons are the game&apos;s own — this page never invents a unit or an item. Lists
+        Cards come from the Set {setNumber} catalogue, so names, costs and rarities are
+        the game&apos;s own; icons and the full item/augment pools follow when the set
+        catalogue loads. This page never invents a unit or an item. Lists
         are yours alone: there is no account and no upload, which also means clearing
         your browser data clears them.
       </p>

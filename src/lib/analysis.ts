@@ -1,64 +1,51 @@
-import { and, eq, gt, inArray, isNotNull, lt, sql } from "drizzle-orm";
-import { alias } from "drizzle-orm/pg-core";
+import { eq } from "drizzle-orm";
 
 import { getDb } from "@/db/client";
-import { matches, participants, participantTraits, participantUnits } from "@/db/schema";
+import { boardPatterns, boardStudies } from "@/db/schema";
 
 import { loadItemCatalogue } from "./items";
 import { loadTraitCatalogue } from "./traits";
 import { loadUnitCatalogue } from "./units";
 
 /**
- * PATTERN MINING over the crawled boards.
+ * READ SIDE of the AInalyses study.
  *
- * Aggregates `participant_units`, `participant_traits` and `participants` into the
- * six questions the data can actually answer:
+ * The mining happens once, in the crawler (`worker/patterns.ts`), because it is a
+ * self-join over `participant_units` — twice for a duo, three times for a trio —
+ * and that cost grows with the crawl. A page that re-mined per request would get
+ * slower every day the crawler ran, so it reads a materialised snapshot instead:
  *
- *   units     which units appear on the most boards, and how those boards placed
- *   duos      which two units share a board more often than their play rates
- *             would explain, and whether the pair finishes better than either
- *   items     which items are held most often, and how those boards placed
- *   popular   which item a specific unit actually holds, most-held first
- *   pairings  which item on which unit performed best (the carry, not the item)
- *   traits    which active traits boards reached, and how they placed
+ *   board_studies    one row per set: the sample, the baseline, the thresholds
+ *   board_patterns   one row per mined pattern: ids and counts
  *
- * Duos are the only mining here with a join across boards (a self-join of
- * `participant_units`), so it is scoped to the most-played units rather than the
- * whole table: a pair involving a unit nobody plays is not a pattern, it is an
- * anecdote with a champion attached.
+ * Everything a reader sees is derived here, in one place: averages, rates, the
+ * "vs avg" delta, the overlap a duo or trio reads, and every name, cost and icon
+ * resolved against the set catalogue. The tables store counts and ids only, so a
+ * renamed unit converges on the next read instead of keeping a stale name.
  *
  * Two rules keep this honest:
  *
- *  1. **Support comes first.** Nothing is reported below `MIN_SAMPLE` boards (or
- *     `MIN_PAIR_SAMPLE` slots for a pairing). A 3-board average is noise with a
- *     decimal point.
+ *  1. **Support comes first.** The job writes nothing below its thresholds, and
+ *     the thresholds travel in the study row — the page quotes what was mined,
+ *     not a constant that drifted.
  *  2. **It is evidence, not advice.** Average placement next to the sample
  *     baseline is correlation: an item on winning boards may be a consequence of
  *     winning, not a cause. Every number carries its sample so the reader can
  *     judge it, and the page says so in prose.
  *
- * Only final boards are stored in the crawl — no bench, no gold curve, no
- * augment order — so nothing here claims to measure those. Ids resolve through
- * the set catalogue exactly like the rest of the site: an unknown id keeps its
- * raw name rather than being guessed.
+ * Three states, and the page distinguishes all three: no database (`unavailable`),
+ * a database that has never mined this set (`not-materialised`), and a study that
+ * exists but covers no boards yet. Zeroes would read as measurements, so none of
+ * them is rendered as one.
  */
 
-export const MIN_SAMPLE = 25;
-export const MIN_PAIR_SAMPLE = 15;
-
-const UNIT_LIMIT = 15;
-const ITEM_LIMIT = 15;
+/** Display caps. The job stores at most this many of each, ranked. */
 const PAIR_LIMIT = 10;
 const POPULAR_PAIR_LIMIT = 12;
-const UNIT_PAIR_LIMIT = 12;
-const TRAIT_LIMIT = 15;
+const UNIT_ITEM_LIMIT = 2;
 
-/**
- * The board table joined to itself. Two rows share a board when they share the
- * (match, player) key — the same key every other query here carries.
- */
-const unitA = alias(participantUnits, "unit_a");
-const unitB = alias(participantUnits, "unit_b");
+/** The job's composite key separator — one character no Riot id contains. */
+const SEP = "\u0001";
 
 export type PatternSample = {
   /** Boards (or item slots, for a pairing) behind the numbers. */
@@ -89,16 +76,18 @@ export type ResolvedItem = {
   kind: string | null;
 };
 
-export type UnitPattern = PatternSample & ResolvedUnit & {
-  avgStar: number;
-  /** The two items this unit held most often on those boards. */
-  items: ResolvedItem[];
-};
+export type UnitPattern = PatternSample &
+  ResolvedUnit & {
+    avgStar: number;
+    /** The two items this unit held most often on those boards. */
+    items: ResolvedItem[];
+  };
 
-export type ItemPattern = PatternSample & ResolvedItem & {
-  /** The unit that held it most often in the mined sample; null when unseen. */
-  holder: (ResolvedUnit & { share: number }) | null;
-};
+export type ItemPattern = PatternSample &
+  ResolvedItem & {
+    /** The unit that held it most often in the mined sample; null when unseen. */
+    holder: (ResolvedUnit & { share: number }) | null;
+  };
 
 export type PairingPattern = PatternSample & {
   unit: ResolvedUnit;
@@ -106,8 +95,8 @@ export type PairingPattern = PatternSample & {
 };
 
 /**
- * The same unit/item shape, ranked by how often it happens rather than how well
- * it finished — the "what does this champion build" question.
+ * The same shape, ranked by how often it happens rather than how well it
+ * finished — the "what does this champion build" question.
  */
 export type PopularPairingPattern = PairingPattern & {
   /** 0..1 — share of that unit's item slots this item accounts for. */
@@ -133,6 +122,20 @@ export type UnitPairPattern = PatternSample & {
   togetherGain: number;
 };
 
+export type UnitTrioPattern = PatternSample & {
+  /** Three units, alphabetically by id. */
+  units: [ResolvedUnit, ResolvedUnit, ResolvedUnit];
+  /**
+   * 0..1 — boards holding all three ÷ boards holding any of the three. The
+   * rarest member sets the ceiling: a trio cannot cover more boards than its
+   * least-played unit appears on, so a high number means the shell is real
+   * rather than three champions that are each everywhere.
+   */
+  overlap: number;
+  /** Trio average against the mean of the three units' own averages. */
+  togetherGain: number;
+};
+
 export type TraitPattern = PatternSample & {
   id: string;
   name: string | null;
@@ -155,15 +158,19 @@ export type AnalysisSummary = {
   winRate: number;
   minSample: number;
   minPairSample: number;
+  /** When the crawler last materialised this study, ISO-8601. */
+  computedAt: string;
 };
 
 export type BoardAnalysis =
   | { kind: "unavailable" }
+  | { kind: "not-materialised" }
   | {
       kind: "ok";
       summary: AnalysisSummary;
       units: UnitPattern[];
       unitPairs: UnitPairPattern[];
+      unitTrios: UnitTrioPattern[];
       items: ItemPattern[];
       popularPairings: PopularPairingPattern[];
       pairings: PairingPattern[];
@@ -172,50 +179,54 @@ export type BoardAnalysis =
 
 type Counts = { sample: number; placeSum: number; top4: number; wins: number };
 
-function emptyCounts(): Counts {
-  return { sample: 0, placeSum: 0, top4: 0, wins: 0 };
-}
-
-function addCounts(target: Counts, source: Counts): void {
-  target.sample += source.sample;
-  target.placeSum += source.placeSum;
-  target.top4 += source.top4;
-  target.wins += source.wins;
-}
-
 function round2(value: number): number {
   return Math.round(value * 100) / 100;
 }
 
+function rate(numerator: number, denominator: number): number {
+  return denominator > 0 ? numerator / denominator : 0;
+}
+
 /** Counts → the rate shape the UI renders, against one baseline. */
 function sampleOf(counts: Counts, baselineAvgPlace: number): PatternSample {
-  const avgPlace = counts.sample > 0 ? counts.placeSum / counts.sample : 0;
+  const avgPlace = rate(counts.placeSum, counts.sample);
   return {
     sample: counts.sample,
     avgPlace: round2(avgPlace),
-    top4Rate: counts.sample > 0 ? round2(counts.top4 / counts.sample) : 0,
-    winRate: counts.sample > 0 ? round2(counts.wins / counts.sample) : 0,
+    top4Rate: round2(rate(counts.top4, counts.sample)),
+    winRate: round2(rate(counts.wins, counts.sample)),
     placeGain: round2(baselineAvgPlace - avgPlace),
   };
 }
 
 let warnedAboutDatabase = false;
 
-/**
- * Null-safe key for a merged row. Postgres returns the item column as text; the
- * driver may hand back null for a filtered column in a union-like merge, so the
- * guard is real rather than defensive noise.
- */
-function keyOf(value: string | null): string | null {
-  return value === null || value === "" ? null : value;
+type StoredPattern = {
+  kind: string;
+  key: string;
+  rank: number;
+  sample: number;
+  placeSum: number;
+  top4Count: number;
+  winCount: number;
+  extra: Record<string, number>;
+};
+
+function countsOf(row: StoredPattern): Counts {
+  return {
+    sample: row.sample,
+    placeSum: row.placeSum,
+    top4: row.top4Count,
+    wins: row.winCount,
+  };
 }
 
 /**
- * Read and aggregate one set's boards.
+ * Read and shape one set's materialised study.
  *
- * `unavailable` means no DATABASE_URL or Postgres did not answer — the same
- * contract as `players.ts`, because an analytics page with no database has
- * nothing to analyse and must say that rather than show zeros as measurements.
+ * `unavailable` means no DATABASE_URL or Postgres did not answer — an analytics
+ * page with no database has nothing to analyse and must say that rather than show
+ * zeros as measurements.
  */
 export async function analyseBoards(setNumber: number): Promise<BoardAnalysis> {
   if (!process.env.DATABASE_URL) return { kind: "unavailable" };
@@ -228,225 +239,41 @@ export async function analyseBoards(setNumber: number): Promise<BoardAnalysis> {
   }
 
   try {
-    const inSet = eq(matches.setNumber, setNumber);
-    // A board is one (match, participant) row. Every join below carries both
-    // halves of that key, or a unit row could be counted against the wrong
-    // player's placement.
-    const participantsOnBoard = and(
-      eq(participants.matchId, participantUnits.matchId),
-      eq(participants.puuid, participantUnits.puuid),
-    );
+    const studyRows = await db
+      .select()
+      .from(boardStudies)
+      .where(eq(boardStudies.setNumber, setNumber))
+      .limit(1);
 
-    const [baselineRows, patchRows, diversityRows, unitRows, traitRows] = await Promise.all([
-      db
-        .select({
-          boards: sql<number>`count(*)::int`,
-          matches: sql<number>`count(distinct ${matches.matchId})::int`,
-          placeSum: sql<number>`coalesce(sum(${participants.placement}), 0)::int`,
-          top4: sql<number>`(count(*) filter (where ${participants.placement} <= 4))::int`,
-          wins: sql<number>`(count(*) filter (where ${participants.placement} = 1))::int`,
-        })
-        .from(participants)
-        .innerJoin(matches, eq(participants.matchId, matches.matchId))
-        .where(inSet),
-      db
-        .selectDistinct({ patch: matches.patch })
-        .from(matches)
-        .where(inSet),
-      db
-        .select({
-          units: sql<number>`count(distinct ${participantUnits.unitId})::int`,
-          slots: sql<number>`count(*)::int`,
-        })
-        .from(participantUnits)
-        .innerJoin(matches, eq(participantUnits.matchId, matches.matchId))
-        .where(inSet),
-      db
-        .select({
-          unitId: participantUnits.unitId,
-          sample: sql<number>`count(*)::int`,
-          placeSum: sql<number>`coalesce(sum(${participants.placement}), 0)::int`,
-          top4: sql<number>`(count(*) filter (where ${participants.placement} <= 4))::int`,
-          wins: sql<number>`(count(*) filter (where ${participants.placement} = 1))::int`,
-          starSum: sql<number>`coalesce(sum(${participantUnits.starLevel}), 0)::int`,
-        })
-        .from(participantUnits)
-        .innerJoin(matches, eq(participantUnits.matchId, matches.matchId))
-        .innerJoin(participants, participantsOnBoard)
-        .where(inSet)
-        .groupBy(participantUnits.unitId)
-        .having(sql`count(*) >= ${MIN_SAMPLE}`)
-        .orderBy(sql`count(*) desc, ${participantUnits.unitId} asc`)
-        .limit(UNIT_LIMIT),
-      db
-        .select({
-          traitId: participantTraits.traitId,
-          sample: sql<number>`count(*)::int`,
-          placeSum: sql<number>`coalesce(sum(${participants.placement}), 0)::int`,
-          top4: sql<number>`(count(*) filter (where ${participants.placement} <= 4))::int`,
-          wins: sql<number>`(count(*) filter (where ${participants.placement} = 1))::int`,
-          tierSum: sql<number>`coalesce(sum(${participantTraits.tierCurrent}), 0)::int`,
-        })
-        .from(participantTraits)
-        .innerJoin(matches, eq(participantTraits.matchId, matches.matchId))
-        .innerJoin(
-          participants,
-          and(
-            eq(participants.matchId, participantTraits.matchId),
-            eq(participants.puuid, participantTraits.puuid),
-          ),
-        )
-        // Tier 0 means the trait never reached its first breakpoint, which is
-        // not a pattern a board achieved.
-        .where(and(inSet, gt(participantTraits.tierCurrent, 0)))
-        .groupBy(participantTraits.traitId)
-        .having(sql`count(*) >= ${MIN_SAMPLE}`)
-        .orderBy(sql`count(*) desc, ${participantTraits.traitId} asc`)
-        .limit(TRAIT_LIMIT),
-    ]);
+    const study = studyRows[0];
+    if (!study) return { kind: "not-materialised" };
 
-    const baseline = baselineRows[0];
-    const boards = baseline?.boards ?? 0;
-    const baselineAvgPlace = boards > 0 ? (baseline?.placeSum ?? 0) / boards : 0;
+    const stored = await db
+      .select({
+        kind: boardPatterns.kind,
+        key: boardPatterns.key,
+        rank: boardPatterns.rank,
+        sample: boardPatterns.sample,
+        placeSum: boardPatterns.placeSum,
+        top4Count: boardPatterns.top4Count,
+        winCount: boardPatterns.winCount,
+        extra: boardPatterns.extra,
+      })
+      .from(boardPatterns)
+      .where(eq(boardPatterns.setNumber, setNumber));
 
-    const unitIds = unitRows.map((row) => row.unitId);
-
-    // A slot holds at most three items, so these three columns are the whole
-    // story. Grouping each column separately and merging in JS is the same
-    // result as a UNION ALL, without a raw lateral join the HTTP driver would
-    // have to parse differently.
-    const slotColumns = [participantUnits.item0, participantUnits.item1, participantUnits.item2];
-
-    const [itemSlotRows, pairRows, duoRows] = await Promise.all([
-      Promise.all(
-        slotColumns.map((column) =>
-          db
-            .select({
-              itemId: sql<string>`${column}`,
-              sample: sql<number>`count(*)::int`,
-              placeSum: sql<number>`coalesce(sum(${participants.placement}), 0)::int`,
-              top4: sql<number>`(count(*) filter (where ${participants.placement} <= 4))::int`,
-              wins: sql<number>`(count(*) filter (where ${participants.placement} = 1))::int`,
-            })
-            .from(participantUnits)
-            .innerJoin(matches, eq(participantUnits.matchId, matches.matchId))
-            .innerJoin(participants, participantsOnBoard)
-            .where(and(inSet, isNotNull(column)))
-            .groupBy(column),
-        ),
-      ),
-      unitIds.length === 0
-        ? Promise.resolve([] as (Counts & { unitId: string; itemId: string })[])
-        : Promise.all(
-            slotColumns.map((column) =>
-              db
-                .select({
-                  unitId: participantUnits.unitId,
-                  itemId: sql<string>`${column}`,
-                  sample: sql<number>`count(*)::int`,
-                  placeSum: sql<number>`coalesce(sum(${participants.placement}), 0)::int`,
-                  top4: sql<number>`(count(*) filter (where ${participants.placement} <= 4))::int`,
-                  wins: sql<number>`(count(*) filter (where ${participants.placement} = 1))::int`,
-                })
-                .from(participantUnits)
-                .innerJoin(matches, eq(participantUnits.matchId, matches.matchId))
-                .innerJoin(participants, participantsOnBoard)
-                .where(and(inSet, isNotNull(column), inArray(participantUnits.unitId, unitIds)))
-                .groupBy(participantUnits.unitId, column),
-            ),
-          ).then((groups) => groups.flat()),
-      // Scoped to the units already above the threshold on both sides: that is
-      // at most 105 pairs to count, instead of every champion in the set.
-      unitIds.length < 2
-        ? Promise.resolve([] as (Counts & { aUnitId: string; bUnitId: string })[])
-        : db
-            .select({
-              aUnitId: unitA.unitId,
-              bUnitId: unitB.unitId,
-              sample: sql<number>`count(*)::int`,
-              placeSum: sql<number>`coalesce(sum(${participants.placement}), 0)::int`,
-              top4: sql<number>`(count(*) filter (where ${participants.placement} <= 4))::int`,
-              wins: sql<number>`(count(*) filter (where ${participants.placement} = 1))::int`,
-            })
-            .from(unitA)
-            .innerJoin(
-              unitB,
-              and(
-                eq(unitB.matchId, unitA.matchId),
-                eq(unitB.puuid, unitA.puuid),
-                // One row per unordered pair, whichever id sorts first.
-                lt(unitA.unitId, unitB.unitId),
-              ),
-            )
-            .innerJoin(matches, eq(matches.matchId, unitA.matchId))
-            .innerJoin(
-              participants,
-              and(
-                eq(participants.matchId, unitA.matchId),
-                eq(participants.puuid, unitA.puuid),
-              ),
-            )
-            .where(
-              and(
-                inSet,
-                inArray(unitA.unitId, unitIds),
-                inArray(unitB.unitId, unitIds),
-              ),
-            )
-            .groupBy(unitA.unitId, unitB.unitId)
-            .having(sql`count(*) >= ${MIN_SAMPLE}`)
-            .orderBy(sql`count(*) desc`)
-            .limit(UNIT_PAIR_LIMIT * 4),
-    ]);
-
-    // Item totals across all slots.
-    const itemTotals = new Map<string, Counts>();
-    for (const rows of itemSlotRows) {
-      for (const row of rows) {
-        const itemId = keyOf(row.itemId);
-        if (!itemId) continue;
-        const counts = itemTotals.get(itemId) ?? emptyCounts();
-        addCounts(counts, row);
-        itemTotals.set(itemId, counts);
-      }
+    const byKind = new Map<string, StoredPattern[]>();
+    for (const row of stored) {
+      const bucket = byKind.get(row.kind) ?? [];
+      bucket.push(row);
+      byKind.set(row.kind, bucket);
     }
+    // Stored rank is the mining order; sorting here keeps the page independent of
+    // whatever order the rows come back in.
+    const rowsOf = (kind: string): StoredPattern[] =>
+      [...(byKind.get(kind) ?? [])].sort((a, b) => a.rank - b.rank);
 
-    // Unit × item: supports both the pair ranking and each unit's common items.
-    const pairTotals = new Map<string, Counts & { unitId: string; itemId: string }>();
-    for (const row of pairRows) {
-      const itemId = keyOf(row.itemId);
-      if (!itemId || !row.unitId) continue;
-      const key = `${row.unitId}\u0001${itemId}`;
-      const counts = pairTotals.get(key) ?? { ...emptyCounts(), unitId: row.unitId, itemId };
-      addCounts(counts, row);
-      pairTotals.set(key, counts);
-    }
-
-    const unitItems = new Map<string, { itemId: string; sample: number }[]>();
-    const itemHolders = new Map<string, { unitId: string; sample: number }[]>();
-    // Denominator for "this item is X% of that unit's items" — every slotted
-    // item that unit held, not every item in the set.
-    const unitSlotTotals = new Map<string, number>();
-    for (const entry of pairTotals.values()) {
-      const forUnit = unitItems.get(entry.unitId) ?? [];
-      forUnit.push({ itemId: entry.itemId, sample: entry.sample });
-      unitItems.set(entry.unitId, forUnit);
-
-      const forItem = itemHolders.get(entry.itemId) ?? [];
-      forItem.push({ unitId: entry.unitId, sample: entry.sample });
-      itemHolders.set(entry.itemId, forItem);
-
-      unitSlotTotals.set(entry.unitId, (unitSlotTotals.get(entry.unitId) ?? 0) + entry.sample);
-    }
-
-    // Each unit's own boards and average, for the "better together than apart"
-    // comparison. Same rows as the units list, so the two sections agree.
-    const unitBoards = new Map<string, number>();
-    const unitAvgPlace = new Map<string, number>();
-    for (const row of unitRows) {
-      unitBoards.set(row.unitId, row.sample);
-      if (row.sample > 0) unitAvgPlace.set(row.unitId, row.placeSum / row.sample);
-    }
+    const baselineAvgPlace = rate(study.placeSum, study.boards);
 
     const [unitIndex, itemIndex, traitIndex] = await Promise.all([
       loadUnitCatalogue(setNumber),
@@ -474,119 +301,137 @@ export async function analyseBoards(setNumber: number): Promise<BoardAnalysis> {
       };
     };
 
-    const units: UnitPattern[] = unitRows.map((row) => {
-      const counts: Counts = {
-        sample: row.sample,
-        placeSum: row.placeSum,
-        top4: row.top4,
-        wins: row.wins,
-      };
-      const commonItems = [...(unitItems.get(row.unitId) ?? [])]
-        .sort((a, b) => b.sample - a.sample || a.itemId.localeCompare(b.itemId))
-        .slice(0, 2)
-        .map((entry) => resolveItem(entry.itemId));
+    const unitRows = rowsOf("unit");
+    const unitItemRows = rowsOf("item-unit");
+
+    // Per-unit totals and averages, from the unit rows the job ranked. Duo and
+    // trio members are drawn from those same units, so the "vs solo" comparison
+    // always has both sides.
+    const unitBoards = new Map(unitRows.map((row) => [row.key, row.sample]));
+    const unitAvgPlace = new Map(
+      unitRows.map((row) => [row.key, rate(row.placeSum, row.sample)]),
+    );
+
+    const soloAverage = (unitId: string): number =>
+      unitAvgPlace.get(unitId) ?? baselineAvgPlace;
+
+    /** unit ÷ its item slots, for the "share of that unit's items" column. */
+    const unitSlotTotals = new Map<string, number>();
+    const unitItems = new Map<string, StoredPattern[]>();
+    const itemHolders = new Map<string, StoredPattern[]>();
+
+    for (const row of unitItemRows) {
+      const [unitId, itemId] = row.key.split(SEP);
+      if (!unitId || !itemId) continue;
+
+      unitSlotTotals.set(unitId, (unitSlotTotals.get(unitId) ?? 0) + row.sample);
+
+      const forUnit = unitItems.get(unitId) ?? [];
+      forUnit.push(row);
+      unitItems.set(unitId, forUnit);
+
+      const forItem = itemHolders.get(itemId) ?? [];
+      forItem.push(row);
+      itemHolders.set(itemId, forItem);
+    }
+
+    const units: UnitPattern[] = unitRows.map((row) => ({
+      ...resolveUnit(row.key),
+      ...sampleOf(countsOf(row), baselineAvgPlace),
+      avgStar: round2(rate(row.extra.starSum ?? 0, row.sample)),
+      items: [...(unitItems.get(row.key) ?? [])]
+        .sort((a, b) => b.sample - a.sample || a.key.localeCompare(b.key))
+        .slice(0, UNIT_ITEM_LIMIT)
+        .map((entry) => resolveItem(entry.key.split(SEP)[1] ?? entry.key)),
+    }));
+
+    const items: ItemPattern[] = rowsOf("item").map((row) => {
+      const holder = [...(itemHolders.get(row.key) ?? [])].sort(
+        (a, b) => b.sample - a.sample || a.key.localeCompare(b.key),
+      )[0];
+      const holderUnit = holder ? holder.key.split(SEP)[0] : undefined;
 
       return {
-        ...resolveUnit(row.unitId),
-        ...sampleOf(counts, baselineAvgPlace),
-        avgStar: row.sample > 0 ? round2(row.starSum / row.sample) : 0,
-        items: commonItems,
+        ...resolveItem(row.key),
+        ...sampleOf(countsOf(row), baselineAvgPlace),
+        holder:
+          holder && holderUnit && row.sample > 0
+            ? { ...resolveUnit(holderUnit), share: round2(rate(holder.sample, row.sample)) }
+            : null,
       };
     });
 
-    const items: ItemPattern[] = [...itemTotals.entries()]
-      .filter(([, counts]) => counts.sample >= MIN_SAMPLE)
-      .sort((a, b) => b[1].sample - a[1].sample || a[0].localeCompare(b[0]))
-      .slice(0, ITEM_LIMIT)
-      .map(([itemId, counts]) => {
-        const holder = [...(itemHolders.get(itemId) ?? [])].sort(
-          (a, b) => b.sample - a.sample || a.unitId.localeCompare(b.unitId),
-        )[0];
+    const resolvePairing = (row: StoredPattern): PairingPattern | null => {
+      const [unitId, itemId] = row.key.split(SEP);
+      if (!unitId || !itemId) return null;
+      return {
+        unit: resolveUnit(unitId),
+        item: resolveItem(itemId),
+        ...sampleOf(countsOf(row), baselineAvgPlace),
+      };
+    };
 
-        return {
-          ...resolveItem(itemId),
-          ...sampleOf(counts, baselineAvgPlace),
-          holder:
-            holder && counts.sample > 0
-              ? { ...resolveUnit(holder.unitId), share: round2(holder.sample / counts.sample) }
-              : null,
-        };
+    const popularPairings: PopularPairingPattern[] = [];
+    for (const row of unitItemRows.slice(0, POPULAR_PAIR_LIMIT)) {
+      const pairing = resolvePairing(row);
+      if (!pairing) continue;
+      popularPairings.push({
+        ...pairing,
+        share: round2(rate(row.sample, unitSlotTotals.get(pairing.unit.id) ?? 0)),
       });
+    }
 
-    const unitPairs: UnitPairPattern[] = duoRows
-      .map((row) => {
-        const boardsA = unitBoards.get(row.aUnitId) ?? 0;
-        const boardsB = unitBoards.get(row.bUnitId) ?? 0;
-        const either = boardsA + boardsB - row.sample;
-        if (row.sample < MIN_SAMPLE || either <= 0) return null;
-
-        const avgA = unitAvgPlace.get(row.aUnitId) ?? baselineAvgPlace;
-        const avgB = unitAvgPlace.get(row.bUnitId) ?? baselineAvgPlace;
-        const counts: Counts = {
-          sample: row.sample,
-          placeSum: row.placeSum,
-          top4: row.top4,
-          wins: row.wins,
-        };
-
-        return {
-          a: resolveUnit(row.aUnitId),
-          b: resolveUnit(row.bUnitId),
-          ...sampleOf(counts, baselineAvgPlace),
-          overlap: round2(row.sample / either),
-          togetherGain: round2((avgA + avgB) / 2 - row.placeSum / row.sample),
-        };
-      })
-      .filter((entry): entry is UnitPairPattern => entry !== null)
-      .sort(
-        (a, b) =>
-          b.overlap - a.overlap || b.sample - a.sample || a.a.id.localeCompare(b.a.id),
-      )
-      .slice(0, UNIT_PAIR_LIMIT);
-
-    const popularPairings: PopularPairingPattern[] = [...pairTotals.values()]
-      .filter((counts) => counts.sample >= MIN_PAIR_SAMPLE)
-      .sort(
-        (a, b) =>
-          b.sample - a.sample ||
-          a.unitId.localeCompare(b.unitId) ||
-          a.itemId.localeCompare(b.itemId),
-      )
-      .slice(0, POPULAR_PAIR_LIMIT)
-      .map((counts) => {
-        const slots = unitSlotTotals.get(counts.unitId) ?? 0;
-        return {
-          unit: resolveUnit(counts.unitId),
-          item: resolveItem(counts.itemId),
-          ...sampleOf(counts, baselineAvgPlace),
-          share: slots > 0 ? round2(counts.sample / slots) : 0,
-        };
-      });
-
-    const pairings: PairingPattern[] = [...pairTotals.values()]
-      .filter((counts) => counts.sample >= MIN_PAIR_SAMPLE)
-      .map((counts) => ({
-        unit: resolveUnit(counts.unitId),
-        item: resolveItem(counts.itemId),
-        ...sampleOf(counts, baselineAvgPlace),
-      }))
+    const pairings: PairingPattern[] = unitItemRows
+      .map((row) => resolvePairing(row))
+      .filter((entry): entry is PairingPattern => entry !== null)
       .filter((entry) => entry.placeGain > 0)
       .sort(
-        (a, b) => b.placeGain - a.placeGain || b.sample - a.sample || a.unit.id.localeCompare(b.unit.id),
+        (a, b) =>
+          b.placeGain - a.placeGain || b.sample - a.sample || a.unit.id.localeCompare(b.unit.id),
       )
       .slice(0, PAIR_LIMIT);
 
-    const traits: TraitPattern[] = traitRows.map((row) => {
-      const trait = traitIndex?.get(row.traitId) ?? null;
+    const unitPairs: UnitPairPattern[] = rowsOf("duo").flatMap((row) => {
+      const [aId, bId] = row.key.split(SEP);
+      if (!aId || !bId) return [];
+      const either = row.extra.either ?? 0;
+      return [
+        {
+          a: resolveUnit(aId),
+          b: resolveUnit(bId),
+          ...sampleOf(countsOf(row), baselineAvgPlace),
+          overlap: round2(rate(row.sample, either)),
+          togetherGain: round2(
+            (soloAverage(aId) + soloAverage(bId)) / 2 - rate(row.placeSum, row.sample),
+          ),
+        },
+      ];
+    });
+
+    const unitTrios: UnitTrioPattern[] = rowsOf("core").flatMap((row) => {
+      const [aId, bId, cId] = row.key.split(SEP);
+      if (!aId || !bId || !cId) return [];
+      return [
+        {
+          units: [resolveUnit(aId), resolveUnit(bId), resolveUnit(cId)],
+          ...sampleOf(countsOf(row), baselineAvgPlace),
+          overlap: round2(rate(row.sample, row.extra.anyBoards ?? 0)),
+          togetherGain: round2(
+            (soloAverage(aId) + soloAverage(bId) + soloAverage(cId)) / 3 -
+              rate(row.placeSum, row.sample),
+          ),
+        },
+      ];
+    });
+
+    const traits: TraitPattern[] = rowsOf("trait").map((row) => {
+      const trait = traitIndex?.get(row.key) ?? null;
       return {
-        id: row.traitId,
+        id: row.key,
         name: trait?.name ?? null,
         imageUrl: trait?.imageUrl ?? null,
-        ...sampleOf(
-          { sample: row.sample, placeSum: row.placeSum, top4: row.top4, wins: row.wins },
-          baselineAvgPlace,
-        ),
-        avgTier: row.sample > 0 ? round2(row.tierSum / row.sample) : 0,
+        ...sampleOf(countsOf(row), baselineAvgPlace),
+        avgTier: round2(rate(row.extra.tierSum ?? 0, row.sample)),
       };
     });
 
@@ -594,20 +439,22 @@ export async function analyseBoards(setNumber: number): Promise<BoardAnalysis> {
       kind: "ok",
       summary: {
         setNumber,
-        patches: patchRows.map((row) => row.patch).sort(),
-        matches: baseline?.matches ?? 0,
-        boards,
-        unitsSeen: diversityRows[0]?.units ?? 0,
-        itemsSeen: itemTotals.size,
-        itemSlots: diversityRows[0]?.slots ?? 0,
+        patches: study.patches,
+        matches: study.matches,
+        boards: study.boards,
+        unitsSeen: study.unitsSeen,
+        itemsSeen: study.itemsSeen,
+        itemSlots: study.itemSlots,
         avgPlace: round2(baselineAvgPlace),
-        top4Rate: boards > 0 ? round2((baseline?.top4 ?? 0) / boards) : 0,
-        winRate: boards > 0 ? round2((baseline?.wins ?? 0) / boards) : 0,
-        minSample: MIN_SAMPLE,
-        minPairSample: MIN_PAIR_SAMPLE,
+        top4Rate: round2(rate(study.top4Count, study.boards)),
+        winRate: round2(rate(study.winCount, study.boards)),
+        minSample: study.minSample,
+        minPairSample: study.minPairSample,
+        computedAt: study.computedAt.toISOString(),
       },
       units,
       unitPairs,
+      unitTrios,
       items,
       popularPairings,
       pairings,
@@ -617,7 +464,7 @@ export async function analyseBoards(setNumber: number): Promise<BoardAnalysis> {
     if (!warnedAboutDatabase) {
       warnedAboutDatabase = true;
       console.warn(
-        `[analysis] Postgres unavailable, no board patterns can be mined: ${
+        `[analysis] Postgres unavailable, no board patterns can be read: ${
           error instanceof Error ? error.message : String(error)
         }`,
       );

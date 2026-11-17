@@ -1,3 +1,5 @@
+import { execFileSync } from "node:child_process";
+
 import { defineConfig, devices } from "@playwright/test";
 
 /**
@@ -23,6 +25,31 @@ const PORT = Number(process.env.PLAYWRIGHT_PORT ?? 3100);
 // forever — every click a no-op, every test a confusing timeout.
 const baseURL = `http://localhost:${PORT}`;
 
+/**
+ * The database specs start their own Postgres containers, so CI must have Docker.
+ *
+ * Checked once here, before any spec or build runs, so a missing daemon aborts the
+ * job with the reason `docker info` gave. A throw inside a spec's `beforeAll` would
+ * instead be retried for every test in that file and report a cascade that says
+ * nothing about the environment.
+ */
+function assertDockerForCi(): void {
+  if (!process.env.CI) return;
+
+  try {
+    execFileSync("docker", ["info"], { stdio: "pipe", timeout: 15_000 });
+  } catch (error) {
+    const stderr = (error as { stderr?: Buffer }).stderr?.toString().trim();
+    throw new Error(
+      "The database specs need Docker in CI, and `docker info` failed. " +
+        "Without it these specs would silently skip.\n" +
+        (stderr || (error instanceof Error ? error.message : String(error))),
+    );
+  }
+}
+
+assertDockerForCi();
+
 export default defineConfig({
   testDir: "./e2e",
   // The pages are few and the dev server compiles per route; one worker keeps a
@@ -33,7 +60,14 @@ export default defineConfig({
   retries: process.env.CI ? 1 : 0,
   timeout: 60_000,
   expect: { timeout: 10_000 },
-  reporter: process.env.CI ? [["github"], ["html", { open: "never" }]] : [["list"]],
+  reporter: process.env.CI
+    ? [
+        ["github"],
+        ["html", { open: "never" }],
+        // A green CI run may not contain a skipped spec; see e2e/skip-guard.ts.
+        ["./e2e/skip-guard.ts"],
+      ]
+    : [["list"]],
   use: {
     baseURL,
     trace: "retain-on-failure",

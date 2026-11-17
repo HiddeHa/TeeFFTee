@@ -1,5 +1,6 @@
 import { comps } from "@/content/comps";
 import { patches } from "@/content/patches";
+import { site } from "@/content/site";
 import type {
   BoardPosition,
   BoardUnit,
@@ -135,7 +136,7 @@ function resolvePriorities(
 /** A consistent scope for the database — every column of the stats key needs one. */
 function resolveScope(filters: CompFilters) {
   return {
-    patch: filters.patch ?? patches[0]?.patch ?? "unknown",
+    patch: filters.patch ?? site.currentPatch,
     rank: filters.rank ?? DEFAULT_RANK,
     region: filters.region,
   };
@@ -150,7 +151,12 @@ function pickStats(stats: CompStats | null, filters: CompFilters): CompStats | n
   return stats;
 }
 
-function sortByTierThenConfidence(a: CompListItem, b: CompListItem): number {
+/**
+ * The tier list's ordering, exported so a change to it fails a test rather than
+ * silently reshuffling every list page: editorial tier first, then the Wilson
+ * lower bound (never the raw top-4 rate), then name for a stable order.
+ */
+export function sortByTierThenConfidence(a: CompListItem, b: CompListItem): number {
   const tierDelta = TIER_ORDER.indexOf(a.tier) - TIER_ORDER.indexOf(b.tier);
   if (tierDelta !== 0) return tierDelta;
 
@@ -165,7 +171,12 @@ function sortByTierThenConfidence(a: CompListItem, b: CompListItem): number {
 
 export async function listComps(filters: CompFilters = {}): Promise<CompListItem[]> {
   const fromDatabase = await loadCompStats(resolveScope(filters));
-  const published = comps.filter((comp) => comp.published);
+  // The public surface belongs to the current set. Set 18 comps remain in
+  // content as an archive, but they must not appear under a Set 19 header or
+  // answer a Set 19 tier-list URL.
+  const published = comps.filter(
+    (comp) => comp.published && comp.setNumber === site.setNumber,
+  );
 
   // One catalogue read per set, not per comp: boards and item chains are the only
   // consumers, and a list page renders every comp on it.
@@ -214,7 +225,7 @@ export async function getRelatedComps(slug: string, limit = 3): Promise<CompList
 
 /** Comps that actually have numbers — used for "top of the meta" blocks. */
 export async function getRankedComps(limit = 5): Promise<CompListItem[]> {
-  const all = await listComps({ patch: patches[0]?.patch });
+  const all = await listComps({ patch: site.currentPatch });
   return all.filter((comp) => comp.visibleStats !== null).slice(0, limit);
 }
 

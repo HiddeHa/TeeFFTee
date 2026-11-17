@@ -26,6 +26,22 @@ import {
  *  - `comp_stats` is what pages query. Pages must never aggregate raw rows.
  */
 
+/**
+ * Counts a derived rate on `board_patterns` needs, stored as the count rather
+ * than the rate it produces. Every field is optional because each pattern kind
+ * carries only the ones it uses.
+ */
+export type PatternExtra = {
+  /** Units: star levels summed, so avgStar is starSum ÷ sample. */
+  starSum?: number;
+  /** Duos: boards holding either unit — the denominator for overlap. */
+  either?: number;
+  /** Trios: boards holding any of the three — the denominator for overlap. */
+  anyBoards?: number;
+  /** Traits: activation tiers summed, so avgTier is tierSum ÷ sample. */
+  tierSum?: number;
+};
+
 /* -------------------------------------------------------------------------- */
 /* Static game data (loaded per set from Data Dragon / Community Dragon)      */
 /* -------------------------------------------------------------------------- */
@@ -263,6 +279,109 @@ export const compAugments = pgTable(
 /* -------------------------------------------------------------------------- */
 /* Derived layer — the only thing pages should query                          */
 /* -------------------------------------------------------------------------- */
+
+/**
+ * Measured augment performance inside one comp, in one scope.
+ *
+ * `participant_augments` has carried every taken augment since the first fetch,
+ * but nothing read it, so the comp page's augment advice was editorial. This is
+ * the derived table that lets the page quote the boards instead.
+ *
+ * Scoped exactly like `comp_stats` (patch, region, rank bucket), so the two can
+ * be compared: an augment's games are a subset of the comp's games in the same
+ * key, which is what makes "with this augment" and "this comp's average"
+ * comparable on read without a join back to raw rows.
+ *
+ * Counts, not rates, for the same reason as `comp_stats`: sums stay exact when
+ * regions are combined, and the average placement, the rates and the delta are
+ * derived in `src/lib/augment-stats.ts`.
+ */
+export const compAugmentStats = pgTable(
+  "comp_augment_stats",
+  {
+    compId: uuid("comp_id")
+      .notNull()
+      .references(() => comps.compId, { onDelete: "cascade" }),
+    patch: text("patch").notNull(),
+    region: text("region").notNull(),
+    /** 'master+' | 'diamond+' | 'all' */
+    rankBucket: text("rank_bucket").notNull(),
+    augmentId: text("augment_id").notNull(),
+    games: integer("games").notNull().default(0),
+    placeSum: integer("place_sum").notNull().default(0),
+    top4Count: integer("top4_count").notNull().default(0),
+    winCount: integer("win_count").notNull().default(0),
+    computedAt: timestamp("computed_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    primaryKey({
+      columns: [table.compId, table.patch, table.region, table.rankBucket, table.augmentId],
+    }),
+    index("comp_augment_stats_scope_idx").on(table.patch, table.rankBucket),
+  ],
+);
+
+/**
+ * A materialised AInalyses study: one row per set, replaced by
+ * `npm run crawl -- patterns`.
+ *
+ * Counts, not rates — the same rule `comp_stats` follows. The mining itself
+ * (the self-joins over `participant_units`) runs in the crawler, because the
+ * page must not pay for a triple join per request as the crawl grows.
+ */
+export const boardStudies = pgTable("board_studies", {
+  setNumber: smallint("set_number").primaryKey(),
+  patches: text("patches").array().notNull().default([]),
+  matches: integer("matches").notNull().default(0),
+  boards: integer("boards").notNull().default(0),
+  unitsSeen: integer("units_seen").notNull().default(0),
+  itemsSeen: integer("items_seen").notNull().default(0),
+  itemSlots: integer("item_slots").notNull().default(0),
+  placeSum: integer("place_sum").notNull().default(0),
+  top4Count: integer("top4_count").notNull().default(0),
+  winCount: integer("win_count").notNull().default(0),
+  /** Thresholds travel with the snapshot, so the page never quotes a stale one. */
+  minSample: smallint("min_sample").notNull().default(25),
+  minPairSample: smallint("min_pair_sample").notNull().default(15),
+  computedAt: timestamp("computed_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+/**
+ * One mined pattern, keyed by kind and its own identity key.
+ *
+ * Ids only. Names, costs and icons are resolved against the set catalogue on
+ * read, exactly like every other board on the site: a renamed unit converges
+ * instead of keeping a stale name in a derived table.
+ *
+ * `kinds`: `unit` | `duo` | `core` | `item` | `item-unit` | `trait`.
+ * `extra` carries the counts a rate needs (`{"either":12000}` for a duo,
+ * `{"anyBoards":9000}` for a trio, `{"starSum":48000}` for a unit,
+ * `{"tierSum":5400}` for a trait) — never a rate, because rates do not combine
+ * across scopes the way counts do.
+ */
+export const boardPatterns = pgTable(
+  "board_patterns",
+  {
+    setNumber: smallint("set_number")
+      .notNull()
+      .references(() => boardStudies.setNumber, { onDelete: "cascade" }),
+    /** unit | duo | core | item | item-unit | trait */
+    kind: text("kind").notNull(),
+    /** Unit id, `a\u0001b`, `a\u0001b\u0001c`, item id, `unit\u0001item`, or trait id. */
+    key: text("key").notNull(),
+    /** 1-based display order within the kind. */
+    rank: smallint("rank").notNull(),
+    sample: integer("sample").notNull().default(0),
+    placeSum: integer("place_sum").notNull().default(0),
+    top4Count: integer("top4_count").notNull().default(0),
+    winCount: integer("win_count").notNull().default(0),
+    extra: jsonb("extra").$type<PatternExtra>().notNull().default({}),
+  },
+  (table) => [
+    primaryKey({ columns: [table.setNumber, table.kind, table.key] }),
+    index("board_patterns_rank_idx").on(table.setNumber, table.kind, table.rank),
+  ],
+);
 
 export const compStats = pgTable(
   "comp_stats",

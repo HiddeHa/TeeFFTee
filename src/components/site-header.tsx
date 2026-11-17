@@ -35,7 +35,7 @@ export function SiteHeader() {
           </div>
         </div>
 
-        <SiteNav className="flex overflow-x-auto pb-2 xl:hidden" />
+        <SiteNav className="flex items-center overflow-x-auto pb-2 xl:hidden" />
       </div>
     </header>
   );
