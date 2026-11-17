@@ -14,7 +14,8 @@ import { listStatsPatches, loadCompStats } from "../src/lib/stats-source";
  * The no-database half is pure enough to test here. The counts-half — regions
  * summing rather than averaging rates, and `boards` staying the pick-rate
  * denominator — is SQL, and is asserted against real Postgres in
- * `e2e/stats-source.db.spec.ts`.
+ * `e2e/stats-source.db.spec.ts` by calling `loadCompStats` directly (the pages it
+ * feeds are gated to the current set, which has no published comps yet).
  */
 
 async function withoutDatabase<T>(run: () => Promise<T>): Promise<T> {

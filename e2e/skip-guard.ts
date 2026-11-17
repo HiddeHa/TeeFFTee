@@ -10,13 +10,13 @@ import type {
 } from "@playwright/test/reporter";
 
 /**
- * The suite is 56 tests in 10 files. This is a floor, not a lockstep: adding tests
+ * The suite is 65 tests in 10 files. This is a floor, not a lockstep: adding tests
  * needs no edit, while a spec file that stops being collected (renamed, moved out
  * of `testDir`, excluded by `testMatch`/`testIgnore`) takes the total below it.
  * Raise it when a suite is added; never lower it to turn a red run green without
  * deciding that the lost tests are genuinely gone.
  */
-const MIN_TESTS = 56;
+const MIN_TESTS = 65;
 
 /**
  * CI must not pass with a skipped spec.
